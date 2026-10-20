@@ -367,11 +367,11 @@ sudo xcode-select --reset`),
     ['⟦kill -9 PID⟧', '**SIGKILL** 後片付けさせず強制終了。⟦kill⟧ で止まらないときだけ'],
   ]),
   cc(`# address already in use と出たら
-lsof -nP -iTCP:3000 -sTCP:LISTEN
+lsof -i :3000
 COMMAND  PID ... NAME
-node   12345 ... *:3000 (LISTEN)
+node   12345 ... *:hbci (LISTEN)
 kill 12345  # 再びlsofで空なら解放`),
-  cd('**lsof** = **list open files**。⟦-n⟧⟦-P⟧ は IP・ポートを番号で表示(無いと 3000 が ⟦hbci⟧ と出る)。⟦-sTCP:LISTEN⟧ でサーバ側に絞る。'),
+  cd('**lsof** = **list open files**。2列目が PID。NAME の ⟦hbci⟧ は 3000番ポートに登録された名前(番号の代わりに表示される)。'),
   cd('⚠ 何も出ないのに使えないときは ⟦sudo lsof …⟧。root など他ユーザーのプロセスは sudo なしでは見えない。'),
 ]},
 
