@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>macOS ショートカット・ターミナル・アプリインストール チートシート</title>
+<meta name="description" content="macOSの標準的なキーボードショートカット・トラックパッド・ターミナル・記号と、アプリのインストール方法(DMG/pkg/App Store/Homebrewほか)をまとめたA4横3ページのチートシート。">
+<style>
+:root{
+  --cA:#1a4fa0; --cB:#6b3fa0; --cC:#1f7a3f; --cD:#b07500;
+  --cE:#6d8c1f; --cF:#c0272d; --cG:#9c2a8c; --cH:#d2691e; --cI:#0f7b7b;
+  --ink:#1a1a1a; --sub:#3f3f3f; --dim:#7b7b7b; --line:#d5d5d5; --rule:#ededed;
+  --codebg:#f4f4f4; --ccbd:#c6c6c6; --chipbd:#dedede; --paper:#fff; --desk:#8f8f8f;
+  --band:#fff; --tint:9%; --star:#b8860b; --cmt:#2e7d4f;
+  --headrule:#333; --footink:#666; --footrule:#bbb; --shadow:rgba(0,0,0,.45); --cardtop:#999;
+  --mono:"SFMono-Regular","SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{background:var(--desk);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  color:var(--ink);}
+@page{size:A4 landscape;margin:7mm}
+
+.page{
+  width:283mm;height:196mm;background:var(--paper);
+  margin:6mm auto;display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 2px 10px var(--shadow);
+}
+.grid{
+  flex:1 1 auto;min-height:0;overflow:hidden;
+  column-count:5;column-gap:2.0mm;column-fill:balance;
+}
+
+/* ヘッダ帯と凡例 */
+.head{display:flex;align-items:flex-end;gap:3mm;border-bottom:1.2pt solid var(--headrule);
+  padding:0 0 1.0mm;margin-bottom:1.3mm;flex:0 0 auto}
+.ttl{white-space:nowrap}
+.ttl b{font-size:13.20pt;letter-spacing:.02em}
+.ttl span{font-size:6.72pt;color:var(--sub);margin-left:2mm}
+.head.slim .ttl b{font-size:10.20pt}
+.legend{display:flex;flex-wrap:wrap;gap:0 2.2mm;flex:1 1 auto;justify-content:flex-end}
+.lg{font-size:6.60pt;color:var(--ink);white-space:nowrap;display:inline-flex;align-items:center}
+.lg i{display:inline-block;width:5.4pt;height:5.4pt;border-radius:1pt;margin-right:.7mm}
+
+/* カテゴリ帯 */
+.sec{break-inside:avoid;-webkit-column-break-inside:avoid;
+  break-after:avoid;-webkit-column-break-after:avoid;
+  color:var(--band);font-size:8.63pt;font-weight:700;line-height:1.25;
+  padding:.55mm 1.1mm;border-radius:.6mm;margin:0 0 .8mm;}
+.sec b{display:inline-block;background:rgba(255,255,255,.3);border-radius:.5mm;
+  padding:0 .8mm;margin-right:1mm}
+
+/* カード */
+.card{break-inside:avoid;-webkit-column-break-inside:avoid;
+  border:.4pt solid var(--line);border-top:1.7pt solid var(--cardtop);border-radius:.6mm;
+  padding:.5mm .9mm .8mm;margin:0 0 .95mm;background:var(--paper);}
+.ct{font-size:8.21pt;font-weight:700;line-height:1.25;
+  margin:-.5mm -.9mm .6mm;padding:.5mm .9mm .45mm}
+.ct .ic{font-style:normal;margin-right:.7mm}
+.ct .sm{font-style:normal;font-weight:400;font-size:6.96pt;opacity:.85;margin-left:.9mm}
+.cc{font-family:var(--mono);font-size:7.38pt;line-height:1.32;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  background:var(--codebg);border-left:.9pt solid var(--ccbd);
+  padding:.45mm .8mm;border-radius:.4mm;margin-bottom:.55mm;}
+.cc .cm{color:var(--cmt);font-style:normal}
+.cg{display:flex;flex-wrap:wrap;gap:.4mm;margin-bottom:.55mm}
+.cd{font-size:7.24pt;line-height:1.35;color:var(--sub)}
+.cd+.cd{margin-top:.35mm}
+.card>.cd{margin-top:.45mm}
+.card>.cd:first-of-type{margin-top:0}
+
+/* キー＋説明の行(macOS版で追加) */
+.kv{margin-bottom:.3mm}
+.kv>div{display:flex;align-items:baseline;gap:1.0mm;padding:.2mm 0;
+  font-size:7.24pt;line-height:1.35;color:var(--sub)}
+.kv>div+div{border-top:.3pt solid var(--rule)}
+.kv em.cg{display:block;flex:0 0 auto;max-width:56%;margin:0;
+  font-style:normal;color:var(--ink);overflow-wrap:anywhere}
+.kv>div>span{flex:1 1 auto;min-width:0;overflow-wrap:anywhere}
+.kv>div.m>span::before{content:"★";color:var(--star);margin-right:.5mm}
+.kv>div.p>span{color:var(--dim)}
+.cg span{font-family:var(--mono);font-size:7.10pt;
+  background:var(--codebg);border:.3pt solid var(--chipbd);border-radius:.4mm;
+  padding:0 .55mm;color:var(--ink);font-weight:400}
+.cg span{display:inline-block;line-height:1.3;white-space:nowrap}
+.kv .cg span{margin:.1mm .15mm .1mm 0}
+
+/* 手順・箇条書き(macOS版で追加) */
+.cl{font-size:7.24pt;line-height:1.35;color:var(--sub);
+  margin:0 0 .55mm 3.0mm;padding:0}
+.cl.b{list-style:disc;margin-left:2.6mm}
+.cl li{margin-bottom:.15mm;padding-left:.2mm}
+
+/* 説明文の中の等幅・強調 */
+.cd code,.kv code,.cl code,.foot code{font-family:var(--mono);font-size:.95em;
+  background:var(--codebg);border:.3pt solid var(--chipbd);border-radius:.3mm;
+  padding:0 .35mm;color:var(--ink);overflow-wrap:anywhere}
+.cd .st,.kv .st,.cl .st{color:var(--ink)}
+
+/* 柱 */
+.foot{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:3mm;
+  border-top:.5pt solid var(--footrule);margin-top:1.1mm;padding-top:.7mm;
+  font-size:6.24pt;color:var(--footink)}
+
+.cA{border-top-color:var(--cA)} .cA>.ct{color:var(--cA);background:color-mix(in srgb,var(--cA) var(--tint),var(--paper))} .sA{background:var(--cA)} .lgA i{background:var(--cA)}
+.cB{border-top-color:var(--cB)} .cB>.ct{color:var(--cB);background:color-mix(in srgb,var(--cB) var(--tint),var(--paper))} .sB{background:var(--cB)} .lgB i{background:var(--cB)}
+.cC{border-top-color:var(--cC)} .cC>.ct{color:var(--cC);background:color-mix(in srgb,var(--cC) var(--tint),var(--paper))} .sC{background:var(--cC)} .lgC i{background:var(--cC)}
+.cD{border-top-color:var(--cD)} .cD>.ct{color:var(--cD);background:color-mix(in srgb,var(--cD) var(--tint),var(--paper))} .sD{background:var(--cD)} .lgD i{background:var(--cD)}
+.cE{border-top-color:var(--cE)} .cE>.ct{color:var(--cE);background:color-mix(in srgb,var(--cE) var(--tint),var(--paper))} .sE{background:var(--cE)} .lgE i{background:var(--cE)}
+.cF{border-top-color:var(--cF)} .cF>.ct{color:var(--cF);background:color-mix(in srgb,var(--cF) var(--tint),var(--paper))} .sF{background:var(--cF)} .lgF i{background:var(--cF)}
+.cG{border-top-color:var(--cG)} .cG>.ct{color:var(--cG);background:color-mix(in srgb,var(--cG) var(--tint),var(--paper))} .sG{background:var(--cG)} .lgG i{background:var(--cG)}
+.cH{border-top-color:var(--cH)} .cH>.ct{color:var(--cH);background:color-mix(in srgb,var(--cH) var(--tint),var(--paper))} .sH{background:var(--cH)} .lgH i{background:var(--cH)}
+.cI{border-top-color:var(--cI)} .cI>.ct{color:var(--cI);background:color-mix(in srgb,var(--cI) var(--tint),var(--paper))} .sI{background:var(--cI)} .lgI i{background:var(--cI)}
+
+@media print{
+  html,body{background:var(--paper)}
+  .page{margin:0;box-shadow:none;width:auto;height:196mm;
+    break-after:page;page-break-after:always}
+  .page:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+<style id="dark-theme">
+:root{
+  --cA:#7fa8ff; --cB:#c6a4ff; --cC:#5fd39a; --cD:#e8b84b;
+  --cE:#b6d45c; --cF:#ff8f8f; --cG:#e9a3e4; --cH:#ffab6b; --cI:#58d2d2;
+  --ink:#e9edf5; --sub:#c3cbd9; --dim:#8c95a6; --line:#2a3140; --rule:#262c38;
+  --codebg:#1b202b; --ccbd:#39414f; --chipbd:#39414f; --paper:#141821; --desk:#0a0c11;
+  --band:#0d1017; --tint:20%; --star:#ffd166; --cmt:#7fcf9f;
+  --headrule:#4d5668; --footink:#8b94a4; --footrule:#2f3645; --shadow:rgba(0,0,0,.7); --cardtop:#565e6e;
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="head"><div class="ttl"><b>macOS ショートカット チートシート</b><span>★ = まず覚える定番 ／ グレー文字 = 上級者向け ／ ⚠ = 間違えやすい点</span></div><div class="legend"><span class="lg lgA"><i></i>A 基本操作</span><span class="lg lgB"><i></i>B アプリ・ウィンドウ</span><span class="lg lgC"><i></i>C Finder・スクショ</span><span class="lg lgD"><i></i>D 日本語入力・支援</span><span class="lg lgE"><i></i>E ブラウザ</span><span class="lg lgF"><i></i>F トラックパッド</span><span class="lg lgG"><i></i>G ターミナル</span><span class="lg lgH"><i></i>H 記号</span><span class="lg lgI"><i></i>I インストール</span></div></div>
+<div class="grid">
+<div class="sec sA"><b>A</b>基本操作</div>
+<div class="card cA"><div class="ct"><i class="ic">🔰</i>まず覚える6つ</div><div class="kv"><div class="m"><em class="cg"><span>⌘</span><span>C</span></em><span>コピー</span></div><div class="m"><em class="cg"><span>⌘</span><span>V</span></em><span>ペースト</span></div><div class="m"><em class="cg"><span>⌘</span><span>X</span></em><span>カット</span></div><div class="m"><em class="cg"><span>⌘</span><span>Z</span></em><span>取り消し</span></div><div class="m"><em class="cg"><span>⌘</span><span>S</span></em><span>保存</span></div><div class="m"><em class="cg"><span>⌘</span><span>Space</span></em><span>Spotlight</span></div></div></div>
+<div class="card cA"><div class="ct"><i class="ic">⌘</i>修飾キーの記号</div><div class="kv"><div><em class="cg"><span>⌘</span></em><span>Command</span></div><div><em class="cg"><span>⌥</span></em><span>Option</span></div><div><em class="cg"><span>⌃</span></em><span>Control</span></div><div><em class="cg"><span>⇧</span></em><span>Shift</span></div><div><em class="cg"><span>⎋</span></em><span>Esc</span></div><div><em class="cg"><span>⌫</span></em><span>Delete</span></div><div><em class="cg"><span>↩</span></em><span>Return</span></div><div><em class="cg"><span>⇥</span></em><span>Tab</span></div><div><em class="cg"><span>🌐</span></em><span>Fn</span></div></div></div>
+<div class="card cA"><div class="ct"><i class="ic">✂️</i>基本編集</div><div class="kv"><div class="m"><em class="cg"><span>⌘</span><span>C</span></em><span>コピー</span></div><div class="m"><em class="cg"><span>⌘</span><span>X</span></em><span>カット</span></div><div class="m"><em class="cg"><span>⌘</span><span>V</span></em><span>ペースト</span></div><div class="m"><em class="cg"><span>⌘</span><span>Z</span></em><span>取り消し</span></div><div class="m"><em class="cg"><span>⇧</span><span>⌘</span><span>Z</span></em><span>やり直し</span></div><div class="m"><em class="cg"><span>⌘</span><span>A</span></em><span>すべて選択</span></div><div class="m"><em class="cg"><span>⌘</span><span>S</span></em><span>保存</span></div><div><em class="cg"><span>⌘</span><span>F</span></em><span>検索</span></div><div><em class="cg"><span>⌘</span><span>G</span></em><span>次を検索</span></div><div><em class="cg"><span>⌘</span><span>N</span> / <span>O</span></em><span>新規 / 開く</span></div><div><em class="cg"><span>⌘</span><span>P</span></em><span>印刷</span></div><div class="p"><em class="cg"><span>⌥</span><span>⌘</span><span>V</span></em><span>移動ペースト(元を削除)</span></div><div class="p"><em class="cg"><span>⌥</span><span>⇧</span><span>⌘</span><span>V</span></em><span>書式なしペースト</span></div></div></div>
+<div class="card cA"><div class="ct"><i class="ic">📝</i>テキスト編集・カーソル移動</div><div class="kv"><div><em class="cg"><span>⌘</span><span>←</span> / <span>→</span></em><span>行頭 / 行末へ</span></div><div><em class="cg"><span>⌥</span><span>←</span><span>→</span></em><span>単語単位で移動</span></div><div><em class="cg"><span>⌘</span><span>↑</span> / <span>↓</span></em><span>文書の先頭 / 末尾</span></div><div><em class="cg"><span>⇧</span>+移動</em><span>移動しながら選択</span></div><div><em class="cg"><span>⌥</span><span>⌫</span></em><span>単語を削除</span></div><div><em class="cg"><span>⌘</span><span>⌫</span></em><span>行頭まで削除</span></div><div><em class="cg"><span>⌘</span><span>B</span><span>I</span><span>U</span></em><span>太字 / 斜体 / 下線</span></div><div><em class="cg"><span>⌘</span><span>+</span> / <span>-</span></em><span>文字サイズ 拡大 / 縮小</span></div><div class="p"><em class="cg"><span>⌃</span><span>A</span> / <span>E</span></em><span>行頭 / 行末(Emacs風)</span></div><div class="p"><em class="cg"><span>⌃</span><span>K</span></em><span>行末まで削除</span></div><div class="p"><em class="cg"><span>⌃</span><span>D</span></em><span>右の1文字を削除</span></div></div></div>
+<div class="sec sB"><b>B</b>アプリ・ウィンドウ・システム</div>
+<div class="card cB"><div class="ct"><i class="ic">🪟</i>アプリ・ウィンドウ</div><div class="kv"><div class="m"><em class="cg"><span>⌘</span><span>⇥</span></em><span>アプリ切替</span></div><div class="m"><em class="cg"><span>⌘</span><span>Q</span></em><span>アプリを終了</span></div><div class="m"><em class="cg"><span>⌘</span><span>W</span></em><span>ウインドウを閉じる</span></div><div class="m"><em class="cg"><span>⌥</span><span>⌘</span><span>⎋</span></em><span>強制終了</span></div><div><em class="cg"><span>⌘</span><span>M</span></em><span>最小化</span></div><div><em class="cg"><span>⌘</span><span>H</span></em><span>アプリを隠す</span></div><div><em class="cg"><span>⌥</span><span>⌘</span><span>H</span></em><span>ほかを隠す</span></div><div><em class="cg"><span>⌘</span><span>`</span></em><span>同アプリのウインドウ切替</span></div><div><em class="cg"><span>⌘</span><span>,</span></em><span>設定を開く(旧: 環境設定)</span></div><div><em class="cg"><span>⌃</span><span>⌘</span><span>F</span></em><span>フルスクリーン</span></div><div class="p"><em class="cg"><span>⌥</span><span>⌘</span><span>W</span></em><span>すべて閉じる</span></div><div class="p"><em class="cg"><span>⌥</span><span>⌘</span><span>D</span></em><span>Dockの表示切替</span></div></div></div>
+<div class="card cB"><div class="ct"><i class="ic">🖥️</i>Mission Control・システム</div><div class="kv"><div class="m"><em class="cg"><span>⌘</span><span>Space</span></em><span>Spotlight検索</span></div><div><em class="cg"><span>⌃</span><span>↑</span></em><span>Mission Control</span></div><div><em class="cg"><span>⌃</span><span>↓</span></em><span>アプリのウインドウ一覧</span></div><div><em class="cg"><span>⌃</span><span>←</span><span>→</span></em><span>デスクトップ左右切替</span></div><div><em class="cg"><span>🌐</span><span>F11</span></em><span>デスクトップを表示</span></div><div><em class="cg"><span>⌃</span><span>⌘</span><span>Space</span></em><span>絵文字と記号</span></div><div><em class="cg"><span>⌃</span><span>⌘</span><span>Q</span></em><span>画面ロック</span></div><div><em class="cg"><span>🌐</span><span>N</span></em><span>通知センター</span></div><div><em class="cg"><span>🌐</span><span>C</span></em><span>コントロールセンター</span></div><div class="p"><em class="cg"><span>🌐</span><span>⌃</span><span>←</span><span>→</span></em><span>ウインドウタイル配置(Sequoia~)</span></div></div><div class="cd">⚠ 上段のファンクションキー(<code>F11</code> など)は、ノートPCでは <code>🌐</code> を押しながらでないと働かないことがある。</div><div class="cd"><code>⌘</code><code>Space</code> →「アプリ」ビューでインストール済みアプリを一覧できる(macOS 26 Tahoe 以降。Launchpad の置き換え)。</div></div>
+<div class="card cB"><div class="ct"><i class="ic">🛟</i>起動・トラブル対応</div><div class="kv"><div class="m"><em class="cg"><span>⌥</span><span>⌘</span><span>⎋</span></em><span>強制終了ウインドウ</span></div><div><em class="cg">電源ボタン長押し</em><span>スリープ解除/電源メニュー</span></div><div class="p"><em class="cg"><span>⌃</span><span>⌘</span>+電源</em><span>強制再起動</span></div><div class="p"><em class="cg">電源オフ→電源ボタン長押し</em><span>起動オプション(復旧・起動ディスク・セーフモード)</span></div></div><div class="cd">macOS 27 は Apple Silicon 専用。復旧・起動ディスク選択・セーフモードはすべて上の「起動オプション」画面から選ぶ。</div></div>
+<div class="sec sC"><b>C</b>Finder・スクリーンショット</div>
+<div class="card cC"><div class="ct"><i class="ic">📁</i>Finder(ファイル操作)</div><div class="kv"><div class="m"><em class="cg"><span>Space</span></em><span>クイックルック</span></div><div class="m"><em class="cg"><span>⌘</span><span>⌫</span></em><span>ゴミ箱へ移動</span></div><div><em class="cg"><span>⇧</span><span>⌘</span><span>N</span></em><span>新規フォルダ</span></div><div><em class="cg"><span>↩</span></em><span>名前を変更</span></div><div><em class="cg"><span>⌘</span><span>I</span></em><span>情報を見る</span></div><div><em class="cg"><span>⌘</span><span>D</span></em><span>複製</span></div><div class="p"><em class="cg"><span>⇧</span><span>⌘</span><span>⌫</span></em><span>ゴミ箱を空にする</span></div><div class="p"><em class="cg"><span>⌥</span> / <span>⌥</span><span>⌘</span></em><span>ドラッグ中コピー / エイリアス</span></div><div class="p"><em class="cg"><span>⌥</span><span>⌘</span><span>C</span></em><span>パスをコピー</span></div></div></div>
+<div class="card cC"><div class="ct"><i class="ic">📁</i>Finder(移動・表示)</div><div class="kv"><div><em class="cg"><span>⌘</span><span>↓</span> / <span>↑</span></em><span>開く / 上の階層へ</span></div><div><em class="cg"><span>⇧</span><span>⌘</span><span>G</span></em><span>フォルダへ移動</span></div><div><em class="cg"><span>⇧</span><span>⌘</span><span>.</span></em><span>隠しファイル表示切替</span></div><div><em class="cg"><span>⌘</span><span>1</span>〜<span>4</span></em><span>表示 アイコン/リスト/カラム/ギャラリー</span></div><div><em class="cg"><span>⇧</span><span>⌘</span><span>H</span> / <span>D</span></em><span>ホーム / デスクトップ</span></div><div><em class="cg"><span>⇧</span><span>⌘</span><span>A</span></em><span>アプリケーション</span></div></div></div>
+<div class="card cC"><div class="ct"><i class="ic">📸</i>スクリーンショット</div><div class="kv"><div class="m"><em class="cg"><span>⇧</span><span>⌘</span><span>4</span></em><span>範囲を指定して撮影</span></div><div><em class="cg"><span>⇧</span><span>⌘</span><span>3</span></em><span>画面全体</span></div><div><em class="cg"><span>⇧</span><span>⌘</span><span>5</span></em><span>撮影ツール(録画も可)</span></div><div><em class="cg"><span>Space</span></em><span>ウインドウ単位(4の後に)</span></div><div><em class="cg"><span>⌃</span></em><span>クリップボードへ(追加で)</span></div></div><div class="cd">保存先は ⇧⌘5 → オプションで変更できます。</div></div>
+<div class="sec sD"><b>D</b>日本語入力・アクセシビリティ</div>
+<div class="card cD"><div class="ct"><i class="ic">あ</i>日本語入力</div><div class="kv"><div class="m"><em class="cg"><span>英数</span> / <span>かな</span></em><span>英数 / かな 切替</span></div><div><em class="cg"><span>F6</span></em><span>ひらがなに変換(変換中)</span></div><div><em class="cg"><span>F7</span></em><span>全角カタカナに変換</span></div><div><em class="cg"><span>F8</span></em><span>半角カタカナに変換</span></div><div><em class="cg"><span>F9</span></em><span>全角英数に変換</span></div><div><em class="cg"><span>F10</span></em><span>半角英数に変換</span></div><div><em class="cg"><span>⌃</span><span>Space</span></em><span>入力ソース切替</span></div></div><div class="cd">⚠ F6〜F10 はノートPCでは <code>🌐</code> 併用が必要な場合あり。</div></div>
+<div class="card cD"><div class="ct"><i class="ic">♿</i>アクセシビリティ・ヘルプ</div><div class="kv"><div><em class="cg"><span>⇧</span><span>⌘</span><span>/</span></em><span>ヘルプメニュー検索</span></div><div><em class="cg"><span>⌥</span><span>⌘</span><span>F5</span></em><span>アクセシビリティ設定(機種により <code>🌐</code> 併用)</span></div></div></div>
+<div class="sec sE"><b>E</b>ブラウザ</div>
+<div class="card cE"><div class="ct"><i class="ic">🌐</i>ブラウザ(Safari / Chrome)</div><div class="kv"><div class="m"><em class="cg"><span>⌘</span><span>T</span></em><span>新規タブ</span></div><div class="m"><em class="cg"><span>⌘</span><span>W</span></em><span>タブを閉じる</span></div><div class="m"><em class="cg"><span>⇧</span><span>⌘</span><span>T</span></em><span>閉じたタブを復元</span></div><div><em class="cg"><span>⌘</span><span>L</span></em><span>アドレスバーへ</span></div><div><em class="cg"><span>⌘</span><span>R</span></em><span>再読み込み</span></div><div><em class="cg"><span>⌘</span><span>[</span> / <span>]</span></em><span>戻る / 進む</span></div><div><em class="cg"><span>⌃</span><span>⇥</span> / <span>⇧</span><span>⌃</span><span>⇥</span></em><span>タブ切替(次/前)</span></div><div><em class="cg"><span>⌘</span><span>1</span>〜<span>9</span></em><span>n番目のタブへ</span></div><div><em class="cg"><span>⇧</span><span>⌘</span><span>N</span></em><span>プライベートウインドウ</span></div><div class="p"><em class="cg"><span>⌥</span><span>⌘</span><span>I</span></em><span>開発者ツール</span></div></div></div>
+</div>
+<div class="foot"><span><b class="st">［まず持ち歩く］1枚目</b> 毎日使う基本操作 ／ macOS 26 Tahoe / 27 Golden Gate 対応 ／ ⌘ = Command　⌥ = Option　⌃ = Control　⇧ = Shift　⌫ = Delete　↩ = Return</span><span>1 / 3</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>macOS トラックパッド・ターミナル</b><span>ジェスチャ / キー操作 / 基本コマンド ／ ★ 定番　グレー 上級者向け　⚠ 間違えやすい点</span></div><div class="legend"><span class="lg lgA"><i></i>A 基本操作</span><span class="lg lgB"><i></i>B アプリ・ウィンドウ</span><span class="lg lgC"><i></i>C Finder・スクショ</span><span class="lg lgD"><i></i>D 日本語入力・支援</span><span class="lg lgE"><i></i>E ブラウザ</span><span class="lg lgF"><i></i>F トラックパッド</span><span class="lg lgG"><i></i>G ターミナル</span><span class="lg lgH"><i></i>H 記号</span><span class="lg lgI"><i></i>I インストール</span></div></div>
+<div class="grid">
+<div class="sec sF"><b>F</b>トラックパッド</div>
+<div class="card cF"><div class="ct"><i class="ic">👆</i>トラックパッドジェスチャ(1〜2本指)</div><div class="kv"><div class="m"><em class="cg">1本指タップ</em><span>クリック</span></div><div class="m"><em class="cg">2本指タップ / <span>⌃</span>+クリック</em><span>副ボタン(右クリック)</span></div><div class="m"><em class="cg">2本指スクロール</em><span>スクロール</span></div><div><em class="cg">2本指ピンチ</em><span>拡大・縮小</span></div><div><em class="cg">2本指ダブルタップ</em><span>スマートズーム</span></div><div><em class="cg">2本指で回転</em><span>画像などの回転</span></div><div><em class="cg">2本指で左右スワイプ</em><span>ページ戻る・進む(ブラウザ)</span></div><div><em class="cg">右端から2本指スワイプ</em><span>通知センター</span></div></div><div class="cd">設定: システム設定 → トラックパッド</div></div>
+<div class="card cF"><div class="ct"><i class="ic">👆</i>トラックパッドジェスチャ(3本指以上)</div><div class="kv"><div><em class="cg">3本指タップ</em><span>調べる(辞書・プレビュー)</span></div><div><em class="cg">3/4本指で上スワイプ</em><span>Mission Control</span></div><div><em class="cg">3/4本指で下スワイプ</em><span>App Exposé</span></div><div><em class="cg">3/4本指で左右スワイプ</em><span>フルスクリーンアプリ切替</span></div><div><em class="cg">親指+3本指でピンチイン</em><span>アプリ(旧 Launchpad)</span></div><div><em class="cg">親指+3本指でピンチアウト</em><span>デスクトップを表示</span></div><div class="p"><em class="cg">強めに押し込む</em><span>クイックルック・調べる</span></div><div class="p"><em class="cg">3本指ドラッグ(要設定)</em><span>ウインドウ移動</span></div></div></div>
+<div class="sec sG"><b>G</b>ターミナル</div>
+<div class="card cG"><div class="ct"><i class="ic">⌨️</i>ターミナル(実行・履歴)</div><div class="kv"><div class="m"><em class="cg"><span>⌃</span><span>C</span></em><span>実行中のコマンドを中断</span></div><div class="m"><em class="cg"><span>Tab</span></em><span>補完(ファイル名・コマンド名)</span></div><div class="m"><em class="cg"><span>↑</span> <span>↓</span></em><span>コマンド履歴をたどる</span></div><div><em class="cg"><span>⌃</span><span>D</span></em><span>入力終了(EOF)/ログアウト</span></div><div><em class="cg"><span>⌃</span><span>L</span></em><span>画面クリア(clear)</span></div><div><em class="cg"><span>⌃</span><span>R</span></em><span>履歴をさかのぼって検索</span></div><div class="p"><em class="cg"><span>⌃</span><span>Z</span></em><span>一時停止(fg で再開)</span></div><div class="p"><em class="cg"><span>!!</span></em><span>直前のコマンドを再実行</span></div><div class="p"><em class="cg"><span>cd -</span></em><span>直前のディレクトリへ戻る</span></div></div></div>
+<div class="card cG"><div class="ct"><i class="ic">⌨️</i>ターミナル(行編集・ウインドウ)</div><div class="kv"><div><em class="cg"><span>⌃</span><span>A</span> / <span>E</span></em><span>行頭 / 行末へ移動</span></div><div><em class="cg"><span>⌃</span><span>U</span></em><span>カーソルから行頭まで削除</span></div><div><em class="cg"><span>⌃</span><span>K</span></em><span>カーソルから行末まで削除</span></div><div><em class="cg"><span>⌃</span><span>W</span></em><span>直前の1単語を削除</span></div><div><em class="cg"><span>⌥</span><span>←</span><span>→</span></em><span>単語単位で移動</span></div><div><em class="cg"><span>⌘</span><span>T</span> / <span>N</span></em><span>新規タブ / ウインドウ</span></div><div><em class="cg"><span>⌘</span><span>K</span></em><span>画面と履歴を消去</span></div><div><em class="cg"><span>⌘</span><span>+</span> / <span>-</span></em><span>文字サイズ変更</span></div></div><div class="cd">ターミナルの場所: アプリケーション → ユーティリティ → ターミナル ／ <code>⌘</code><code>Space</code> で「ターミナル」</div></div>
+<div class="card cG"><div class="ct"><i class="ic">📂</i>基本コマンド① 今どこ・何がある・移動する</div><div class="cd"><b class="st">コマンド名 ／ 由来(フルスペル) ／ 用途</b>　書き方は <code>コマンド -オプション 対象</code>。</div><div class="kv"><div class="m"><em class="cg"><span>pwd</span></em><span><b class="st">print working directory</b> 今いる場所(カレントディレクトリ)のパスを表示</span></div><div class="m"><em class="cg"><span>ls</span></em><span><b class="st">list</b> その場所のファイル・フォルダ一覧を表示</span></div><div><em class="cg"><span>ls -l</span></em><span><b class="st">long</b> 1行1件で詳細表示(種類・権限・サイズ・更新日時)</span></div><div><em class="cg"><span>ls -a</span></em><span><b class="st">all</b> <code>.</code> で始まる隠しファイルも表示</span></div><div><em class="cg"><span>ls -lh</span></em><span><b class="st">human readable</b> サイズを <code>4.0K</code> <code>12M</code> のように読みやすく</span></div><div><em class="cg"><span>ls -lt</span> / <span>-ltr</span></em><span><b class="st">time</b> 更新日時順 / <b class="st">reverse</b> を足して古い順</span></div><div><em class="cg"><span>ls -F</span></em><span><b class="st">file type</b> 種類の記号を付ける(<code>/</code> フォルダ <code>*</code> 実行可能)</span></div><div><em class="cg"><span>ls -la</span></em><span>オプションはまとめて書ける(= <code>-l -a</code>)</span></div><div class="m"><em class="cg"><span>cd フォルダ名</span></em><span><b class="st">change directory</b> そのフォルダへ移動</span></div><div class="m"><em class="cg"><span>cd ..</span></em><span>一つ上(親フォルダ)へ。<code>..</code> = 親、<code>.</code> = 現在地</span></div><div><em class="cg"><span>cd ~</span> / <span>cd</span></em><span><b class="st">~</b> = ホーム(自分のフォルダ)。引数なしでも同じ</span></div><div class="p"><em class="cg"><span>cd -</span></em><span>直前にいたディレクトリへ戻る</span></div></div><div class="cd">名前の途中で <code>Tab</code> を押すと補完される。打ち間違い防止に必ず使うこと。</div></div>
+<div class="card cG"><div class="ct"><i class="ic">🗂️</i>基本コマンド② 作る・コピー・移動・消す</div><div class="kv"><div class="m"><em class="cg"><span>mkdir 名前</span></em><span><b class="st">make directory</b> フォルダを作る</span></div><div><em class="cg"><span>mkdir -p a/b/c</span></em><span><b class="st">parents</b> 途中の階層もまとめて作る</span></div><div><em class="cg"><span>touch 名前</span></em><span>空のファイルを作る(既存なら更新日時だけ変える)</span></div><div class="m"><em class="cg"><span>cp 元 先</span></em><span><b class="st">copy</b> ファイルをコピー</span></div><div><em class="cg"><span>cp -r 元 先</span></em><span><b class="st">recursive</b> フォルダを中身ごとコピー</span></div><div class="m"><em class="cg"><span>mv 元 先</span></em><span><b class="st">move</b> 移動。<code>mv a.c b.c</code> で名前の変更にもなる</span></div><div class="m"><em class="cg"><span>rm ファイル</span></em><span><b class="st">remove</b> 削除。ゴミ箱に入らず<b class="st">その場で消える</b></span></div><div><em class="cg"><span>rm -r フォルダ</span></em><span><b class="st">recursive</b> フォルダを中身ごと削除</span></div><div><em class="cg"><span>rm -i</span></em><span><b class="st">interactive</b> 1件ずつ確認してから削除(安全)</span></div><div><em class="cg"><span>rmdir 名前</span></em><span><b class="st">remove directory</b> 空のフォルダだけ削除</span></div><div class="m"><em class="cg"><span>cat ファイル</span></em><span><b class="st">concatenate</b> 中身を画面に流して表示</span></div><div><em class="cg"><span>less ファイル</span></em><span>長いファイルを1画面ずつ読む(<code>q</code> で終了)</span></div></div><div class="cd">⚠ <code>rm</code> に取り消しは無い。消す前に <code>ls</code> で確認し、<code>*</code> を使う指定は特に慎重に。</div></div>
+<div class="card cG"><div class="ct"><i class="ic">🍎</i>macOS のコマンド・システム情報</div><div class="kv"><div class="m"><em class="cg"><span>open .</span></em><span>今いる場所を Finder で開く(<code>.</code> = 現在地)</span></div><div><em class="cg"><span>open ファイル</span></em><span>標準のアプリでそのファイルを開く</span></div><div><em class="cg"><span>open -a Safari</span></em><span><b class="st">application</b> アプリを指定して開く</span></div><div><em class="cg"><span>pbcopy</span></em><span><b class="st">pasteboard copy</b> 出力をコピー <code>cat a.c | pbcopy</code></span></div><div><em class="cg"><span>pbpaste</span></em><span><b class="st">pasteboard paste</b> クリップボードの中身を出力</span></div><div><em class="cg"><span>say こんにちは</span></em><span>テキストを読み上げる</span></div><div class="m"><em class="cg"><span>ps</span></em><span><b class="st">process status</b> 実行中のプロセスを表示</span></div><div><em class="cg"><span>top</span></em><span>負荷の高い順にプロセスを表示(<code>q</code> で終了)</span></div><div><em class="cg"><span>whoami</span> / <span>who</span></em><span>自分のユーザ名 / ログイン中のユーザー一覧</span></div><div><em class="cg"><span>hostname</span></em><span>この Mac の名前を表示</span></div><div><em class="cg"><span>uname -a</span></em><span><b class="st">unix name</b> OS・カーネルの情報</span></div><div><em class="cg"><span>vm_stat</span></em><span>メモリの使用状況。Linux の <code>free</code> は macOS に<b class="st">無い</b></span></div><div><em class="cg"><span>df -h</span> / <span>du -sh .</span></em><span>ディスクの空き / このフォルダの使用量</span></div><div class="m"><em class="cg"><span>man コマンド名</span></em><span><b class="st">manual</b> そのコマンドの説明書(<code>q</code> で終了)</span></div></div><div class="cd"><b class="st">Finder ⇄ ターミナル</b> <code>cd</code> と半角スペースまで打ってから Finder のフォルダを<b class="st">ドラッグ&amp;ドロップ</b>するとパスが入る。逆は <code>open .</code> で現在地を Finder で開く。Finder の右クリック →「フォルダに新規ターミナル」も使える(サービス設定で有効化)。</div></div>
+<div class="card cG"><div class="ct"><i class="ic">🛠️</i>① Xcode Command Line Tools(C言語の最初の一歩)</div><div class="cc"><i class="cm"># gcc / git / make などが入る</i>
+xcode-select --install
+<i class="cm"># 確認</i>
+xcode-select -p
+gcc --version
+<i class="cm"># コンパイルと実行</i>
+gcc hello.c -o hello
+./hello</div><div class="cd">ダイアログで「インストール」→ 完了まで数分〜。Xcode 本体は不要。</div><div class="cd">🔑 途中で<b class="st">管理者のパスワード</b>(Mac のログインパスワード)を求められたら入力。ターミナルでは入力中の文字が<b class="st">表示されない</b>が正常。入力後 <code>↩</code>。</div></div>
+<div class="card cG"><div class="ct">② うまくいかないとき</div><div class="cc">command not found  → ターミナルを開き直す
+echo $PATH         <i class="cm"># PATH を確認</i>
+sudo xcode-select --reset</div><div class="cd">アップデート後に動かなくなったら ① を再実行。</div></div>
+</div>
+<div class="foot"><span><b class="st">［参照用］2枚目</b> ターミナルで手が止まったとき ／ ターミナルの場所: アプリケーション → ユーティリティ → ターミナル ／ コマンドは「コマンド -オプション 対象」の形で書く ／ <code>Tab</code> 補完と <code>man</code> を使うこと</span><span>2 / 3</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>macOS 記号・アプリのインストール</b><span>記号の読み方と入力 / アプリの入手 ／ ★ 定番　グレー 上級者向け　⚠ 間違えやすい点</span></div><div class="legend"><span class="lg lgA"><i></i>A 基本操作</span><span class="lg lgB"><i></i>B アプリ・ウィンドウ</span><span class="lg lgC"><i></i>C Finder・スクショ</span><span class="lg lgD"><i></i>D 日本語入力・支援</span><span class="lg lgE"><i></i>E ブラウザ</span><span class="lg lgF"><i></i>F トラックパッド</span><span class="lg lgG"><i></i>G ターミナル</span><span class="lg lgH"><i></i>H 記号</span><span class="lg lgI"><i></i>I インストール</span></div></div>
+<div class="grid">
+<div class="sec sG"><b>G</b>ターミナル（続き）</div>
+<div class="card cG"><div class="ct"><i class="ic">🔌</i>基本コマンド③ プロセスとポートを調べる・止める</div><div class="cd"><b class="st">PID</b> = 実行中のプログラム(プロセス)ごとの番号。止めるときはこの番号で指定する。</div><div class="kv"><div class="m"><em class="cg"><span>ps</span></em><span><b class="st">process status</b> 自分が端末で動かすプロセスと PID</span></div><div class="m"><em class="cg"><span>ps aux | grep 名前</span></em><span>全プロセスから探す。2列目が PID</span></div><div class="m"><em class="cg"><span>kill PID</span></em><span>終了を頼む。まずこれ</span></div><div><em class="cg"><span>kill -9 PID</span></em><span><b class="st">SIGKILL</b> 後片付けさせず強制終了。<code>kill</code> で止まらないときだけ</span></div></div><div class="cc"><i class="cm"># address already in use と出たら</i>
+lsof -nP -iTCP:3000 -sTCP:LISTEN
+COMMAND  PID ... NAME
+node   12345 ... *:3000 (LISTEN)
+kill 12345  <i class="cm"># 再びlsofで空なら解放</i></div><div class="cd"><b class="st">lsof</b> = <b class="st">list open files</b>。<code>-n</code><code>-P</code> は IP・ポートを番号で表示(無いと 3000 が <code>hbci</code> と出る)。<code>-sTCP:LISTEN</code> でサーバ側に絞る。</div><div class="cd">⚠ 何も出ないのに使えないときは <code>sudo lsof …</code>。root など他ユーザーのプロセスは sudo なしでは見えない。</div></div>
+<div class="sec sH"><b>H</b>記号</div>
+<div class="card cH"><div class="ct"><i class="ic">＃</i>コンピュータで使用する主な記号 (1)</div><div class="cd">記号 ／ 読み方 ／ 主な用途 ／ 入力(JISキー)</div><div class="kv"><div><em class="cg"><span>~</span></em><span><b class="st">チルダ</b> ホームディレクトリ ／ <code>⇧</code><code>^</code></span></div><div><em class="cg"><span>/</span></em><span><b class="st">スラッシュ</b> パス区切り・除算・コメント <code>//</code> ／ <code>/</code></span></div><div><em class="cg"><span>\</span></em><span><b class="st">バックスラッシュ</b> エスケープ <code>\n</code> ／ <code>⌥</code><code>¥</code></span></div><div><em class="cg"><span>|</span></em><span><b class="st">パイプ</b> コマンド連結・論理和 <code>||</code> ／ <code>⇧</code><code>¥</code></span></div><div><em class="cg"><span>&gt; &lt;</span></em><span><b class="st">大なり・小なり</b> リダイレクト・比較 ／ <code>⇧</code><code>.</code> <code>⇧</code><code>,</code></span></div><div><em class="cg"><span>&amp;</span></em><span><b class="st">アンパサンド</b> アドレス取得・論理積 <code>&amp;&amp;</code> ／ <code>⇧</code><code>6</code></span></div><div><em class="cg"><span>*</span></em><span><b class="st">アスタリスク</b> ポインタ・乗算・ワイルドカード ／ <code>⇧</code><code>:</code></span></div><div><em class="cg"><span>#</span></em><span><b class="st">シャープ</b> <code>#include</code>・コメント(シェル) ／ <code>⇧</code><code>3</code></span></div><div><em class="cg"><span>$</span></em><span><b class="st">ドル</b> 変数展開・プロンプト ／ <code>⇧</code><code>4</code></span></div><div><em class="cg"><span>%</span></em><span><b class="st">パーセント</b> 剰余・<code>printf</code> 書式 ／ <code>⇧</code><code>5</code></span></div></div></div>
+<div class="card cH"><div class="ct"><i class="ic">＃</i>コンピュータで使用する主な記号 (2)</div><div class="kv"><div><em class="cg"><span>!</span></em><span><b class="st">エクスクラメーション</b> 否定・履歴展開 ／ <code>⇧</code><code>1</code></span></div><div><em class="cg"><span>=</span></em><span><b class="st">イコール</b> 代入(<code>==</code> は比較) ／ <code>⇧</code><code>-</code></span></div><div><em class="cg"><span>+</span></em><span><b class="st">プラス</b> 加算・インクリメント <code>++</code> ／ <code>⇧</code><code>;</code></span></div><div><em class="cg"><span>-</span></em><span><b class="st">ハイフン</b> 減算・オプション指定 ／ <code>-</code></span></div><div><em class="cg"><span>_</span></em><span><b class="st">アンダースコア</b> 変数名・関数名 ／ <code>⇧</code><code>ろ</code></span></div><div><em class="cg"><span>^</span></em><span><b class="st">キャレット</b> ビット排他的論理和 ／ <code>^</code></span></div><div><em class="cg"><span>&quot;</span></em><span><b class="st">ダブルクォート</b> 文字列 ／ <code>⇧</code><code>2</code></span></div><div><em class="cg"><span>'</span></em><span><b class="st">シングルクォート</b> 文字 <code>'a'</code> ／ <code>⇧</code><code>7</code></span></div></div></div>
+<div class="card cH"><div class="ct"><i class="ic">＃</i>コンピュータで使用する主な記号 (3)</div><div class="kv"><div><em class="cg"><span>`</span></em><span><b class="st">バッククォート</b> コマンド置換 ／ <code>⇧</code><code>@</code></span></div><div><em class="cg"><span>( )</span></em><span><b class="st">丸括弧</b> 関数呼び出し・優先順位 ／ <code>⇧</code><code>8</code> <code>⇧</code><code>9</code></span></div><div><em class="cg"><span>{ }</span></em><span><b class="st">波括弧</b> ブロック・配列初期化 ／ <code>⇧</code><code>[</code> <code>⇧</code><code>]</code></span></div><div><em class="cg"><span>[ ]</span></em><span><b class="st">角括弧</b> 配列の添字 ／ <code>[</code> <code>]</code></span></div><div><em class="cg"><span>;</span></em><span><b class="st">セミコロン</b> C言語の文末 ／ <code>;</code></span></div><div><em class="cg"><span>:</span></em><span><b class="st">コロン</b> 三項演算子・ラベル ／ <code>:</code></span></div><div><em class="cg"><span>?</span></em><span><b class="st">クエスチョン</b> 三項演算子・1文字ワイルドカード ／ <code>⇧</code><code>/</code></span></div><div><em class="cg"><span>.</span></em><span><b class="st">ドット</b> 現在のディレクトリ・メンバ参照 ／ <code>.</code></span></div></div><div class="cd">英数(半角)モードで入力。全角になる場合は <code>英数</code> で切替。</div><div class="cd">⚠ <b class="st">全角スペース・全角記号が混ざると、見た目は正しいのにエラーになる。</b> 画面上では半角と見分けがつきにくい。</div><div class="cd">⚠ <code>command not found</code> や意味の分からないコンパイルエラーが出たら、まず全角が混じっていないか疑うこと。</div></div>
+<div class="sec sI"><b>I</b>アプリのインストール</div>
+<div class="card cI"><div class="ct">🛍️ Mac App Store<i class="sm">最も手軽・安全</i></div><div class="cd">Apple の審査済みアプリ。自動アップデート対応。</div><ol class="cl"><li>App Store を開き Apple Account でサインイン</li><li>アプリを検索 →「入手」/ 価格ボタン →「インストール」</li><li>Spotlight(<code>⌘</code><code>Space</code>)/ アプリケーションフォルダから起動</li></ol><div class="cd"><b class="st">👍 長所</b> 安全・更新が自動・購入履歴で再DL</div><div class="cd"><b class="st">👎 短所</b> サンドボックスで機能制限あり・掲載外のアプリあり</div><div class="cd">削除: Finder の「アプリケーション」フォルダからゴミ箱へ</div></div>
+<div class="card cI"><div class="ct">💿 DMG(ディスクイメージ)<i class="sm">最も一般的</i></div><div class="cd">公式サイトからダウンロードする <code>.dmg</code>。中に .app が入っている。</div><ol class="cl"><li><code>.dmg</code> をダブルクリックしてマウント</li><li>開いたウインドウで <b class="st">アプリを「Applications」へドラッグ&amp;ドロップ</b></li><li>Finder サイドバーでディスクイメージの <b class="st">⏏</b> を押して取り出す</li><li>.dmg ファイルはゴミ箱へ(不要なら)</li></ol><div class="cd"><b class="st">👍 長所</b> 操作が直感的・管理者権限が不要なことが多い</div><div class="cd"><b class="st">👎 短所</b> 更新は手動(アプリ内更新があれば自動)</div><div class="cd">削除: Applications からゴミ箱へ。設定は <code>~/Library</code> に残る場合あり</div></div>
+<div class="card cI"><div class="ct">📦 pkg(インストーラ)<i class="sm">システム変更あり</i></div><div class="cd">ウィザード形式の <code>.pkg</code>。複数ファイル・ドライバ・ヘルパー等を配置する。</div><ol class="cl"><li><code>.pkg</code> をダブルクリック</li><li>「続ける」で使用許諾 → インストール先を選択</li><li>Touch ID / パスワードで管理者認証</li><li>完了後、インストーラはゴミ箱へ</li></ol><div class="cc"><i class="cm"># ターミナルから</i>
+sudo installer -pkg app.pkg -target /</div><div class="cd">削除: .app 削除だけでは不完全なことが多い → 公式アンインストーラを使う / <code>pkgutil --files &lt;id&gt;</code> で確認</div></div>
+<div class="card cI"><div class="ct">🍺 Homebrew<i class="sm">開発者向け定番</i></div><div class="cd">コマンドでアプリ・CLIツールを一括管理。<code>brew.sh</code> の手順で導入。</div><div class="cc"><i class="cm"># GUIアプリ(Cask)</i>
+brew install --cask google-chrome
+<i class="cm"># CLIツール(Formula)</i>
+brew install git wget
+brew search keyword     <i class="cm"># 検索</i>
+brew list               <i class="cm"># 一覧</i>
+brew update &amp;&amp; brew upgrade   <i class="cm"># 更新</i>
+brew uninstall wget     <i class="cm"># 削除</i>
+brew uninstall --cask --zap app <i class="cm"># 設定も削除</i>
+brew bundle dump        <i class="cm"># Brewfile に書き出し</i></div><div class="cd"><b class="st">👍 長所</b> 再現しやすい・一括更新・Brewfileで環境複製</div><div class="cd"><b class="st">👎 短所</b> 初回に導入作業が必要・CLIに慣れが必要</div></div>
+<div class="card cI"><div class="ct">🗜️ ZIP / .app 直接配置<i class="sm">シンプル</i></div><div class="cd"><code>.zip</code> を展開すると <code>.app</code> が出てくる形式。</div><ol class="cl"><li>ZIP をダブルクリックで展開(自動で .app が出現)</li><li><b class="st">.app を「アプリケーション」フォルダへ移動</b></li><li>初回は一度起動を試み、警告を閉じる → <b class="st">システム設定 → プライバシーとセキュリティ →「このまま開く」</b>(🔒 の欄を参照)</li></ol><div class="cd">ダウンロードフォルダのまま起動すると自動更新・権限付与が失敗することがある。必ず Applications へ。</div></div>
+<div class="card cI"><div class="ct">🧰 その他のメジャーな方法</div><ul class="cl b"><li><b class="st">公式インストーラスクリプト</b>: <code>curl -fsSL URL | sh</code>(例: Homebrew, rustup)⚠ 取得したスクリプトの<b class="st">中身を確認してから</b>実行する</li><li><b class="st">言語ごとのパッケージ管理</b>: <code>pip</code> / <code>npm</code> / <code>cargo</code> / <code>gem</code> など、その言語用のライブラリ・ツールを入れる仕組み</li></ul></div>
+<div class="card cI"><div class="ct"><i class="ic">📊</i>インストール方法の比較</div><div class="cd">方法 ／ おすすめの場面 ／ 更新 ／ 管理者権限 ／ 削除のしやすさ</div><div class="kv"><div><em class="cg"><span>App Store</span></em><span>まず探す場所。安全重視 ／ 更新: 自動 ／ 管理者権限: 不要 ／ 削除: ◎ 簡単</span></div><div><em class="cg"><span>DMG / ZIP</span></em><span>公式サイト配布の普通のアプリ ／ 更新: アプリ依存 ／ 管理者権限: 不要が多い ／ 削除: ○ ゴミ箱へ</span></div><div><em class="cg"><span>pkg</span></em><span>ドライバ・業務ソフト・ヘルパー付き ／ 更新: アプリ依存 ／ 管理者権限: 必要 ／ 削除: △ 専用アンインストーラ推奨</span></div><div><em class="cg"><span>Homebrew</span></em><span>開発ツール・環境の再現・一括更新 ／ 更新: <code>brew upgrade</code> ／ 管理者権限: 初回のみ ／ 削除: ◎ コマンド一発</span></div></div></div>
+<div class="card cI"><div class="ct">🔒 「開発元を検証できません」と表示されたら<i class="sm">Gatekeeper</i></div><div class="cd">信頼できる配布元か確認したうえで、<b class="st">システム設定 → プライバシーとセキュリティ →「このまま開く」</b> を押します。</div><div class="cc">xattr -dr com.apple.quarantine /Applications/Foo.app</div><div class="cd">⚠ 隔離属性は上のコマンドで外せますが、出所が確かな場合のみ使ってください。ダウンロード元は公式サイト・App Store・信頼できる Homebrew を基本にしましょう。</div><div class="cd">不明な提供元のアプリは避ける。</div></div>
+</div>
+<div class="foot"><span><b class="st">［参照用］3枚目</b> 記号とアプリ導入で迷ったとき ／ 配布形式ごとの手順・向き不向き・アンインストール方法 ／ 記号は英数(半角)モードで入力する</span><span>3 / 3</span></div>
+</div>
+</body>
+</html>

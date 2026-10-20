@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[ライト] C言語チートシート(macOS / gcc)</title>
+<meta name="description" content="授業で扱うC言語の文法・コンパイル・ポインタ・メモリ・開発手法をまとめたA4横3ページのチートシート(ライトモード)。">
+<style>
+:root{
+  --cA: #1a4fa0;
+  --cB: #6b3fa0;
+  --cC: #1f7a3f;
+  --cD: #b07500;
+  --cE: #6d8c1f;
+  --cF: #c0272d;
+  --cG: #d2691e;
+  --cH: #0f7b7b;
+  --ink:#1a1a1a; --sub:#3f3f3f; --dim:#8a8a8a; --line:#d5d5d5; --codebg:#f4f4f4;
+  --star:#b8860b; --warn:#8a4b08; --cmt:#2e7d4f;
+  --mono:"SFMono-Regular","SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{background:#8f8f8f;
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  color:var(--ink);}
+@page{size:A4 landscape;margin:7mm}
+
+.page{
+  width:283mm;height:196mm;background:#fff;
+  margin:6mm auto;display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.45);
+}
+.grid{
+  flex:1 1 auto;min-height:0;overflow:hidden;
+  column-count:5;column-gap:2.0mm;column-fill:balance;
+}
+
+/* ヘッダ帯と凡例 */
+.head{display:flex;align-items:flex-end;gap:3mm;border-bottom:1.36pt solid #333;
+  padding:0 0 1.0mm;margin-bottom:1.3mm;flex:0 0 auto}
+.ttl{white-space:nowrap}
+.ttl b{font-size:14.92pt;letter-spacing:.02em}
+.ttl span{font-size:7.59pt;color:var(--sub);margin-left:2mm}
+.head.slim .ttl b{font-size:11.53pt}
+.legend{display:flex;flex-wrap:wrap;gap:0 2.2mm;flex:1 1 auto;justify-content:flex-end}
+.lg{font-size:7.46pt;color:#222;white-space:nowrap;display:inline-flex;align-items:center}
+.lg i{display:inline-block;width:6.10pt;height:6.10pt;border-radius:1.13pt;margin-right:.7mm}
+.lg b{margin-right:.6mm}
+.lg.mk b{color:var(--star)} .lg.wn b{color:var(--warn)}
+
+/* カテゴリ帯 */
+.sec{break-inside:avoid;-webkit-column-break-inside:avoid;
+  break-after:avoid;-webkit-column-break-after:avoid;
+  color:#fff;font-size:8.41pt;font-weight:700;line-height:1.25;
+  padding:.55mm 1.1mm;border-radius:.6mm;margin:0 0 .8mm;}
+.sec b{display:inline-block;background:rgba(255,255,255,.3);border-radius:.5mm;
+  padding:0 .8mm;margin-right:1mm}
+
+/* カード */
+.card{break-inside:avoid;-webkit-column-break-inside:avoid;
+  border:0.45pt solid var(--line);border-top:1.92pt solid #999;border-radius:.6mm;
+  padding:.5mm .9mm .8mm;margin:0 0 .95mm;background:#fff;}
+.ct{font-size:8.00pt;font-weight:700;line-height:1.2;
+  margin:-.5mm -.9mm .6mm;padding:.5mm .9mm .45mm}
+.cc{font-family:var(--mono);font-size:7.19pt;line-height:1.32;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  background:var(--codebg);border-left:1.02pt solid #c6c6c6;
+  padding:.45mm .8mm;border-radius:.4mm;margin-bottom:.55mm;}
+.cc .cm{color:var(--cmt)}
+.cg{display:flex;flex-wrap:wrap;gap:.4mm;margin-bottom:.55mm}
+.cd{font-size:7.05pt;line-height:1.35;color:var(--sub)}
+
+/* キー＋説明の行(C言語版で追加) */
+.kv{margin-bottom:.55mm}
+.kv>div{display:flex;align-items:baseline;gap:1.0mm;padding:.15mm 0;
+  font-size:7.05pt;line-height:1.35;color:var(--sub)}
+.kv>div+div{border-top:0.34pt solid #ededed}
+.kv>div>span{min-width:0;overflow-wrap:anywhere}
+.cg span,.kv b{font-family:var(--mono);font-size:6.92pt;
+  background:var(--codebg);border:0.34pt solid #dedede;border-radius:.4mm;
+  padding:0 .55mm;color:var(--ink);font-weight:400}
+.cg span{line-height:1.3;white-space:nowrap}
+.kv b{flex:0 0 auto;max-width:56%;overflow-wrap:anywhere}
+.kv>div.m b::before{content:"★";color:var(--star);margin-right:.5mm}
+.kv>div.p>span{color:var(--dim)}
+.lg.ad b{color:var(--dim)}
+
+/* ⚠ 間違えやすい点(C言語版で追加) */
+.cw{font-size:7.05pt;line-height:1.35;color:var(--warn);
+  background:#fdf5e8;border-left:1.02pt solid #e0b263;
+  padding:.4mm .8mm;border-radius:.4mm;margin-bottom:.55mm}
+.cw::before{content:"⚠ "}
+
+/* 一覧表(C言語版で追加) */
+.tb{width:100%;border-collapse:collapse;font-size:6.92pt;line-height:1.3;margin-bottom:.55mm}
+.tb th{text-align:left;font-weight:700;color:var(--ink);background:var(--codebg);
+  padding:.25mm .6mm;border-bottom:0.45pt solid #c6c6c6;white-space:nowrap}
+.tb td{padding:.2mm .6mm;border-top:0.34pt solid #ededed;color:var(--sub);vertical-align:top}
+.tb td.f{white-space:nowrap}
+
+/* 説明文の中の等幅 */
+.cd code,.kv code,.tb code,.cw code{font-family:var(--mono);font-size:.95em;
+  background:var(--codebg);border-radius:.3mm;padding:0 .3mm;overflow-wrap:anywhere}
+
+/* 柱 */
+.foot{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:3mm;
+  border-top:0.56pt solid #bbb;margin-top:1.1mm;padding-top:.7mm;
+  font-size:7.05pt;color:#666}
+
+.cA{border-top-color:var(--cA)} .cA>.ct{color:var(--cA);background:color-mix(in srgb,var(--cA) 9%,#fff)} .sA{background:var(--cA)} .lgA i{background:var(--cA)}
+.cB{border-top-color:var(--cB)} .cB>.ct{color:var(--cB);background:color-mix(in srgb,var(--cB) 9%,#fff)} .sB{background:var(--cB)} .lgB i{background:var(--cB)}
+.cC{border-top-color:var(--cC)} .cC>.ct{color:var(--cC);background:color-mix(in srgb,var(--cC) 9%,#fff)} .sC{background:var(--cC)} .lgC i{background:var(--cC)}
+.cD{border-top-color:var(--cD)} .cD>.ct{color:var(--cD);background:color-mix(in srgb,var(--cD) 9%,#fff)} .sD{background:var(--cD)} .lgD i{background:var(--cD)}
+.cE{border-top-color:var(--cE)} .cE>.ct{color:var(--cE);background:color-mix(in srgb,var(--cE) 9%,#fff)} .sE{background:var(--cE)} .lgE i{background:var(--cE)}
+.cF{border-top-color:var(--cF)} .cF>.ct{color:var(--cF);background:color-mix(in srgb,var(--cF) 9%,#fff)} .sF{background:var(--cF)} .lgF i{background:var(--cF)}
+.cG{border-top-color:var(--cG)} .cG>.ct{color:var(--cG);background:color-mix(in srgb,var(--cG) 9%,#fff)} .sG{background:var(--cG)} .lgG i{background:var(--cG)}
+.cH{border-top-color:var(--cH)} .cH>.ct{color:var(--cH);background:color-mix(in srgb,var(--cH) 9%,#fff)} .sH{background:var(--cH)} .lgH i{background:var(--cH)}
+
+@media print{
+  html,body{background:#fff}
+  .page{margin:0;box-shadow:none;width:auto;height:196mm;
+    break-after:page;page-break-after:always}
+  .page:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="head"><div class="ttl"><b>C言語チートシート</b><span>macOS / gcc — 授業で扱う文法・コンパイル・ポインタ・メモリ・開発手法</span></div><div class="legend"><span class="lg lgA"><i></i>A 書き方とコンパイル</span><span class="lg lgB"><i></i>B 変数・型・入出力</span><span class="lg lgC"><i></i>C 演算子と型変換</span><span class="lg lgD"><i></i>D 制御構文</span><span class="lg lgE"><i></i>E 関数とファイル分割</span><span class="lg lgF"><i></i>F 配列と文字列</span><span class="lg lgG"><i></i>G ポインタとメモリ</span><span class="lg lgH"><i></i>H 数の表現・ツール・設計</span><span class="lg mk"><b>★</b>まず覚える定番</span><span class="lg ad"><b>Aa</b>グレー文字=上級者向け</span><span class="lg wn"><b>⚠</b>間違えやすい点</span></div></div>
+<div class="grid">
+<div class="sec sA"><b>A</b>書き方とコンパイル</div>
+<div class="card cA"><div class="ct">まず覚える5つ</div><div class="cc">gcc -Wall x.c -o x  <span class="cm">// コンパイル</span>
+./x                 <span class="cm">// 実行</span>
+printf("%d\n", n);  <span class="cm">// 表示</span>
+scanf("%d", &amp;n);    <span class="cm">// 入力(&amp; を忘れない)</span>
+for (int i=0;i&lt;n;i++) <span class="cm">// 繰り返し</span></div><div class="cd">迷ったらこの5つ。詳しくは各カードへ</div></div>
+<div class="card cA"><div class="ct">プログラムの骨格</div><div class="cc">#include &lt;stdio.h&gt;   <span class="cm">// 標準入出力</span>
+
+/* 複数行の
+   コメント */
+int main(void) {
+    printf("Hello\n");  <span class="cm">// 1行コメント</span>
+    return 0;           <span class="cm">// 正常終了</span>
+}</div><div class="kv"><div class="m"><b>#include</b><span>標準ライブラリを読み込む</span></div><div class="m"><b>main</b><span>実行の入口(プログラムに1つ)</span></div><div class="m"><b>;</b><span>文の終わり</span></div><div><b>{ }</b><span>ブロックの範囲</span></div></div><div class="cw"><code>{</code> と <code>}</code> の対応、文末の <code>;</code> の付け忘れ</div></div>
+<div class="card cA"><div class="ct">コンパイルと実行</div><div class="cc">gcc hello.c -o hello   <span class="cm"># コンパイル</span>
+./hello                <span class="cm"># 実行</span></div><div class="kv"><div class="m"><b>-o 名前</b><span>実行ファイル名を指定(省略すると a.out)</span></div><div class="m"><b>-Wall</b><span>警告をすべて表示(常に付ける)</span></div><div><b>-g</b><span>デバッグ情報を付ける(lldb 用)</span></div><div><b>-lm</b><span><code>math.h</code> の関数を使うときに付ける</span></div><div><b>-c</b><span><code>.o</code> までで止める(分割コンパイル)</span></div><div><b>-std=c17</b><span>規格を指定(Apple clang の既定は C17)</span></div><div><b>-std=c23</b><span>最新規格(<code>0b1010</code> などが警告なしで使える)</span></div><div><b>./</b><span>現在のディレクトリのプログラムを指す</span></div></div><div class="cd">macOS の <code>gcc</code> は実体が Apple clang(<code>gcc --version</code> で確認)。教科書の GNU gcc とはエラー文面が異なる</div><div class="cd"><code>ls</code> <code>cd</code> <code>pwd</code> などの基本コマンドと、記号の読み方・入力方法は macOS 版シート参照</div><div class="cw"><code>./hello</code> の <code>./</code> を忘れると command not found</div></div>
+<div class="card cA"><div class="ct">よくあるエラー・警告</div><div class="kv"><div><b>expected ';'</b><span>セミコロンの付け忘れ</span></div><div><b>undeclared identifier</b><span>変数・関数の宣言忘れ、綴りミス</span></div><div><b>implicit declaration</b><span><code>#include</code> 忘れ、プロトタイプ宣言なし</span></div><div><b>format specifies type</b><span><code>printf</code> の <code>%d</code> などと型が不一致</span></div><div><b>unused variable</b><span>使っていない変数(警告)</span></div><div><b>Segmentation fault</b><span>不正なメモリアクセス(配列・ポインタ)</span></div><div><b>command not found</b><span><code>./</code> の付け忘れ、名前の誤り</span></div><div><b>Undefined symbols</b><span>リンクエラー。実装ファイルの渡し忘れ(<code>gcc main.c add.c</code>)</span></div><div><b>Unicode character</b><span>全角スペースが混ざっている(警告)</span></div></div><div class="cw">エラーは「最初の1個」から直す(後ろは連鎖して出る)</div><div class="cw">原因不明のときは全角を疑う(全角の <code>；</code> <code>（</code> はエラー、全角スペースは警告)</div></div>
+<div class="card cA"><div class="ct">コンパイラとインタープリタ</div><div class="kv"><div><b>コンパイラ</b><span>全体を機械語に翻訳してから実行(C 言語・速い)</span></div><div><b>インタープリタ</b><span>1行ずつ解釈しながら実行(Python など)</span></div></div><div class="cc">hello.c --gcc--&gt; hello --./hello--&gt; 実行
+ソース        実行ファイル</div></div>
+<div class="card cA"><div class="ct">終了コードとデバッグ</div><div class="kv"><div><b>return 0</b><span>正常終了(0 以外は異常)</span></div><div><b>echo $?</b><span>直前のコマンドの終了コードを表示</span></div><div><b>printf</b><span>途中の変数の値を表示して確認する</span></div><div class="p"><b>lldb ./hello</b><span>デバッガ起動(<code>-g</code> 付きで作成)</span></div><div class="p"><b>b main</b><span>main にブレークポイント</span></div><div class="p"><b>r</b><span>実行  /  <code>n</code> 次の行  /  <code>c</code> 続行</span></div><div class="p"><b>p x</b><span>変数 x の値を表示  /  <code>q</code> 終了</span></div></div></div>
+<div class="sec sB"><b>B</b>変数・型・入出力</div>
+<div class="card cB"><div class="ct">変数と型</div><table class="tb"><thead><tr><th>型</th><th>用途</th><th>printf</th><th>サイズ</th></tr></thead><tbody><tr><td class="f"><code>int</code></td><td>整数</td><td><code>%d</code></td><td>4B</td></tr><tr><td class="f"><code>long</code></td><td>大きな整数</td><td><code>%ld</code></td><td>8B</td></tr><tr><td class="f"><code>float</code></td><td>実数(単精度)</td><td><code>%f</code></td><td>4B</td></tr><tr><td class="f"><code>double</code></td><td>実数(倍精度)</td><td><code>%f</code></td><td>8B</td></tr><tr><td class="f"><code>char</code></td><td>1文字</td><td><code>%c</code></td><td>1B</td></tr></tbody></table><div class="cc">int a;          <span class="cm">// 宣言</span>
+int b = 5;      <span class="cm">// 宣言 + 初期化</span>
+a = b + 1;      <span class="cm">// 代入</span>
+sizeof(int)     <span class="cm">// 型のバイト数</span></div><div class="cw">初期化していない変数の値は不定(ゴミ)</div><div class="cw">変数名は大文字小文字を区別(<code>Num</code> と <code>num</code> は別物)。数字始まり・予約語は不可</div></div>
+<div class="card cB"><div class="ct">定数</div><div class="cc">#define PI 3.14159   <span class="cm">// マクロ(置換・; なし)</span>
+const int MAX = 10;  <span class="cm">// 型付きの定数</span></div><div class="cd">定数名は大文字にするのが慣習</div></div>
+<div class="card cB"><div class="ct">入力</div><div class="cc">int n; double d; char c;
+scanf("%d",  &amp;n);    <span class="cm">// 整数</span>
+scanf("%lf", &amp;d);    <span class="cm">// double は %lf</span>
+scanf(" %c", &amp;c);    <span class="cm">// 空白で改行を読み飛ばす</span></div><div class="kv"><div class="m"><b>&amp;</b><span>変数のアドレス(scanf に必須)</span></div><div><b>fgets(s,N,stdin)</b><span>1行を文字列で入力</span></div><div><b>getchar()</b><span>1文字入力</span></div></div><div class="cw"><code>scanf</code> で <code>&amp;</code> を忘れると <code>-Wall</code> でコンパイル時に警告(<code>format specifies type 'int *'</code>)。無視して実行すると未定義動作</div><div class="cw">古い教科書の <code>gets</code> は使わない(長さを制限できず危険。deprecated 警告が出る)。<code>fgets</code> を使う</div></div>
+<div class="card cB"><div class="ct">printf の書式</div><div class="kv"><div class="m"><b>%d</b><span>整数</span></div><div class="m"><b>%f</b><span>実数(小数)</span></div><div class="m"><b>%c</b><span>1文字</span></div><div class="m"><b>%s</b><span>文字列</span></div><div><b>%x / %o</b><span>16進数 / 8進数</span></div><div class="p"><b>%e</b><span>指数表記(1.2e+03)</span></div><div><b>%ld</b><span>long</span></div><div><b>%%</b><span>% 記号そのもの</span></div></div></div>
+<div class="card cB"><div class="ct">桁揃え</div><div class="kv"><div><b>%5d</b><span>5桁・右詰め</span></div><div><b>%-5d</b><span>5桁・左詰め</span></div><div><b>%05d</b><span>5桁・0埋め</span></div><div><b>%.2f</b><span>小数点以下2桁</span></div><div><b>%8.3f</b><span>全体8桁・小数3桁</span></div></div></div>
+<div class="card cB"><div class="ct">エスケープ</div><div class="kv"><div class="m"><b>\n</b><span>改行</span></div><div><b>\t</b><span>タブ</span></div><div><b>\\</b><span>バックスラッシュ</span></div><div><b>\"</b><span>ダブルクォート</span></div><div><b>\'</b><span>シングルクォート</span></div><div><b>\0</b><span>文字列の終端</span></div><div><b>\033[31m</b><span>文字を赤に(ANSI)</span></div><div><b>\033[0m</b><span>色を元に戻す</span></div><div><b>Option+¥</b><span>Mac で <code>\</code> を入力</span></div></div></div>
+<div class="sec sC"><b>C</b>演算子と型変換</div>
+<div class="card cC"><div class="ct">演算子</div><div class="kv"><div class="m"><b>+ - * / %</b><span>算術(<code>%</code> は剰余)</span></div><div><b>= += -= *= /=</b><span>代入 / 複合代入</span></div><div><b>++  --</b><span>1増やす / 1減らす</span></div><div class="m"><b>== != &lt; &gt; &lt;= &gt;=</b><span>比較</span></div><div class="m"><b>&amp;&amp; || !</b><span>かつ / または / 否定</span></div><div class="p"><b>? :</b><span>条件演算子 <code>a ? b : c</code></span></div><div><b>優先順位</b><span><code>! ++</code> → <code>* / %</code> → <code>+ -</code> → 比較 → <code>&amp;&amp;</code> → <code>||</code> → <code>=</code></span></div></div><div class="cw"><code>=</code> は代入、比較は <code>==</code></div></div>
+</div>
+<div class="foot"><span>このページ＝まず持ち歩く1枚。文法の基本・コンパイル・変数と入出力・演算子(もう1枚は macOS 版の1ページ目)</span><span>コンパイル: gcc -Wall file.c -o app ／ 実行: ./app</span><span>1 / 3</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>C言語チートシート</b><span>macOS / gcc</span></div><div class="legend"><span class="lg lgA"><i></i>A 書き方とコンパイル</span><span class="lg lgB"><i></i>B 変数・型・入出力</span><span class="lg lgC"><i></i>C 演算子と型変換</span><span class="lg lgD"><i></i>D 制御構文</span><span class="lg lgE"><i></i>E 関数とファイル分割</span><span class="lg lgF"><i></i>F 配列と文字列</span><span class="lg lgG"><i></i>G ポインタとメモリ</span><span class="lg lgH"><i></i>H 数の表現・ツール・設計</span><span class="lg mk"><b>★</b>まず覚える定番</span><span class="lg ad"><b>Aa</b>グレー文字=上級者向け</span><span class="lg wn"><b>⚠</b>間違えやすい点</span></div></div>
+<div class="grid">
+<div class="sec sC"><b>C</b>演算子と型変換(続き)</div>
+<div class="card cC"><div class="ct">型変換の落とし穴</div><div class="kv"><div><b>5 / 2</b><span>→ 2(整数どうしは切り捨て)</span></div><div><b>5 / 2.0</b><span>→ 2.5(片方が実数なら実数)</span></div><div><b>(double)a / b</b><span>キャスト(型変換)</span></div><div><b>0.1+0.2 == 0.3</b><span>→ 偽(誤差が出る)</span></div><div><b>fabs(x-y) &lt; 1e-9</b><span>実数は差で比較する</span></div></div></div>
+<div class="card cC"><div class="ct">math.h(コンパイル時 -lm)</div><div class="kv"><div><b>sqrt(x)</b><span>平方根</span></div><div><b>pow(x, y)</b><span>x の y 乗</span></div><div><b>fabs(x)</b><span>実数の絶対値</span></div><div><b>abs(n)</b><span>整数の絶対値(<code>stdlib.h</code>)</span></div><div><b>floor / ceil</b><span>切り捨て / 切り上げ</span></div><div><b>sin cos tan</b><span>三角関数(ラジアン)</span></div></div></div>
+<div class="sec sD"><b>D</b>制御構文</div>
+<div class="card cD"><div class="ct">条件分岐</div><div class="cc">if (x &gt; 0) {
+    ...
+} else if (x == 0) {
+    ...
+} else {
+    ...
+}
+switch (n) {
+    case 1: ...; break;
+    default: ...;
+}</div><div class="cw"><code>switch</code> の <code>break</code> 忘れで次の case に落ちる / <code>if (x = 1)</code> は代入</div></div>
+<div class="card cD"><div class="ct">乱数</div><div class="cc">#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+srand(time(NULL));    <span class="cm">// 最初に1回だけ</span>
+int r = rand() % 3;   <span class="cm">// 0〜2</span></div></div>
+<div class="card cD"><div class="ct">フローチャート</div><div class="kv"><div><b>楕円</b><span>開始・終了</span></div><div><b>四角</b><span>処理</span></div><div><b>ひし形</b><span>判断(条件分岐)</span></div></div></div>
+<div class="card cD"><div class="ct">繰り返し</div><div class="cc">for (int i = 0; i &lt; 10; i++) { ... }  <span class="cm">// 10回</span>
+while (cond) { ... }       <span class="cm">// 真の間</span>
+do { ... } while (cond);   <span class="cm">// 最低1回</span></div><div class="kv"><div><b>break</b><span>ループを抜ける</span></div><div><b>continue</b><span>次の周回へ</span></div><div class="m"><b>for</b><span>回数が決まっているとき</span></div><div class="m"><b>while</b><span>回数が決まっていないとき</span></div><div><b>do-while</b><span>先に1回実行したいとき</span></div></div><div class="cw"><code>i &lt;= 10</code> と <code>i &lt; 10</code> の違い / <code>for(...);</code> の <code>;</code> / 無限ループは Ctrl+C</div></div>
+<div class="card cD"><div class="ct">二重ループ(三角形)</div><div class="cc">for (int i = 1; i &lt;= 5; i++) {
+    for (int j = 0; j &lt; i; j++)
+        printf("*");
+    printf("\n");
+}</div><div class="kv"><div><b>外側</b><span>行(縦)を繰り返す</span></div><div><b>内側</b><span>列(横)を繰り返す</span></div></div></div>
+<div class="card cD"><div class="ct">再帰</div><div class="cc">int fact(int n) {
+    if (n &lt;= 1) return 1;     <span class="cm">// 終了条件</span>
+    return n * fact(n - 1);
+}</div><div class="cw">終了条件がないと無限に呼び出される</div></div>
+<div class="sec sE"><b>E</b>関数とファイル分割</div>
+<div class="card cE"><div class="ct">関数</div><div class="cc">int add(int a, int b);        <span class="cm">// プロトタイプ宣言</span>
+
+int main(void) {
+    printf("%d\n", add(2, 3));
+    return 0;
+}
+int add(int a, int b) {       <span class="cm">// 定義</span>
+    return a + b;
+}</div><div class="kv"><div><b>void</b><span>戻り値または引数がない</span></div><div><b>値渡し</b><span>引数はコピーされる</span></div><div><b>ローカル変数</b><span>関数の中だけで有効</span></div><div><b>グローバル変数</b><span>関数の外・全体で有効(多用しない)</span></div></div></div>
+<div class="card cE"><div class="ct">ファイル分割</div><div class="cc"><span class="cm">// add.h    int add(int a, int b);</span>
+<span class="cm">// add.c    #include "add.h" + 定義</span>
+<span class="cm">// main.c   #include "add.h" + main</span></div><div class="cc">gcc main.c add.c -o app    <span class="cm"># まとめてコンパイル</span></div><div class="cc">#ifndef ADD_H     <span class="cm">// インクルードガード</span>
+#define ADD_H
+int add(int a, int b);
+#endif</div><div class="kv"><div><b>"x.h"</b><span>自作ヘッダは <code>" "</code>、標準は <code>&lt; &gt;</code></span></div></div></div>
+<div class="card cE"><div class="ct">ヘッダ早見</div><div class="kv"><div class="m"><b>stdio.h</b><span><code>printf</code> <code>scanf</code> <code>fgets</code> <code>fopen</code></span></div><div><b>stdlib.h</b><span><code>malloc</code> <code>free</code> <code>rand</code> <code>srand</code> <code>abs</code></span></div><div><b>string.h</b><span><code>strlen</code> <code>strcpy</code> <code>strcat</code> <code>strcmp</code></span></div><div><b>math.h</b><span><code>sqrt</code> <code>pow</code> <code>fabs</code>(<code>-lm</code> を付ける)</span></div><div><b>time.h</b><span><code>time</code>(<code>srand</code> の種に使う)</span></div></div><div class="cd"><code>implicit declaration</code> が出たら <code>#include</code> 忘れを疑う</div></div>
+<div class="sec sF"><b>F</b>配列と文字列</div>
+<div class="card cF"><div class="ct">配列</div><div class="cc">int a[5] = {10, 20, 30, 40, 50};
+int b[5] = {0};            <span class="cm">// すべて0</span>
+a[0] = 1;                  <span class="cm">// 添字は0から</span>
+int n = sizeof(a) / sizeof(a[0]);  <span class="cm">// 要素数</span>
+for (int i = 0; i &lt; n; i++)
+    printf("%d ", a[i]);</div><div class="cw"><code>a[5]</code> は範囲外(正しくは <code>a[0]</code>〜<code>a[4]</code>)。エラーにならず危険</div></div>
+<div class="card cF"><div class="ct">二次元配列</div><div class="cc">int m[2][3] = { {1,2,3}, {4,5,6} };
+for (int i = 0; i &lt; 2; i++)
+    for (int j = 0; j &lt; 3; j++)
+        sum += m[i][j];</div><div class="kv"><div><b>合計</b><span><code>sum += m[i][j]</code></span></div><div><b>最大</b><span><code>if (m[i][j] &gt; max) max = m[i][j];</code></span></div><div><b>平均</b><span><code>(double)sum / (行数 * 列数)</code></span></div></div></div>
+<div class="card cF"><div class="ct">関数への配列の渡し方</div><div class="cc">void show(int a[], int n) { ... }
+show(a, 5);</div><div class="kv"><div><span>先頭アドレスが渡る(コピーされない)</span></div><div><span>関数内で変更すると元の配列も変わる</span></div><div><span>要素数 <code>n</code> は別に渡す</span></div></div></div>
+<div class="card cF"><div class="ct">文字と文字列</div><div class="cc">char c = 'A';           <span class="cm">// 文字は ' '</span>
+char s[] = "Hello";     <span class="cm">// 文字列は " "</span>
+<span class="cm">// 実体: 'H' 'e' 'l' 'l' 'o' '\0'</span></div><div class="kv"><div class="m"><b>文字列</b><span><code>char</code> の配列 + 終端 <code>\0</code></span></div><div><b>c - '0'</b><span>数字の文字 → 数値</span></div><div><b>'a' - 'A'</b><span>= 32(大文字と小文字の差)</span></div></div></div>
+<div class="card cF"><div class="ct">string.h</div><div class="kv"><div><b>strlen(s)</b><span>文字数(<code>\0</code> を除く)</span></div><div><b>strcpy(d, s)</b><span>s を d にコピー</span></div><div><b>strcat(d, s)</b><span>s を d の後ろに連結</span></div><div class="m"><b>strcmp(a, b)</b><span>比較(同じなら 0)</span></div></div><div class="cw">文字列は <code>==</code> で比較できない(アドレス比較になる)</div></div>
+</div>
+<div class="foot"><span>このページ＝書くときに開く。演算子・制御構文・関数・配列・文字列</span><span>コンパイル: gcc -Wall file.c -o app ／ 実行: ./app</span><span>2 / 3</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>C言語チートシート</b><span>macOS / gcc</span></div><div class="legend"><span class="lg lgA"><i></i>A 書き方とコンパイル</span><span class="lg lgB"><i></i>B 変数・型・入出力</span><span class="lg lgC"><i></i>C 演算子と型変換</span><span class="lg lgD"><i></i>D 制御構文</span><span class="lg lgE"><i></i>E 関数とファイル分割</span><span class="lg lgF"><i></i>F 配列と文字列</span><span class="lg lgG"><i></i>G ポインタとメモリ</span><span class="lg lgH"><i></i>H 数の表現・ツール・設計</span><span class="lg mk"><b>★</b>まず覚える定番</span><span class="lg ad"><b>Aa</b>グレー文字=上級者向け</span><span class="lg wn"><b>⚠</b>間違えやすい点</span></div></div>
+<div class="grid">
+<div class="sec sF"><b>F</b>配列と文字列(続き)</div>
+<div class="card cF"><div class="ct">ASCII 早見</div><table class="tb"><thead><tr><th>文字</th><th>10進</th><th>16進</th></tr></thead><tbody><tr><td class="f"><code>'0'</code></td><td>48</td><td>0x30</td></tr><tr><td class="f"><code>'A'</code></td><td>65</td><td>0x41</td></tr><tr><td class="f"><code>'a'</code></td><td>97</td><td>0x61</td></tr><tr><td class="f"><code>' '</code></td><td>32</td><td>0x20</td></tr><tr><td class="f"><code>'\n'</code></td><td>10</td><td>0x0A</td></tr><tr><td class="f"><code>'\0'</code></td><td>0</td><td>0x00</td></tr></tbody></table></div>
+<div class="sec sG"><b>G</b>ポインタとメモリ</div>
+<div class="card cG"><div class="ct">メモリとポインタ</div><div class="cc">int x = 10;
+int *p = &amp;x;
+*p = 20;               <span class="cm">// x は 20 になる</span>
+printf("%p\n", (void*)p);  <span class="cm">// アドレスを表示</span></div><div class="kv"><div class="m"><b>&amp;x</b><span>x のアドレス</span></div><div class="m"><b>int *p</b><span>int へのポインタ変数</span></div><div class="m"><b>*p</b><span>p が指す先の値</span></div><div><b>NULL</b><span>何も指していない印</span></div></div></div>
+<div class="card cG"><div class="ct">ポインタと配列</div><div class="kv"><div><b>a</b><span>配列名 = 先頭要素のアドレス</span></div><div><b>a[i]</b><span><code>*(a + i)</code> と同じ</span></div><div><b>p + 1</b><span>次の要素(型のサイズ分進む)</span></div><div><b>scanf の &amp;</b><span>変数のアドレスに書き込むため必要</span></div></div></div>
+<div class="card cG"><div class="ct">コマンドライン引数</div><div class="cc">int main(int argc, char *argv[]) { ... }
+<span class="cm">// ./app a b → argc=3</span>
+<span class="cm">// argv[0]="./app" argv[1]="a" argv[2]="b"</span></div></div>
+<div class="card cG"><div class="ct">未定義動作</div><div class="kv"><div><span>初期化していない変数を使う</span></div><div><span>配列の範囲外にアクセスする(<code>a[10]</code>)</span></div><div><span>解放済みのメモリを使う</span></div><div><span><code>NULL</code> を参照する → Segmentation fault</span></div></div></div>
+<div class="card cG"><div class="ct">動的メモリ</div><div class="cc">#include &lt;stdlib.h&gt;
+int *a = malloc(n * sizeof(int));
+if (a == NULL) { return 1; }  <span class="cm">// 確保失敗</span>
+a[0] = 1;
+free(a);        <span class="cm">// 使い終わったら解放</span>
+a = NULL;</div><div class="cw">解放忘れ(メモリリーク)、二重 free、解放後の使用</div></div>
+<div class="card cG"><div class="ct">構造体</div><div class="cc">struct Point { int x; int y; };
+struct Point p = {1, 2};
+p.x = 5;              <span class="cm">// メンバは .</span>
+struct Point *q = &amp;p;
+q-&gt;y = 7;             <span class="cm">// ポインタ経由は -&gt;</span>
+typedef struct { int x, y; } Pt;</div></div>
+<div class="card cG"><div class="ct">ファイル入出力</div><div class="cc">FILE *fp = fopen("a.txt", "r");   <span class="cm">// "w" 書込 / "a" 追記</span>
+if (fp == NULL) { return 1; }
+fscanf(fp, "%d", &amp;n);
+fprintf(stdout, "%d\n", n);
+fclose(fp);</div></div>
+<div class="sec sH"><b>H</b>数の表現・ツール・設計</div>
+<div class="card cH"><div class="ct">進数の対応表</div><table class="tb"><thead><tr><th>10進</th><th>2進</th><th>16進</th></tr></thead><tbody><tr><td class="f">0</td><td>0000</td><td>0</td></tr><tr><td class="f">1</td><td>0001</td><td>1</td></tr><tr><td class="f">2</td><td>0010</td><td>2</td></tr><tr><td class="f">3</td><td>0011</td><td>3</td></tr><tr><td class="f">4</td><td>0100</td><td>4</td></tr><tr><td class="f">5</td><td>0101</td><td>5</td></tr><tr><td class="f">6</td><td>0110</td><td>6</td></tr><tr><td class="f">7</td><td>0111</td><td>7</td></tr><tr><td class="f">8</td><td>1000</td><td>8</td></tr><tr><td class="f">9</td><td>1001</td><td>9</td></tr><tr><td class="f">10</td><td>1010</td><td>A</td></tr><tr><td class="f">11</td><td>1011</td><td>B</td></tr><tr><td class="f">12</td><td>1100</td><td>C</td></tr><tr><td class="f">13</td><td>1101</td><td>D</td></tr><tr><td class="f">14</td><td>1110</td><td>E</td></tr><tr><td class="f">15</td><td>1111</td><td>F</td></tr></tbody></table></div>
+<div class="card cH"><div class="ct">進数の書き方と変換</div><div class="kv"><div><b>0b1010</b><span>2進数(C23 の機能。既定の C17 では <code>-pedantic</code> で警告)</span></div><div><b>012</b><span>8進数(先頭に 0)</span></div><div><b>0x1F</b><span>16進数(先頭に 0x)</span></div><div><b>2→10</b><span>各桁 × 2のn乗 の合計</span></div><div><b>10→2</b><span>2で割った余りを逆順に並べる</span></div><div><b>16⇔2</b><span>16進1桁 = 2進4桁</span></div></div></div>
+<div class="card cH"><div class="ct">負数と2の補数</div><div class="kv"><div><b>補数</b><span>ビットを反転して +1</span></div><div><b>例 -5</b><span><code>00000101</code> → <code>11111010</code> → <code>11111011</code></span></div><div><b>符号</b><span>最上位ビットが 1 なら負</span></div><div><b>引き算</b><span><code>a - b</code> = <code>a + (-b)</code> を足し算で計算</span></div><div><b>範囲</b><span>nビット: -2^(n-1) 〜 2^(n-1)-1</span></div></div><div class="cw">範囲を超えるとオーバーフロー(INT_MAX + 1 は負になる)</div></div>
+<div class="card cH"><div class="ct">型の範囲(limits.h)</div><table class="tb"><thead><tr><th>型</th><th>範囲</th></tr></thead><tbody><tr><td class="f"><code>char</code></td><td>-128 〜 127</td></tr><tr><td class="f"><code>unsigned char</code></td><td>0 〜 255</td></tr><tr><td class="f"><code>int</code></td><td>-2147483648 〜 2147483647</td></tr><tr><td class="f"><code>long long</code></td><td>約 ±9.2×10^18</td></tr></tbody></table><div class="cd"><code>char</code> の符号は処理系依存。本機(macOS / Apple clang)では signed で -128〜127</div></div>
+<div class="card cH"><div class="ct">ビット演算</div><div class="kv"><div><b>&amp;  |  ^</b><span>AND / OR / XOR</span></div><div><b>~</b><span>NOT(ビット反転)</span></div><div><b>&lt;&lt;  &gt;&gt;</b><span>左シフト(×2) / 右シフト(÷2)</span></div></div></div>
+<div class="card cH"><div class="ct">システム開発の流れ</div><div class="cc">要件定義 → 基本設計 → 詳細設計
+  → 実装 → テスト → 運用</div><div class="kv"><div><b>TDD / CI</b><span>テストを先に書く / 変更のたびに自動でビルド・テスト</span></div></div></div>
+<div class="card cH"><div class="ct">プログラミングの格言</div><div class="kv"><div><b>DRY / KISS / YAGNI</b><span>同じことを繰り返し書かない / 単純に保つ / 今いらない機能は作らない</span></div></div></div>
+<div class="card cH"><div class="ct">リダイレクトとパイプ</div><div class="cc">./app &gt; out.txt     <span class="cm"># 出力をファイルへ(上書き)</span>
+./app &gt;&gt; out.txt    <span class="cm"># 追記</span>
+./app &lt; in.txt      <span class="cm"># ファイルから入力</span>
+./app | grep abc    <span class="cm"># 出力を次のコマンドへ</span>
+./app 2&gt; err.txt    <span class="cm"># エラー出力だけファイルへ</span></div></div>
+<div class="card cH"><div class="ct">ライブラリと make</div><div class="kv"><div><b>静的 (.a)</b><span>実行ファイルに組み込む</span></div><div><b>動的 (.dylib)</b><span>実行時に読み込む(Mac)</span></div><div><b>-l名前</b><span>ライブラリを指定(例 <code>-lm</code>)</span></div><div class="p"><b>-L dir</b><span>ライブラリの検索先</span></div><div class="p"><b>-I dir</b><span>ヘッダの検索先</span></div></div><div class="cc">app: main.o add.o      <span class="cm"># Makefile</span>
+	gcc main.o add.o -o app</div></div>
+<div class="card cH"><div class="ct">仕様書とテスト</div><div class="kv"><div><b>関数仕様書</b><span>名前・機能・引数・戻り値・備考</span></div><div><b>テストの観点</b><span>正常値 / 境界値 / 異常値</span></div><div><b>カバレッジ</b><span>すべての分岐を通ったか</span></div></div><div class="cc">#include &lt;assert.h&gt;
+assert(add(2, 3) == 5);   <span class="cm">// 失敗すると停止</span></div></div>
+</div>
+<div class="foot"><span>このページ＝詰まったときに引く。ポインタとメモリ・数の表現・ツールと開発手法</span><span>コンパイル: gcc -Wall file.c -o app ／ 実行: ./app</span><span>3 / 3</span></div>
+</div>
+</body>
+</html>
