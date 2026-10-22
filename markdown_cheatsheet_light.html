@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[ライト] Markdown チートシート(GitHub Flavored Markdown)</title>
+<meta name="description" content="見出し・文字飾り・改行・リスト・コード・リンク・画像・表から、Mermaid の図・数式・脚注・目次・アラート・HTML・frontmatter・よくある失敗までを、書き方と GitHub での表示を並べてまとめたA4横2ページのチートシート(ライトモード)。">
+<style>
+:root{
+  --cA: #1a4fa0;
+  --cB: #6b3fa0;
+  --cC: #1f7a3f;
+  --cD: #b07500;
+  --cE: #0f7b7b;
+  --cF: #d2691e;
+  --cG: #c0272d;
+  --ink:#1a1a1a; --sub:#3f3f3f; --dim:#8a8a8a; --line:#d5d5d5; --codebg:#f4f4f4;
+  --star:#b8860b; --warn:#8a4b08; --cmt:#2e7d4f;
+  --gh:#1f2328; --ghline:#d1d9e0; --ghlink:#0969da; --ghmuted:#59636e;
+  --mono:"SFMono-Regular","SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{background:#8f8f8f;
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  color:var(--ink);}
+@page{size:A4 landscape;margin:7mm}
+
+.page{
+  width:283mm;height:196mm;background:#fff;
+  margin:6mm auto;display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.45);
+}
+.grid{
+  flex:1 1 auto;min-height:0;overflow:hidden;
+  column-count:5;column-gap:2.0mm;column-fill:balance;
+}
+
+/* ヘッダ帯と凡例 */
+.head{display:flex;align-items:flex-end;gap:3mm;border-bottom:1.20pt solid #333;
+  padding:0 0 1.0mm;margin-bottom:1.3mm;flex:0 0 auto}
+.ttl{white-space:nowrap}
+.ttl b{font-size:13.20pt;letter-spacing:.02em}
+.ttl span{font-size:6.72pt;color:var(--sub);margin-left:2mm}
+.head.slim .ttl b{font-size:10.20pt}
+.legend{display:flex;flex-wrap:wrap;gap:0 2.2mm;flex:1 1 auto;justify-content:flex-end}
+.lg{font-size:6.60pt;color:#222;white-space:nowrap;display:inline-flex;align-items:center}
+.lg i{display:inline-block;width:5.40pt;height:5.40pt;border-radius:1.00pt;margin-right:.7mm}
+.lg b{margin-right:.6mm}
+.lg.mk b{color:var(--star)} .lg.wn b{color:var(--warn)}
+
+/* カテゴリ帯 */
+.sec{break-inside:avoid;-webkit-column-break-inside:avoid;
+  break-after:avoid;-webkit-column-break-after:avoid;
+  color:#fff;font-size:7.44pt;font-weight:700;line-height:1.25;
+  padding:.55mm 1.1mm;border-radius:.6mm;margin:0 0 .8mm;}
+.sec b{display:inline-block;background:rgba(255,255,255,.3);border-radius:.5mm;
+  padding:0 .8mm;margin-right:1mm}
+
+/* カード */
+.card{break-inside:avoid;-webkit-column-break-inside:avoid;
+  border:0.40pt solid var(--line);border-top:1.70pt solid #999;border-radius:.6mm;
+  padding:.5mm .9mm .8mm;margin:0 0 .95mm;background:#fff;}
+.ct{font-size:7.08pt;font-weight:700;line-height:1.2;
+  margin:-.5mm -.9mm .6mm;padding:.5mm .9mm .45mm}
+.ct .ic{font-style:normal;margin-right:.7mm}
+.cc{font-family:var(--mono);font-size:6.36pt;line-height:1.32;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  background:var(--codebg);border-left:0.90pt solid #c6c6c6;
+  padding:.45mm .8mm;border-radius:.4mm;margin-bottom:.55mm;}
+.cc .cm{color:var(--cmt);font-family:"Hiragino Sans",sans-serif}
+.cd{font-size:6.24pt;line-height:1.35;color:var(--sub)}
+.cd+.cd{margin-top:.35mm}
+.cd strong,.kv strong,.tb strong,.er strong{color:var(--ink)}
+.cd+.cw,.cd+.kv,.cd+.cc{margin-top:.55mm}
+
+/* キー+説明の行 */
+.kv{margin-bottom:.55mm}
+.kv>div{display:flex;align-items:baseline;gap:1.0mm;padding:.15mm 0;
+  font-size:6.24pt;line-height:1.35;color:var(--sub)}
+.kv>div+div{border-top:0.30pt solid #ededed}
+.kv>div>span{min-width:0;overflow-wrap:anywhere}
+.kv b{font-family:var(--mono);font-size:6.12pt;
+  background:var(--codebg);border:0.30pt solid #dedede;border-radius:.4mm;
+  padding:0 .55mm;color:var(--ink);font-weight:400}
+.kv b{flex:0 0 auto;max-width:56%;overflow-wrap:anywhere}
+.kv>div.m b::before{content:"★";color:var(--star);margin-right:.5mm}
+.kv>div.p>span{color:var(--dim)}
+.lg.ad b{color:var(--dim)}
+
+/* ⚠ 間違えやすい点 */
+.cw{font-size:6.24pt;line-height:1.35;color:var(--warn);
+  background:#fdf5e8;border-left:0.90pt solid #e0b263;
+  padding:.4mm .8mm;border-radius:.4mm;margin-bottom:.55mm}
+.cw::before{content:"⚠ "}
+
+/* 一覧表 */
+.tb{width:100%;border-collapse:collapse;font-size:6.12pt;line-height:1.3;margin-bottom:.55mm}
+.tb th{text-align:left;font-weight:700;color:var(--ink);background:var(--codebg);
+  padding:.25mm .6mm;border-bottom:0.40pt solid #c6c6c6;white-space:nowrap}
+.tb td{padding:.2mm .6mm;border-top:0.30pt solid #ededed;color:var(--sub);vertical-align:top}
+.tb td.f{white-space:nowrap}
+
+/* 失敗した書き方 → 直し方 */
+.er{margin-bottom:.55mm}
+.er>div{padding:.3mm 0;font-size:6.24pt;line-height:1.35;color:var(--sub)}
+.er>div+div{border-top:0.30pt solid #ededed}
+.er>div>code{font-family:var(--mono);font-size:5.88pt;line-height:1.3;
+  white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink);
+  background:var(--codebg);border-radius:.3mm;padding:0 .4mm;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.er span::before{content:" → "}
+
+/* 説明文の中の等幅 */
+.cd code,.kv code,.tb code,.cw code,.er span code{font-family:var(--mono);font-size:.95em;
+  background:var(--codebg);border-radius:.3mm;padding:0 .3mm;overflow-wrap:anywhere}
+.cw code{background:#f6e7cf}
+
+/* 書き方 → GitHub での表示(Markdown 版で追加) */
+.ex{margin-bottom:.55mm}
+.exh,.exr{display:flex;gap:1.0mm}
+.exh{font-size:5.40pt;line-height:1.2;color:var(--dim);padding-bottom:.15mm}
+.exh>span:first-child,.exs{flex:0 0 54%;min-width:0}
+.exr{align-items:center;padding:.25mm 0;border-top:0.30pt solid #ededed}
+.exs{font-family:var(--mono);font-size:6.12pt;line-height:1.3;color:var(--ink);
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  background:var(--codebg);border:0.30pt solid #dedede;border-radius:.4mm;padding:.1mm .55mm}
+.exo{flex:1 1 auto;min-width:0}
+.exr.m>.exs::before{content:"★";color:var(--star);margin-right:.5mm;font-family:"Hiragino Sans",sans-serif}
+.exr.p>.exs{color:var(--dim)}
+
+/* 表示例の枠(Markdown 版で追加) */
+.ov{position:relative;border:0.50pt dashed #b9c2cc;border-radius:.5mm;
+  padding:2.0mm 1.0mm .6mm;margin:0 0 .55mm}
+.ovl{position:absolute;top:.15mm;left:.8mm;font-size:5.04pt;line-height:1.2;color:var(--dim)}
+
+/* GitHub での見た目の再現(.md の中だけに効かせる) */
+.md{font-size:6.24pt;line-height:1.38;color:var(--gh);overflow-wrap:anywhere}
+.md>*+*{margin-top:.5mm}
+.md h1,.md h2,.md h3,.md h4{font-weight:700;line-height:1.25}
+.md h1{font-size:9.00pt;border-bottom:0.40pt solid var(--ghline);padding-bottom:.2mm}
+.md h2{font-size:7.80pt;border-bottom:0.40pt solid var(--ghline);padding-bottom:.2mm}
+.md h3{font-size:6.96pt}
+.md h4{font-size:6.36pt}
+.md code{font-family:var(--mono);font-size:.92em;background:#eff1f3;border-radius:.4mm;padding:0 .4mm}
+.md a{color:var(--ghlink)}
+.md ul,.md ol{padding-left:3.2mm}
+.md ul ul{list-style:circle}
+.md ul.tl{list-style:none;padding-left:0}
+.md blockquote{border-left:1.30pt solid var(--ghline);color:var(--ghmuted);padding-left:1.2mm}
+.md blockquote blockquote{margin-top:.3mm}
+.md hr{border:0;border-top:1.40pt solid var(--ghline);margin:.6mm 0}
+.md kbd{font-family:var(--mono);font-size:.88em;border:0.40pt solid var(--ghline);border-bottom-width:1.00pt;
+  border-radius:.5mm;background:#f6f8fa;padding:0 .5mm}
+.md table{border-collapse:collapse;font-size:6.00pt;line-height:1.3}
+.md th,.md td{border:0.40pt solid var(--ghline);padding:.2mm .9mm}
+.md th{font-weight:700}
+.md tbody tr:nth-child(2n) td{background:#f6f8fa}
+.md .l{text-align:left} .md .r{text-align:right} .md .c{text-align:center}
+.md .dim{color:var(--ghmuted)}
+.md .cbx{display:inline-block;width:5.60pt;height:5.60pt;border:0.60pt solid #6e7781;border-radius:1.00pt;
+  vertical-align:-0.60pt;position:relative}
+.md .cbx.on{background:var(--ghlink);border-color:var(--ghlink)}
+.md .cbx.on::after{content:"";position:absolute;left:1.60pt;top:0.30pt;width:1.40pt;height:2.80pt;
+  border:solid #fff;border-width:0 0.90pt 0.90pt 0;transform:rotate(45deg)}
+.md .img{display:inline-block;width:12mm;height:7mm;line-height:7mm;text-align:center;font-size:10.00pt;
+  background:#eef3f8;border:0.40pt solid var(--ghline);border-radius:.5mm}
+.md .hl{font-family:var(--mono);font-size:6.12pt;line-height:1.32;white-space:pre-wrap;
+  background:#f6f8fa;border-radius:.5mm;padding:.4mm .7mm}
+.md .pl-k{color:#cf222e} .md .pl-s{color:#0a3069} .md .pl-en{color:#6639ba}
+.md .pl-c1{color:#0550ae} .md .pl-smi{color:var(--gh)}
+.md .alt{font-weight:700}
+.md .a-note{color:#0969da} .md .a-tip{color:#1a7f37} .md .a-important{color:#8250df}
+.md .a-warning{color:#9a6700} .md .a-caution{color:#d1242f}
+.md .al{border-left:1.40pt solid currentColor;padding-left:1.2mm}
+.md .al p{color:var(--gh)}
+.md .fn{border-top:0.40pt solid var(--ghline);padding-top:.4mm;font-size:5.76pt;color:var(--ghmuted)}
+.md .tri{font-size:.8em}
+.md .mm{display:block;width:88%;margin:0 auto;font-family:inherit}
+.md .mm.sm{width:70%}
+.md .fm th,.md .fm td{font-size:5.76pt}
+.md .fm td table{margin:0}
+/* 数式 */
+.md .mx{font-family:"Times New Roman","Hiragino Mincho ProN",serif;font-size:7.20pt;white-space:pre-wrap}
+.md .mx.blk{display:block;text-align:center}
+.md .fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.15}
+.md .fr>span:first-child{border-bottom:0.50pt solid currentColor;padding:0 .4mm}
+.md .sq>span{border-top:0.50pt solid currentColor}
+.md .lim{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1}
+.md .lim small{font-size:.62em}
+.md .acc{position:relative;display:inline-block}
+.md .acc::after{content:attr(data-a);position:absolute;left:0;right:0;top:-.62em;text-align:center;font-size:.7em;font-style:normal}
+
+/* 柱 */
+.foot{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:3mm;
+  border-top:0.50pt solid #bbb;margin-top:1.1mm;padding-top:.7mm;
+  font-size:6.24pt;color:#666}
+
+.cA{border-top-color:var(--cA)} .cA>.ct{color:var(--cA);background:color-mix(in srgb,var(--cA) 9%,#fff)} .sA{background:var(--cA)} .lgA i{background:var(--cA)}
+.cB{border-top-color:var(--cB)} .cB>.ct{color:var(--cB);background:color-mix(in srgb,var(--cB) 9%,#fff)} .sB{background:var(--cB)} .lgB i{background:var(--cB)}
+.cC{border-top-color:var(--cC)} .cC>.ct{color:var(--cC);background:color-mix(in srgb,var(--cC) 9%,#fff)} .sC{background:var(--cC)} .lgC i{background:var(--cC)}
+.cD{border-top-color:var(--cD)} .cD>.ct{color:var(--cD);background:color-mix(in srgb,var(--cD) 9%,#fff)} .sD{background:var(--cD)} .lgD i{background:var(--cD)}
+.cE{border-top-color:var(--cE)} .cE>.ct{color:var(--cE);background:color-mix(in srgb,var(--cE) 9%,#fff)} .sE{background:var(--cE)} .lgE i{background:var(--cE)}
+.cF{border-top-color:var(--cF)} .cF>.ct{color:var(--cF);background:color-mix(in srgb,var(--cF) 9%,#fff)} .sF{background:var(--cF)} .lgF i{background:var(--cF)}
+.cG{border-top-color:var(--cG)} .cG>.ct{color:var(--cG);background:color-mix(in srgb,var(--cG) 9%,#fff)} .sG{background:var(--cG)} .lgG i{background:var(--cG)}
+
+@media print{
+  html,body{background:#fff}
+  .page{margin:0;box-shadow:none;width:auto;height:196mm;
+    break-after:page;page-break-after:always}
+  .page:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="head"><div class="ttl"><b>Markdown チートシート</b><span>GitHub Flavored Markdown(GFM)— README・レポート・Issue を書くときに。左が書き方、右が GitHub での表示</span></div><div class="legend"><span class="lg lgA"><i></i>A 基本の書式</span><span class="lg lgB"><i></i>B リスト・コード</span><span class="lg lgC"><i></i>C リンク・表</span><span class="lg lgD"><i></i>D GitHub の記法</span><span class="lg lgE"><i></i>E 数式と図</span><span class="lg lgF"><i></i>F 文書を整える</span><span class="lg lgG"><i></i>G よくある失敗</span><span class="lg mk"><b>★</b>まず覚える定番</span><span class="lg ad"><b>Aa</b>グレー文字=上級者向け</span><span class="lg wn"><b>⚠</b>間違えやすい点</span></div></div>
+<div class="grid">
+<div class="sec sA"><b>A</b>基本の書式(見出し・文字・改行)</div>
+<div class="card cA"><div class="ct"><i class="ic">📝</i>Markdown とは</div><div class="kv"><div class="m"><b>.md</b><span>Markdown ファイルの拡張子。<code>README.md</code> はリポジトリのトップに表示される</span></div><div class="m"><b>Issue・PR</b><span>本文やコメント欄も Markdown。<strong>Preview</strong> タブで表示を確認</span></div><div><b>⇧⌘V</b><span>VS Code でプレビュー(<code>⌘K V</code> で横に並べる)</span></div><div><b>GFM</b><span>GitHub Flavored Markdown。このシートは GitHub での表示が基準</span></div></div><div class="cd">記号を書き足すだけのテキストなので、どのエディタでも書ける。段落・リスト・表・コードなどの<strong>かたまりの間は空行</strong>で区切るのが基本</div><div class="cw">アプリごとに方言がある(VS Code・Qiita・Notion など)。提出・公開の前に GitHub 上の表示で確かめる</div></div>
+<div class="card cA"><div class="ct"><i class="ic">🔠</i>見出し</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs"># 見出し1</div><div class="exo md"><h1>見出し1</h1></div></div><div class="exr m"><div class="exs">## 見出し2</div><div class="exo md"><h2>見出し2</h2></div></div><div class="exr"><div class="exs">### 見出し3</div><div class="exo md"><h3>見出し3</h3></div></div><div class="exr"><div class="exs">#### 見出し4</div><div class="exo md"><h4>見出し4</h4></div></div></div><div class="cd"><code>######</code>(h6)まで6段階。<code>#</code> は文書の題名に1回だけ使い、章は <code>##</code> から始めるのが一般的</div><div class="cw"><code>#</code> の後には<strong>半角スペース</strong>。<code>#見出し</code> は見出しにならず、そのまま文字で出る</div></div>
+<div class="card cA"><div class="ct"><i class="ic">✏️</i>文字飾り</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">**太字**</div><div class="exo md"><strong>太字</strong></div></div><div class="exr"><div class="exs">*斜体*</div><div class="exo md"><em>斜体</em></div></div><div class="exr"><div class="exs">***太字斜体***</div><div class="exo md"><em><strong>太字斜体</strong></em></div></div><div class="exr"><div class="exs">~~取り消し線~~</div><div class="exo md"><del>取り消し線</del></div></div><div class="exr"><div class="exs">H&lt;sub&gt;2&lt;/sub&gt;O</div><div class="exo md">H<sub>2</sub>O</div></div><div class="exr"><div class="exs">x&lt;sup&gt;2&lt;/sup&gt;</div><div class="exo md">x<sup>2</sup></div></div><div class="exr"><div class="exs">&lt;ins&gt;下線&lt;/ins&gt;</div><div class="exo md"><ins>下線</ins></div></div><div class="exr p"><div class="exs">&lt;kbd&gt;⌘&lt;/kbd&gt;+&lt;kbd&gt;C&lt;/kbd&gt;</div><div class="exo md"><kbd>⌘</kbd>+<kbd>C</kbd></div></div></div><div class="cw">日本語の文中では <code>__太字__</code> <code>_斜体_</code> は効かない。<code>**</code> と <code>*</code> を使う</div><div class="cd">文字の色・大きさ・蛍光ペン(<code>==…==</code>)は GitHub では指定できない</div></div>
+<div class="card cA"><div class="ct"><i class="ic">↩️</i>改行と段落(いちばんの罠)</div><table class="tb"><thead><tr><th>書き方</th><th>.md ファイル</th><th>Issue・PR</th></tr></thead><tbody><tr><td class="f">Enter で改行しただけ</td><td>⚠ <strong>改行されない</strong></td><td>改行される</td></tr><tr><td class="f">行末に <code>␣␣</code>(空白2個)</td><td>改行</td><td>改行</td></tr><tr><td class="f">行末に <code>\</code></td><td>改行</td><td>改行</td></tr><tr><td class="f"><code>&lt;br&gt;</code> を書く</td><td>改行</td><td>改行</td></tr><tr><td class="f">空行を入れる</td><td><strong>段落</strong>が分かれる</td><td>同じ</td></tr></tbody></table><div class="cc">1行目
+2行目\
+3行目
+
+4行目</div><div class="ov"><span class="ovl">.md ファイルでの表示</span><div class="md"><p>1行目 2行目<br>3行目</p><p>4行目</p></div></div><div class="cd">.md では改行が<strong>空白1個</strong>になり前の行とつながる(Issue・PR のコメントでは改行になる)。空行は何行入れても1行と同じ</div><div class="cw">行末の <code>␣␣</code> は見えず、保存時にエディタが消すこともある。<code>\</code> か <code>&lt;br&gt;</code> が確実</div></div>
+<div class="card cA"><div class="ct"><i class="ic">🛡️</i>エスケープ(記号をそのまま出す)</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">\*星\*</div><div class="exo md">*星*</div></div><div class="exr"><div class="exs">\# 見出しにしない</div><div class="exo md"># 見出しにしない</div></div><div class="exr"><div class="exs">1986\. 年</div><div class="exo md">1986. 年</div></div><div class="exr"><div class="exs">10\~20人</div><div class="exo md">10~20人</div></div></div><div class="kv"><div><b>\ が効く記号</b><span><code>\ ` * _ { } [ ] &lt; &gt; ( ) # + - . ! | ~</code> など、半角の記号すべて</span></div></div><div class="cd">コードの中では <code>\</code> は不要(書いたとおりに出る)</div></div>
+<div class="sec sB"><b>B</b>リスト・引用・コード</div>
+<div class="card cB"><div class="ct"><i class="ic">📋</i>箇条書き・番号付きリスト</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">- りんご
+- みかん
+  - 温州みかん</div><div class="exo md"><ul><li>りんご</li><li>みかん<ul><li>温州みかん</li></ul></li></ul></div></div><div class="exr m"><div class="exs">1. 準備
+1. 実行
+1. 確認</div><div class="exo md"><ol><li>準備</li><li>実行</li><li>確認</li></ol></div></div></div><div class="cd"><code>*</code> <code>+</code> でも同じ(1つのリストでは混ぜない)。番号は自動で振られるので <code>1.</code> を並べてよい</div><div class="cw"><code>-</code> <code>1.</code> の後は<strong>半角スペース</strong>。全角スペース、<code>・</code>、全角の <code>－</code> ではリストにならない</div><div class="cw">入れ子は親の<strong>文字の位置</strong>まで下げる。<code>- </code> の下は2文字、<code>1. </code> の下は<strong>3文字</strong>。番号付きの下を2文字にすると入れ子にならない</div></div>
+<div class="card cB"><div class="ct"><i class="ic">☑️</i>チェックボックス</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">- [ ] 資料を読む
+- [x] 環境構築</div><div class="exo md"><ul class="tl"><li><span class="cbx"></span> 資料を読む</li><li><span class="cbx on"></span> 環境構築</li></ul></div></div></div><div class="cd">Issue・PR・コメントでは、表示されたチェックボックスをクリックしてオン・オフできる</div><div class="cw"><code>[ ]</code> の中は半角スペース。<code>- []</code> は文字のまま出る</div></div>
+<div class="card cB"><div class="ct"><i class="ic">💬</i>引用と水平線</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">&gt; 引用した文
+&gt;&gt; 引用の中の引用</div><div class="exo md"><blockquote><p>引用した文</p><blockquote><p>引用の中の引用</p></blockquote></blockquote></div></div><div class="exr m"><div class="exs">---</div><div class="exo md"><hr></div></div></div><div class="cd">水平線は <code>***</code> <code>___</code> でもよい。引用の中でもリストや太字が使える</div><div class="cw">文のすぐ下の行に <code>---</code> を書くと、その文が<strong>見出し(h2)</strong>になる。<code>---</code> の前に空行を入れる</div></div>
+<div class="card cB"><div class="ct"><i class="ic">💻</i>コード</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">`printf()` を使う</div><div class="exo md"><code>printf()</code> を使う</div></div><div class="exr p"><div class="exs">`` a`b ``</div><div class="exo md"><code>a`b</code></div></div></div><div class="cc">```c <span class="cm">← 言語名を付ける</span>
+#include &lt;stdio.h&gt;
+int main(void) {
+    printf(&quot;Hello\n&quot;);
+    return 0;
+}
+```</div><div class="ov"><span class="ovl">GitHub での表示</span><div class="md"><pre class="hl"><span class="pl-k">#include</span> <span class="pl-s">&lt;stdio.h&gt;</span>
+<span class="pl-smi">int</span> <span class="pl-en">main</span>(<span class="pl-smi">void</span>) {
+    <span class="pl-en">printf</span>(<span class="pl-s">"Hello\n"</span>);
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div></div><div class="kv"><div class="m"><b>```言語名</b><span>色分けされる。<code>c</code> <code>js</code> <code>python</code> <code>java</code> <code>html</code> <code>css</code> <code>json</code> <code>sh</code> <code>sql</code> など</span></div><div><b>```diff</b><span>行頭の <code>+</code> <code>-</code> を追加・削除として色分け</span></div><div class="p"><b>~~~</b><span><code>```</code> の代わりに使える</span></div><div class="p"><b>````</b><span><code>```</code> を含む文章は4個で囲む</span></div></div><div class="cw"><code>```</code> を閉じ忘れると、そこからファイルの最後まで全部コードになる</div></div>
+<div class="sec sC"><b>C</b>リンク・画像・表</div>
+<div class="card cC"><div class="ct"><i class="ic">🔗</i>リンク</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">[GitHub](https://github.com)</div><div class="exo md"><a>GitHub</a></div></div><div class="exr"><div class="exs">&lt;https://example.com&gt;</div><div class="exo md"><a>https://example.com</a></div></div><div class="exr"><div class="exs">https://example.com</div><div class="exo md"><a>https://example.com</a></div></div></div><div class="kv"><div><b>[文字](URL &quot;説明&quot;)</b><span>マウスを乗せると説明が出る</span></div><div class="m"><b>[課題1](docs/kadai1.md)</b><span>リポジトリ内のファイル(このファイルからの相対パス)</span></div><div><b>[README](/README.md)</b><span><code>/</code> で始めるとリポジトリの最上位から</span></div><div><b>[目次へ](#はじめに)</b><span>同じページの見出しへ(F のアンカー)</span></div><div class="p"><b>[文字][1]</b><span>参照式。別の行に <code>[1]: URL</code> と書く</span></div></div><div class="cw">URL やファイル名に空白があるとリンクにならない。空白を <code>%20</code> にするか、<code>[資料](&lt;my file.md&gt;)</code> のように <code>&lt; &gt;</code> で囲む</div></div>
+<div class="card cC"><div class="ct"><i class="ic">🖼️</i>画像</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">![猫の写真](img/cat.png)</div><div class="exo md"><span class="img">🐈</span></div></div></div><div class="kv"><div class="m"><b>![代替テキスト](パス)</b><span>代替テキスト = 画像が出ないとき・読み上げのときの説明</span></div><div><b>![図](URL &quot;説明&quot;)</b><span>Web 上の画像も URL で貼れる</span></div><div><b>&lt;img src=&quot;cat.png&quot; width=&quot;200&quot;&gt;</b><span>大きさを指定するときは HTML(F)</span></div><div class="p"><b>[![図](a.png)](URL)</b><span>画像をクリックするとリンク先へ</span></div></div><div class="cd">Issue やコメントでは、画像を<strong>ドラッグ&amp;ドロップ</strong>するとアップロードされ、書き方が自動で入る</div><div class="cw">GitHub はファイル名の<strong>大文字と小文字</strong>を区別する。Mac 上では <code>Cat.PNG</code> を <code>cat.png</code> と書いても表示されるが、GitHub では表示されない</div></div>
+<div class="card cC"><div class="ct"><i class="ic">📊</i>表</div><div class="cc">| 名前 | 点数 | 結果 |
+|:-----|-----:|:----:| <span class="cm">← 区切り行</span>
+| 佐藤 |   85 | 合格 |
+| 鈴木 |    9 | 再試 |</div><div class="ov"><span class="ovl">GitHub での表示</span><div class="md"><table><thead><tr><th class="l">名前</th><th class="r">点数</th><th class="c">結果</th></tr></thead>
+<tbody><tr><td class="l">佐藤</td><td class="r">85</td><td class="c">合格</td></tr>
+<tr><td class="l">鈴木</td><td class="r">9</td><td class="c">再試</td></tr></tbody></table></div></div><div class="kv"><div><b>:---</b><span>左寄せ</span></div><div><b>---:</b><span>右寄せ(数値向き)</span></div><div><b>:---:</b><span>中央寄せ</span></div></div><div class="cd">2行目の<strong>区切り行</strong>が必須。<code>-</code> は1個以上ならいくつでもよく、列の幅は内容に合わせて自動で決まる。縦をそろえなくてもよい</div><div class="cw">区切り行の列の数が見出し行と違うと、表にならず文字のまま表示される</div></div>
+<div class="card cC"><div class="ct"><i class="ic">🧩</i>表の中で使える書き方</div><div class="kv"><div class="m"><b>&lt;br&gt;</b><span>セルの中で改行</span></div><div class="m"><b>\|</b><span>セルの中に <code>|</code> を書く(<code>`a\|b`</code> のようにコードの中でも必要)</span></div><div><b>**太字** `コード`</b><span>リンクや画像も使える</span></div><div class="p"><b>&lt;table&gt;</b><span>セルの結合は HTML の <code>rowspan</code> <code>colspan</code> で</span></div></div><div class="cd">見出し行よりセルが多い行は余りが捨てられ、少ない行は空欄で埋まる。前後の <code>|</code> は省略できるが、付けたほうが崩れにくい</div></div>
+<div class="sec sD"><b>D</b>GitHub の便利な記法</div>
+<div class="card cD"><div class="ct"><i class="ic">🚨</i>アラート(注意書きの枠)</div><div class="cc">&gt; [!NOTE]
+&gt; 提出は金曜 17 時まで。</div><div class="ov"><span class="ovl">GitHub での表示</span><div class="md"><div class="al a-note"><span class="alt a-note">ⓘ Note</span><p>提出は金曜 17 時まで。</p></div></div></div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr"><div class="exs">&gt; [!TIP]</div><div class="exo md"><span class="alt a-tip">Tip</span> <span class="dim">コツ・助言</span></div></div><div class="exr"><div class="exs">&gt; [!IMPORTANT]</div><div class="exo md"><span class="alt a-important">Important</span> <span class="dim">必ず知っておくこと</span></div></div><div class="exr"><div class="exs">&gt; [!WARNING]</div><div class="exo md"><span class="alt a-warning">Warning</span> <span class="dim">すぐ注意が必要</span></div></div><div class="exr"><div class="exs">&gt; [!CAUTION]</div><div class="exo md"><span class="alt a-caution">Caution</span> <span class="dim">危険・悪い結果になる</span></div></div></div><div class="cw"><code>[!NOTE]</code> の行には他の文字を書かない(本文は次の行から)。リストや引用の中には入れられない</div></div>
+</div>
+<div class="foot"><span>このページ＝毎回使う基本の書式と GitHub の便利な記法。左が書き方、右が GitHub での表示</span><span>␣ = 半角スペース ／ 表示の確認: GitHub の Preview タブ・VS Code の ⇧⌘V</span><span>1 / 2</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>Markdown チートシート</b><span>GitHub Flavored Markdown(GFM)</span></div><div class="legend"><span class="lg lgA"><i></i>A 基本の書式</span><span class="lg lgB"><i></i>B リスト・コード</span><span class="lg lgC"><i></i>C リンク・表</span><span class="lg lgD"><i></i>D GitHub の記法</span><span class="lg lgE"><i></i>E 数式と図</span><span class="lg lgF"><i></i>F 文書を整える</span><span class="lg lgG"><i></i>G よくある失敗</span><span class="lg mk"><b>★</b>まず覚える定番</span><span class="lg ad"><b>Aa</b>グレー文字=上級者向け</span><span class="lg wn"><b>⚠</b>間違えやすい点</span></div></div>
+<div class="grid">
+<div class="sec sD"><b>D</b>GitHub の便利な記法(続き)</div>
+<div class="card cD"><div class="ct"><i class="ic">📂</i>折りたたみ(details)</div><div class="cc">&lt;details&gt;
+&lt;summary&gt;解答を見る&lt;/summary&gt;
+ <span class="cm">← この空行が必要</span>
+答えは **42**。
+ <span class="cm">← この空行が必要</span>
+&lt;/details&gt;</div><div class="ov"><span class="ovl">表示(押すと開く)</span><div class="md"><p><span class="tri">▶</span> 解答を見る</p></div></div><div class="cw"><code>&lt;/summary&gt;</code> の後と <code>&lt;/details&gt;</code> の前に<strong>空行</strong>が無いと、中の Markdown が効かず <code>**</code> が文字で出る</div><div class="kv"><div class="p"><b>&lt;details open&gt;</b><span>最初から開いた状態にする</span></div></div></div>
+<div class="card cD"><div class="ct"><i class="ic">😀</i>絵文字と自動リンク</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">:smile: :+1: :warning:</div><div class="exo md">😄 👍 ⚠️</div></div><div class="exr"><div class="exs">@octocat</div><div class="exo md"><strong><a>@octocat</a></strong></div></div><div class="exr"><div class="exs">#123</div><div class="exo md"><a>#123</a></div></div></div><div class="cd"><code>:</code> を打つと絵文字の候補が出る。<code>@ユーザー名</code> はその人に<strong>通知</strong>が届き、<code>#番号</code> はそのリポジトリの Issue・PR へのリンクになる(どちらも Issue・PR・コメントの中で)</div><div class="cd">URL は <code>&lt; &gt;</code> で囲まなくても、そのまま書けばリンクになる(<code>www.</code> で始まるものも)</div></div>
+<div class="sec sE"><b>E</b>数式と図(Mermaid)</div>
+<div class="card cE"><div class="ct"><i class="ic">🧮</i>数式の書き方</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">$E=mc^2$</div><div class="exo md"><span class="mx"><i>E</i>=<i>mc</i><sup>2</sup></span></div></div></div><div class="cc">$$
+x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}
+$$</div><div class="ov"><span class="ovl">GitHub での表示</span><div class="md"><div class="mx blk"><i>x</i> = <span class="fr"><span>−<i>b</i> ± <span class="sq">√<span><i>b</i><sup>2</sup>−4<i>ac</i></span></span></span><span>2<i>a</i></span></span></div></div></div><div class="kv"><div class="m"><b>$…$</b><span>文中の数式</span></div><div class="m"><b>$$ … $$</b><span>独立した行の数式</span></div><div><b>```math</b><span><code>$$</code> の代わりのコードブロック(<code>$$</code> は不要)</span></div><div class="p"><b>$`…`$</b><span>数式の中の記号が Markdown と衝突して崩れるとき</span></div></div><div class="cd">LaTeX の書き方で書き、GitHub が MathJax で表示する。.md ファイル・Issue・PR・wiki で使える</div><div class="cw">数式と同じ行で <code>$</code> を文字として出すときは、数式の中では <code>\$</code>、数式の外では <code>&lt;span&gt;$&lt;/span&gt;</code></div></div>
+<div class="card cE"><div class="ct"><i class="ic">🔢</i>数式でよく使う記号</div><div class="ex"><div class="exh"><span>書き方</span><span>GitHub での表示</span></div><div class="exr m"><div class="exs">x^2  x_i  x^{10}</div><div class="exo md"><span class="mx"><i>x</i><sup>2</sup>  <i>x</i><sub><i>i</i></sub>  <i>x</i><sup>10</sup></span></div></div><div class="exr m"><div class="exs">\frac{a}{b}  \sqrt{x}</div><div class="exo md"><span class="mx"><span class="fr"><span><i>a</i></span><span><i>b</i></span></span>  <span class="sq">√<span><i>x</i></span></span></span></div></div><div class="exr"><div class="exs">\sum_{i=1}^{n}  \int_0^1</div><div class="exo md"><span class="mx"><span class="lim"><small><i>n</i></small><span>∑</span><small><i>i</i>=1</small></span>  ∫<sub>0</sub><sup>1</sup></span></div></div><div class="exr"><div class="exs">\lim_{x \to 0}</div><div class="exo md"><span class="mx"><span class="lim"><span>lim</span><small><i>x</i>→0</small></span></span></div></div><div class="exr"><div class="exs">\times \div \pm \cdot</div><div class="exo md"><span class="mx">×  ÷  ±  ⋅</span></div></div><div class="exr"><div class="exs">\le \ge \ne \approx</div><div class="exo md"><span class="mx">≤  ≥  ≠  ≈</span></div></div><div class="exr"><div class="exs">\alpha \beta \pi \theta</div><div class="exo md"><span class="mx"><i>α  β  π  θ</i></span></div></div><div class="exr"><div class="exs">\infty \to \cdots</div><div class="exo md"><span class="mx">∞  →  ⋯</span></div></div><div class="exr"><div class="exs">\vec{v}  \bar{x}</div><div class="exo md"><span class="mx"><span class="acc" data-a="→"><i>v</i></span>  <span class="acc" data-a="‾"><i>x</i></span></span></div></div><div class="exr"><div class="exs">\sin x  \log n</div><div class="exo md"><span class="mx">sin <i>x</i>  log <i>n</i></span></div></div><div class="exr p"><div class="exs">\text{個数}</div><div class="exo md"><span class="mx">個数</span></div></div></div><div class="cw">2文字以上を上付き・下付きにするときは <code>{ }</code> で囲む。<code>x^10</code> は <code>x</code> の上に <code>1</code> だけが付く</div></div>
+<div class="card cE"><div class="ct"><i class="ic">📈</i>Mermaid で図を描く(フローチャート)</div><div class="cc">```mermaid
+flowchart TD
+  A[開始] --&gt; B{60点以上?}
+  B --&gt;|Yes| C[合格]
+  B --&gt;|No| D[再試験]
+  D --&gt; B
+```</div><div class="ov"><span class="ovl">GitHub での表示</span><div class="md"><svg class="mm" viewBox="0 0 200 108" role="img" aria-label="フローチャートの表示例">
+<defs><marker id="mkf" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L8 4L0 8z" fill="#333"/></marker></defs>
+<g fill="#ececff" stroke="#9370db" stroke-width="1">
+<rect x="76" y="2" width="48" height="16" rx="1.5"/>
+<path d="M100 27L142 43L100 59L58 43Z"/>
+<rect x="26" y="88" width="48" height="16" rx="1.5"/>
+<rect x="126" y="88" width="48" height="16" rx="1.5"/>
+</g>
+<g fill="none" stroke="#333" stroke-width="1" marker-end="url(#mkf)">
+<path d="M100 18V26"/><path d="M86 54L52 87"/><path d="M114 54L148 87"/>
+<path d="M174 96C196 96 196 43 143 43"/>
+</g>
+<g font-size="9" text-anchor="middle" fill="#333">
+<text x="100" y="13">開始</text><text x="100" y="46">60点以上?</text>
+<text x="50" y="99">合格</text><text x="150" y="99">再試験</text>
+</g>
+<g font-size="8" text-anchor="middle" fill="#333">
+<rect x="56" y="64" width="18" height="10" fill="#e8e8e8"/><text x="65" y="72">Yes</text>
+<rect x="126" y="64" width="16" height="10" fill="#e8e8e8"/><text x="134" y="72">No</text>
+</g>
+</svg></div></div><div class="kv"><div class="m"><b>flowchart TD</b><span>上→下に並べる(<code>LR</code> で左→右)</span></div><div><b>A[文字]  A(文字)</b><span>四角 / 角丸</span></div><div><b>A{文字}  A((文字))</b><span>ひし形(分岐) / 円</span></div><div class="m"><b>--&gt;  ---</b><span>矢印 / 線</span></div><div><b>-.-&gt;  ==&gt;</b><span>点線の矢印 / 太い矢印</span></div><div><b>--&gt;|Yes|</b><span>矢印に文字を付ける</span></div></div><div class="cd"><code>```mermaid</code> のコードブロックに書くと、.md ファイル・Issue・PR などで図になる</div><div class="cw">文字に <code>( ) [ ] { }</code> などの記号を含めるときは <code>A[&quot;f(x) を計算&quot;]</code> のように <code>&quot;…&quot;</code> で囲む</div></div>
+<div class="card cE"><div class="ct"><i class="ic">🗺️</i>Mermaid のほかの図</div><div class="cc">```mermaid
+sequenceDiagram
+  ブラウザ-&gt;&gt;サーバ: GET /
+  サーバ--&gt;&gt;ブラウザ: 200 OK
+```</div><div class="ov"><span class="ovl">GitHub での表示</span><div class="md"><svg class="mm sm" viewBox="0 0 200 76" role="img" aria-label="シーケンス図の表示例">
+<defs><marker id="mks" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L8 4L0 8z" fill="#333"/></marker></defs>
+<g stroke="#999" stroke-width=".8" stroke-dasharray="3 2"><path d="M40 16V60"/><path d="M160 16V60"/></g>
+<g fill="#ececff" stroke="#9370db" stroke-width="1">
+<rect x="10" y="2" width="60" height="14" rx="1.5"/><rect x="130" y="2" width="60" height="14" rx="1.5"/>
+<rect x="10" y="60" width="60" height="14" rx="1.5"/><rect x="130" y="60" width="60" height="14" rx="1.5"/>
+</g>
+<g fill="none" stroke="#333" stroke-width="1" marker-end="url(#mks)">
+<path d="M40 32H159"/><path d="M160 50H41" stroke-dasharray="3 2"/>
+</g>
+<g font-size="9" text-anchor="middle" fill="#333">
+<text x="40" y="12">ブラウザ</text><text x="160" y="12">サーバ</text>
+<text x="40" y="70">ブラウザ</text><text x="160" y="70">サーバ</text>
+<text x="100" y="29">GET /</text><text x="100" y="47">200 OK</text>
+</g>
+</svg></div></div><div class="kv"><div class="m"><b>sequenceDiagram</b><span>シーケンス図(やり取りの順番)</span></div><div><b>-&gt;&gt;  --&gt;&gt;</b><span>実線の矢印 / 点線の矢印(返事)</span></div><div><b>classDiagram</b><span>クラス図(<code>stateDiagram-v2</code> は状態遷移図)</span></div><div><b>erDiagram</b><span>ER 図(<code>gantt</code> はガントチャート、<code>pie</code> は円グラフ)</span></div></div></div>
+<div class="sec sF"><b>F</b>文書を整える(脚注・目次・HTML)</div>
+<div class="card cF"><div class="ct"><i class="ic">📌</i>脚注</div><div class="cc">本文です[^1]。
+
+[^1]: 出典は教科書 p.12。</div><div class="ov"><span class="ovl">GitHub での表示</span><div class="md"><p>本文です<sup><a>1</a></sup>。</p><div class="fn"><ol><li>出典は教科書 p.12。 <a>↩</a></li></ol></div></div></div><div class="cd">定義はどこに書いても<strong>末尾</strong>にまとめて出る。番号は出てきた順(<code>[^note]</code> のような名前も可)。<code>↩</code> で本文へ戻る。wiki では不可</div></div>
+<div class="card cF"><div class="ct"><i class="ic">🧭</i>見出しのアンカーと目次</div><table class="tb"><thead><tr><th>見出し</th><th>リンク先(アンカー)</th></tr></thead><tbody><tr><td class="f"><code>## Hello World!</code></td><td><code>#hello-world</code></td></tr><tr><td class="f"><code>## はじめに</code></td><td><code>#はじめに</code></td></tr><tr><td class="f"><code>## 環境構築（macOS）</code></td><td><code>#環境構築macos</code></td></tr><tr><td class="f"><code>## 1. 準備</code></td><td><code>#1-準備</code></td></tr><tr><td class="f">2回目の <code>## はじめに</code></td><td><code>#はじめに-1</code></td></tr></tbody></table><div class="cd">英字は小文字、空白は <code>-</code> に。<code>-</code> <code>_</code> 以外の記号は全角も消える。<strong>日本語はそのまま</strong>(アドレス欄では <code>%E3%81%AF…</code> と見えるが同じ)</div><div class="cc">## 目次
+- [はじめに](#はじめに)
+- [Hello World!](#hello-world)</div><div class="kv"><div class="m"><b>🔗</b><span>見出しに乗せると出る。押すとアンカー付き URL に</span></div><div><b>Outline</b><span>.md 表示の目次ボタン(見出し2つ以上)</span></div></div><div class="cw">見出しを変えるとアンカーも変わり、リンクが切れる</div></div>
+<div class="card cF"><div class="ct"><i class="ic">🧱</i>HTML を混ぜる(Markdown の逃げ道)</div><div class="kv"><div class="m"><b>&lt;br&gt;</b><span>改行(表のセルの中でも使える)</span></div><div class="m"><b>&lt;img src=&quot;a.png&quot; width=&quot;300&quot;&gt;</b><span>画像の大きさを指定</span></div><div><b>&lt;p align=&quot;center&quot;&gt;…&lt;/p&gt;</b><span>中央寄せ(<code>&lt;div align=&quot;center&quot;&gt;</code> も可)</span></div><div class="m"><b>&lt;!-- メモ --&gt;</b><span>表示されないコメント</span></div><div><b>&lt;sub&gt; &lt;sup&gt; &lt;ins&gt;</b><span>下付き・上付き・下線(A)</span></div><div><b>&lt;kbd&gt;Esc&lt;/kbd&gt;</b><span>キーの表示</span></div><div><b>&lt;details&gt;</b><span>折りたたみ(D)</span></div><div class="p"><b>&lt;table&gt;</b><span>セルの結合(<code>rowspan</code> <code>colspan</code>)</span></div></div><div class="cw"><code>style=&quot;color:red&quot;</code>・<code>&lt;font&gt;</code>・<code>&lt;u&gt;</code> は GitHub が取り除くので、色や下線は付けられない(<code>&lt;script&gt;</code> は文字のまま出る)</div><div class="cw">HTML のタグの中に Markdown を書くときは、前後に<strong>空行</strong>を入れる</div></div>
+<div class="card cF"><div class="ct"><i class="ic">📑</i>YAML frontmatter</div><div class="cc">---
+title: 第3回 レポート
+author: 千葉 太郎
+date: 2026-10-23
+tags: [markdown, github]
+---
+
+# 本文はここから</div><div class="ov"><span class="ovl">.md ファイルでの表示</span><div class="md"><table class="fm"><tbody><tr><th>title</th><td>第3回 レポート</td></tr><tr><th>author</th><td>千葉 太郎</td></tr><tr><th>date</th><td>2026-10-23</td></tr><tr><th>tags</th><td><table><tbody><tr><td>markdown</td><td>github</td></tr></tbody></table></td></tr></tbody></table><h1>本文はここから</h1></div></div><div class="cd">ファイルの<strong>1行目</strong>を <code>---</code> で始め、<code>---</code> で閉じる。中は YAML(<code>キー: 値</code>)で、文書の題名・日付などの情報を書く。GitHub Pages(Jekyll)などのツールが設定として読む</div><div class="cw"><code>:</code> の後には半角スペース。値に <code>: </code> や <code> #</code> を含むときは <code>&quot;…&quot;</code> で囲む</div><div class="cw">Issue・コメントに書くと<strong>水平線と見出し</strong>に化ける。.md ファイルの先頭専用</div></div>
+<div class="sec sG"><b>G</b>よくある失敗</div>
+<div class="card cG"><div class="ct"><i class="ic">💥</i>よくある失敗(書式が崩れる)</div><div class="er"><div><code>#見出し</code><span><code>#</code> の後に半角スペース → <code># 見出し</code></span></div><div><code>-　項目(全角スペース)</code><span>リストにならない → 半角スペースに</span></div><div><code>・項目</code><span><code>・</code> はただの文字 → <code>- 項目</code></span></div><div><code>日本語の**「重要」**です</code><span>記号で始まる・終わる太字は効かない → <code>**</code> の外側に半角スペースを入れるか <code>&lt;b&gt;「重要」&lt;/b&gt;</code></span></div><div><code>10~20人、3~5万円</code><span><code>~</code> が2つあると間が<strong>取り消し線</strong>になる → <code>〜</code>(全角)か <code>\~</code></span></div><div><code>まとめ
+---</code><span><code>まとめ</code> が見出しになる → <code>---</code> の前に空行</span></div><div><code>1. 親
+  - 子</code><span>2文字下げでは入れ子にならない → 3文字下げる</span></div><div><code>```js(閉じ忘れ)</code><span>そこから最後まで全部コードになる</span></div></div></div>
+<div class="card cG"><div class="ct"><i class="ic">🐛</i>よくある失敗(つながる・出ない)</div><div class="er"><div><code>1行目
+2行目</code><span>.md では1行につながる → 行末に <code>\</code>(A の改行)</span></div><div><code>| A | B |
+|---|</code><span>区切り行の列の数が違う → 表にならない</span></div><div><code>![図](Img/Cat.PNG)</code><span>大文字・小文字が実際のファイル名と違う → GitHub で画像が出ない</span></div><div><code>[資料](my file.pdf)</code><span>空白を含む → <code>my%20file.pdf</code> か <code>&lt;my file.pdf&gt;</code></span></div><div><code>&lt;div&gt;**太字**&lt;/div&gt;</code><span>HTML の中の Markdown は効かない → タグの前後に空行</span></div><div><code>- []  タスク</code><span><code>[ ]</code> の中の半角スペースが無い → チェックボックスにならない</span></div></div></div>
+</div>
+<div class="foot"><span>このページ＝数式・図と、文書を整える記法。表示が崩れたら G を見る</span><span>␣ = 半角スペース ／ 表示の確認: GitHub の Preview タブ・VS Code の ⇧⌘V</span><span>2 / 2</span></div>
+</div>
+</body>
+</html>

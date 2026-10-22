@@ -1,6 +1,6 @@
 # チートシート
 
-授業で配布する印刷教材です。macOS の操作と C言語の文法を、それぞれ A4横 3 枚に、Node.js による Web アプリ開発を A4横 4 枚にまとめています。
+授業で配布する印刷教材です。macOS の操作と C言語の文法を、それぞれ A4横 3 枚に、Node.js による Web アプリ開発を A4横 4 枚に、Markdown の書き方を A4横 2 枚にまとめています。
 
 | シート | 出力ファイル | 構成 |
 | --- | --- | --- |
@@ -8,6 +8,7 @@
 | macOS ショートカット（ダーク） | `index.html` | 同上（配色のみ違う） |
 | C言語 | `c_lang_cheatsheet_light.html` | 3ページ・47カード・5段組 |
 | Node.js Webアプリ開発 | `node_cheatsheet_light.html` | 4ページ・53カード・5段組 |
+| Markdown（GitHub） | `markdown_cheatsheet_light.html` | 2ページ・26カード・5段組 |
 
 いずれも外部 CDN を参照しない単一ファイルです。ブラウザで開いてそのまま印刷できます。
 
@@ -19,7 +20,7 @@
 - 余白: **なし**（`@page{size:A4 landscape;margin:7mm}` で内側に余白を確保済み）
 - **背景のグラフィック: オン**（カテゴリの色帯が出ません）
 
-配布用は `index-light.html` と `c_lang_cheatsheet_light.html` と `node_cheatsheet_light.html` を使ってください。`index.html` は画面で見るためのダーク版です。
+配布用は `index-light.html` と `c_lang_cheatsheet_light.html` と `node_cheatsheet_light.html` と `markdown_cheatsheet_light.html` を使ってください。`index.html` は画面で見るためのダーク版です。
 
 ## ページの役割
 
@@ -42,6 +43,13 @@
 3. 非同期処理と Node.js の作法（callback / Promise / async-await / JSON / CommonJS と ES Modules / fs / HTTP / fetch）
 4. Express とトラブル対処（ルーティング / req・res / ミドルウェア / 静的ファイル / フォーム / EJS / 404・エラー処理 / .env / nodemon / よくあるエラー）
 
+**Markdown**（GitHub Flavored Markdown。GitHub 上の表示を正とし、2026年10月に GitHub の Markdown API と実リポジトリの描画で確認）
+
+1. 基本の書式と GitHub の便利な記法（見出し / 文字飾り / 改行と段落 / エスケープ / リスト / チェックボックス / 引用・水平線 / コード / リンク / 画像 / 表 / アラート）
+2. 数式・図と文書を整える記法（折りたたみ / 絵文字・自動リンク / 数式 / Mermaid / 脚注 / アンカーと目次 / HTML / YAML frontmatter / よくある失敗）
+
+各カードは「書き方（左）」と「GitHub での表示（右）」を並べています。
+
 「まず持ち歩く2枚」は、macOS 版の1ページ目と C言語版の1ページ目です。
 
 ## 凡例
@@ -60,6 +68,7 @@
 node build_macos_cheatsheet.js   # index.html と index-light.html を生成
 node build_c_cheatsheet.js       # c_lang_cheatsheet_light.html を生成
 node build_node_cheatsheet.js    # node_cheatsheet_light.html を生成
+node build_markdown_cheatsheet.js  # markdown_cheatsheet_light.html を生成
 ```
 
 Node.js の標準モジュール（`fs` / `path`）しか使っていないので、依存関係のインストールは不要です。開発に使った Node は v26.4.0 です。
@@ -74,8 +83,11 @@ Node.js の標準モジュール（`fs` / `path`）しか使っていないの�
   - macOS: `SPLIT = [13, 9, 12]`
   - C言語: `SPLIT = [13, 16, 18]`
   - Node.js: `SPLIT = [14, 14, 12, 13]`
-- 全体の文字サイズは macOS が `FS`（現在 1.16）、C言語が `SCALE`（現在 1.13）、Node.js が `SCALE`（現在 1.0）で調整します。C言語版と Node.js 版は `SCALE=1.10 node build_c_cheatsheet.js` のように環境変数でも渡せます。
+  - Markdown: `SPLIT = [14, 12]`（p2 の先頭は「D GitHub の便利な記法（続き）」）
+- 全体の文字サイズは macOS が `FS`（現在 1.16）、C言語が `SCALE`（現在 1.13）、Node.js と Markdown が `SCALE`（現在 1.0）で調整します。C言語版・Node.js 版・Markdown 版は `SCALE=1.10 node build_c_cheatsheet.js` のように環境変数でも渡せます。
 - Node.js 版のコード塊は1行 37 桁（全角は約 1.7 桁）を超えると折り返して高さが増えます。長い行は自然な位置で改行してください。
+- Markdown 版は本文に `**` や `` ` `` をそのまま載せるため、説明文の独自記法を他のシートと変えています。説明文（`CD` / `CW` / `KV` の説明 / `TB` / `ER` の右側）では **等幅は `⟦…⟧`、強調は `⟪…⟫`** と書きます。`` ` `` と `**` は解釈せず文字のまま出ます。書き方の欄（`EX` の左・`CC`・`KV` のキー・`ER` の左）は一切解釈せず、書いたとおりに表示します。`⟦` `⟪` の閉じ忘れはビルドが例外で止まります。
+- Markdown 版の右側（GitHub での表示）は、GitHub の見た目を HTML で再現した固定文字列です。書き方を変えたら表示も手で直してください。
 
 ### レイアウトの確認を必ず行うこと
 
@@ -84,6 +96,7 @@ Node.js の標準モジュール（`fs` / `path`）しか使っていないの�
 - C言語 1ページ目: 余白 **約 5.0mm**
 - macOS 3ページ目の第1段: 余白 **約 4.9mm**
 - Node.js 3ページ目の第2段: 余白 **約 5.7mm**（各ページの最小余白は p1 8.5 / p2 8.6 / p3 5.7 / p4 10.5mm）
+- Markdown 1ページ目の第2段: 余白 **約 6.4mm**（各ページの最小余白は p1 6.4 / p2 6.8mm）
 
 さらに厄介なことに、**PDF のページ数を見るだけでは、あふれを検出できません。** 段から押し出された内容は `overflow:hidden` で見えなくなるため、はみ出していてもページ数は 3 のままになります。
 
@@ -96,9 +109,11 @@ Node.js の標準モジュール（`fs` / `path`）しか使っていないの�
 | `build_macos_cheatsheet.js` | macOS シートの生成スクリプト（唯一の編集対象） |
 | `build_c_cheatsheet.js` | C言語シートの生成スクリプト（唯一の編集対象） |
 | `build_node_cheatsheet.js` | Node.js シートの生成スクリプト（唯一の編集対象） |
+| `build_markdown_cheatsheet.js` | Markdown シートの生成スクリプト（唯一の編集対象） |
 | `index.html` / `index-light.html` | macOS シート（生成物） |
 | `c_lang_cheatsheet_light.html` | C言語シート（生成物） |
 | `node_cheatsheet_light.html` | Node.js シート（生成物） |
+| `markdown_cheatsheet_light.html` | Markdown シート（生成物） |
 | `content_review.md` | 内容精査の記録。誤り・追加候補・削除候補・未解決事項 |
 | `c_lang.md` | C言語シートの素材 |
 | `c_lang_plan.md` | C言語シートの構成案 |
