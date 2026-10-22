@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[ライト] Node.js Webアプリ開発チートシート(macOS / Express 5)</title>
+<meta name="description" content="Homebrew・nodebrew・npm による環境構築、UNIX コマンド、JavaScript の基本文法、非同期処理、Node.js の作法、Express の基本とトラブル対処をまとめたA4横4ページのチートシート(ライトモード)。">
+<style>
+:root{
+  --cA: #1a4fa0;
+  --cB: #6b3fa0;
+  --cC: #1f7a3f;
+  --cD: #b07500;
+  --cE: #6d8c1f;
+  --cF: #c0272d;
+  --cG: #d2691e;
+  --cH: #0f7b7b;
+  --ink:#1a1a1a; --sub:#3f3f3f; --dim:#8a8a8a; --line:#d5d5d5; --codebg:#f4f4f4;
+  --star:#b8860b; --warn:#8a4b08; --cmt:#2e7d4f;
+  --mono:"SFMono-Regular","SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{background:#8f8f8f;
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  color:var(--ink);}
+@page{size:A4 landscape;margin:7mm}
+
+.page{
+  width:283mm;height:196mm;background:#fff;
+  margin:6mm auto;display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.45);
+}
+.grid{
+  flex:1 1 auto;min-height:0;overflow:hidden;
+  column-count:5;column-gap:2.0mm;column-fill:balance;
+}
+
+/* ヘッダ帯と凡例 */
+.head{display:flex;align-items:flex-end;gap:3mm;border-bottom:1.20pt solid #333;
+  padding:0 0 1.0mm;margin-bottom:1.3mm;flex:0 0 auto}
+.ttl{white-space:nowrap}
+.ttl b{font-size:13.20pt;letter-spacing:.02em}
+.ttl span{font-size:6.72pt;color:var(--sub);margin-left:2mm}
+.head.slim .ttl b{font-size:10.20pt}
+.legend{display:flex;flex-wrap:wrap;gap:0 2.2mm;flex:1 1 auto;justify-content:flex-end}
+.lg{font-size:6.60pt;color:#222;white-space:nowrap;display:inline-flex;align-items:center}
+.lg i{display:inline-block;width:5.40pt;height:5.40pt;border-radius:1.00pt;margin-right:.7mm}
+.lg b{margin-right:.6mm}
+.lg.mk b{color:var(--star)} .lg.wn b{color:var(--warn)}
+
+/* カテゴリ帯 */
+.sec{break-inside:avoid;-webkit-column-break-inside:avoid;
+  break-after:avoid;-webkit-column-break-after:avoid;
+  color:#fff;font-size:7.44pt;font-weight:700;line-height:1.25;
+  padding:.55mm 1.1mm;border-radius:.6mm;margin:0 0 .8mm;}
+.sec b{display:inline-block;background:rgba(255,255,255,.3);border-radius:.5mm;
+  padding:0 .8mm;margin-right:1mm}
+
+/* カード */
+.card{break-inside:avoid;-webkit-column-break-inside:avoid;
+  border:0.40pt solid var(--line);border-top:1.70pt solid #999;border-radius:.6mm;
+  padding:.5mm .9mm .8mm;margin:0 0 .95mm;background:#fff;}
+.ct{font-size:7.08pt;font-weight:700;line-height:1.2;
+  margin:-.5mm -.9mm .6mm;padding:.5mm .9mm .45mm}
+.ct .ic{font-style:normal;margin-right:.7mm}
+.cc{font-family:var(--mono);font-size:6.36pt;line-height:1.32;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  background:var(--codebg);border-left:0.90pt solid #c6c6c6;
+  padding:.45mm .8mm;border-radius:.4mm;margin-bottom:.55mm;}
+.cc .cm{color:var(--cmt)}
+.cd{font-size:6.24pt;line-height:1.35;color:var(--sub)}
+.cd+.cd{margin-top:.35mm}
+.cd strong,.kv strong{color:var(--ink)}
+
+/* キー+説明の行 */
+.kv{margin-bottom:.55mm}
+.kv>div{display:flex;align-items:baseline;gap:1.0mm;padding:.15mm 0;
+  font-size:6.24pt;line-height:1.35;color:var(--sub)}
+.kv>div+div{border-top:0.30pt solid #ededed}
+.kv>div>span{min-width:0;overflow-wrap:anywhere}
+.kv b{font-family:var(--mono);font-size:6.12pt;
+  background:var(--codebg);border:0.30pt solid #dedede;border-radius:.4mm;
+  padding:0 .55mm;color:var(--ink);font-weight:400}
+.kv b{flex:0 0 auto;max-width:56%;overflow-wrap:anywhere}
+.kv>div.m b::before{content:"★";color:var(--star);margin-right:.5mm}
+.kv>div.p>span{color:var(--dim)}
+.lg.ad b{color:var(--dim)}
+
+/* ⚠ 間違えやすい点 */
+.cw{font-size:6.24pt;line-height:1.35;color:var(--warn);
+  background:#fdf5e8;border-left:0.90pt solid #e0b263;
+  padding:.4mm .8mm;border-radius:.4mm;margin-bottom:.55mm}
+.cw::before{content:"⚠ "}
+
+/* 一覧表 */
+.tb{width:100%;border-collapse:collapse;font-size:6.12pt;line-height:1.3;margin-bottom:.55mm}
+.tb th{text-align:left;font-weight:700;color:var(--ink);background:var(--codebg);
+  padding:.25mm .6mm;border-bottom:0.40pt solid #c6c6c6;white-space:nowrap}
+.tb td{padding:.2mm .6mm;border-top:0.30pt solid #ededed;color:var(--sub);vertical-align:top}
+.tb td.f{white-space:nowrap}
+
+/* エラー文面 → 対処(Node.js 版で追加) */
+.er{margin-bottom:.55mm}
+.er>div{padding:.3mm 0;font-size:6.24pt;line-height:1.35;color:var(--sub)}
+.er>div+div{border-top:0.30pt solid #ededed}
+.er code{font-family:var(--mono);font-size:5.88pt;line-height:1.3;
+  white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink);
+  background:var(--codebg);border-radius:.3mm;padding:0 .4mm;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.er span::before{content:" → "}
+
+/* 説明文の中の等幅 */
+.cd code,.kv code,.tb code,.cw code,.er span code{font-family:var(--mono);font-size:.95em;
+  background:var(--codebg);border-radius:.3mm;padding:0 .3mm;overflow-wrap:anywhere}
+.cw code{background:#f6e7cf}
+
+/* 柱 */
+.foot{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:3mm;
+  border-top:0.50pt solid #bbb;margin-top:1.1mm;padding-top:.7mm;
+  font-size:6.24pt;color:#666}
+
+.cA{border-top-color:var(--cA)} .cA>.ct{color:var(--cA);background:color-mix(in srgb,var(--cA) 9%,#fff)} .sA{background:var(--cA)} .lgA i{background:var(--cA)}
+.cB{border-top-color:var(--cB)} .cB>.ct{color:var(--cB);background:color-mix(in srgb,var(--cB) 9%,#fff)} .sB{background:var(--cB)} .lgB i{background:var(--cB)}
+.cC{border-top-color:var(--cC)} .cC>.ct{color:var(--cC);background:color-mix(in srgb,var(--cC) 9%,#fff)} .sC{background:var(--cC)} .lgC i{background:var(--cC)}
+.cD{border-top-color:var(--cD)} .cD>.ct{color:var(--cD);background:color-mix(in srgb,var(--cD) 9%,#fff)} .sD{background:var(--cD)} .lgD i{background:var(--cD)}
+.cE{border-top-color:var(--cE)} .cE>.ct{color:var(--cE);background:color-mix(in srgb,var(--cE) 9%,#fff)} .sE{background:var(--cE)} .lgE i{background:var(--cE)}
+.cF{border-top-color:var(--cF)} .cF>.ct{color:var(--cF);background:color-mix(in srgb,var(--cF) 9%,#fff)} .sF{background:var(--cF)} .lgF i{background:var(--cF)}
+.cG{border-top-color:var(--cG)} .cG>.ct{color:var(--cG);background:color-mix(in srgb,var(--cG) 9%,#fff)} .sG{background:var(--cG)} .lgG i{background:var(--cG)}
+.cH{border-top-color:var(--cH)} .cH>.ct{color:var(--cH);background:color-mix(in srgb,var(--cH) 9%,#fff)} .sH{background:var(--cH)} .lgH i{background:var(--cH)}
+
+@media print{
+  html,body{background:#fff}
+  .page{margin:0;box-shadow:none;width:auto;height:196mm;
+    break-after:page;page-break-after:always}
+  .page:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="head"><div class="ttl"><b>Node.js Webアプリ開発チートシート</b><span>macOS / Node.js v26 / npm 11 / Express 5.3 — 環境構築・UNIX・JavaScript・非同期・Express</span></div><div class="legend"><span class="lg lgA"><i></i>A 環境構築</span><span class="lg lgB"><i></i>B UNIX コマンド</span><span class="lg lgC"><i></i>C JS の値と型</span><span class="lg lgD"><i></i>D 関数・配列</span><span class="lg lgE"><i></i>E 非同期処理</span><span class="lg lgF"><i></i>F Node.js の作法</span><span class="lg lgG"><i></i>G Express</span><span class="lg lgH"><i></i>H トラブル対処</span><span class="lg mk"><b>★</b>まず覚える定番</span><span class="lg ad"><b>Aa</b>グレー文字=上級者向け</span><span class="lg wn"><b>⚠</b>間違えやすい点</span></div></div>
+<div class="grid">
+<div class="sec sA"><b>A</b>環境構築(brew・nodebrew・npm)</div>
+<div class="card cA"><div class="ct"><i class="ic">🧭</i>道具の関係(何が何を入れるか)</div><div class="cc">Homebrew ─→ nodebrew を入れる
+nodebrew ─→ Node.js を入れる
+            (node と npm が付属)
+npm      ─→ express などを入れる</div><div class="kv"><div class="m"><b>brew</b><span>Mac のソフト管理(macOS 全体)</span></div><div class="m"><b>nodebrew</b><span>Node.js の版の管理(切り替え・更新)</span></div><div class="m"><b>npm</b><span>JS ライブラリの管理(プロジェクトごと)</span></div><div><b>… -v</b><span>版を表示(<code>brew -v</code> <code>nodebrew -v</code> <code>node -v</code> <code>npm -v</code>)</span></div></div></div>
+<div class="card cA"><div class="ct"><i class="ic">🍺</i>Homebrew の基本</div><div class="kv"><div class="m"><b>brew install 名前</b><span>ソフトを入れる</span></div><div><b>brew install --cask 名前</b><span>GUI アプリを入れる(例 <code>google-chrome</code>)</span></div><div><b>brew uninstall 名前</b><span>削除</span></div><div class="m"><b>brew list</b><span>入っているもの一覧(<code>--versions</code> で版も)</span></div><div><b>brew search 語</b><span>名前で探す</span></div><div><b>brew info 名前</b><span>説明・版・依存を表示</span></div><div><b>brew doctor</b><span>環境の問題を診断</span></div></div><div class="cd">Homebrew 本体の導入は公式サイト <code>brew.sh</code> の1行コマンドで(macOS 版シート参照)</div></div>
+<div class="card cA"><div class="ct"><i class="ic">🔄</i>Homebrew の更新</div><div class="cc">brew update      <span class="cm"># ① 一覧を最新に</span>
+brew outdated    <span class="cm"># ② 古いものを確認</span>
+brew upgrade     <span class="cm"># ③ すべて更新</span>
+brew upgrade git <span class="cm"># 1つだけ更新</span>
+brew cleanup     <span class="cm"># ④ 古い版を削除</span></div><div class="kv"><div class="p"><b>brew upgrade --greedy</b><span>自動更新付きの GUI アプリも対象に</span></div></div><div class="cd"><code>install</code> / <code>upgrade</code> の前には <code>update</code> が24時間に1回自動で走る。<code>upgrade</code> の後は古い版の <code>cleanup</code> も自動で行われる</div><div class="cw"><code>update</code> は一覧の更新だけで、ソフトは新しくならない。本体を新しくするのは <code>upgrade</code></div><div class="cw">nodebrew で入れた Node.js は <code>brew upgrade</code> では更新されない(次のカード)</div></div>
+<div class="card cA"><div class="ct"><i class="ic">🟢</i>nodebrew の導入</div><div class="cc">brew install nodebrew
+nodebrew setup          <span class="cm"># 初回だけ</span>
+echo 'export PATH=~/.nodebrew/current/bin:$PATH' &gt;&gt; ~/.zshrc
+source ~/.zshrc         <span class="cm"># 読み直す</span>
+nodebrew install stable <span class="cm"># 入れる</span>
+nodebrew use stable     <span class="cm"># 使う版にする</span>
+which node  <span class="cm"># ~/.nodebrew/… なら OK</span></div><div class="kv"><div class="m"><b>nodebrew ls</b><span>入っている版と <code>current:</code>(使用中)</span></div><div><b>nodebrew install v24</b><span>v24 系の最新を入れる</span></div><div><b>stable / latest</b><span>最新の偶数版(LTS 系) / 最新版</span></div></div><div class="cw"><code>brew install node</code> と併用しない。どちらの node が動くか分からなくなる(<code>which node</code> で確認)</div></div>
+<div class="card cA"><div class="ct"><i class="ic">⬆️</i>Node.js のアップデート</div><div class="cc">node -v                 <span class="cm"># 今の版</span>
+nodebrew install stable <span class="cm"># 最新を追加</span>
+nodebrew use stable     <span class="cm"># 切り替え</span>
+node -v                 <span class="cm"># 新しい版</span>
+nodebrew uninstall v26.4.0  <span class="cm"># 削除</span></div><div class="cd">古い版は消さなくてよい。<code>nodebrew use v26.4.0</code> でいつでも戻せる</div><div class="cw"><code>use</code> は全ターミナル共通。開いている他のウインドウの node も切り替わる</div></div>
+<div class="card cA"><div class="ct"><i class="ic">📦</i>npm の基本</div><div class="kv"><div class="m"><b>npm init -y</b><span><code>package.json</code> を作る(最初に1回)</span></div><div class="m"><b>npm install express</b><span>ライブラリを入れる(<code>npm i</code> と略せる)</span></div><div><b>npm install -D nodemon</b><span>開発中だけ使うものを入れる</span></div><div class="m"><b>npm install</b><span><code>package.json</code> の全部を入れる(受け取ったら)</span></div><div><b>npm outdated / update</b><span>新しい版の確認 / <code>^</code> の範囲で更新</span></div><div class="m"><b>npm run 名前</b><span><code>scripts</code> の名前のコマンドを実行</span></div><div><b>npm start</b><span><code>scripts.start</code> を実行(<code>run</code> 不要)</span></div><div><b>npx 名前</b><span>プロジェクト内のコマンドを直接実行</span></div></div><div class="cw"><code>npm install -g</code> で入れたものは Node.js の版を切り替えると使えなくなる。プロジェクト内に入れて <code>npx</code> で使う</div></div>
+<div class="card cA"><div class="ct"><i class="ic">📄</i>package.json</div><div class="cc">{
+  "name": "myapp",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}</div><div class="kv"><div class="m"><b>"type"</b><span><code>"commonjs"</code>(npm 11 の <code>init -y</code> の既定)→ <code>require</code> / <code>"module"</code> → <code>import</code>(F)</span></div><div><b>"scripts"</b><span><code>npm run dev</code> で呼ぶコマンドの別名</span></div><div><b>devDependencies</b><span>開発中だけ必要なもの(<code>-D</code> で入れた)</span></div><div><b>^5.3.0</b><span>5.x.x の範囲なら新しい版を許す</span></div></div><div class="cw"><code>npm dev</code> は動かない(<code>Unknown command: "dev"</code>)。<code>start</code> 以外は <code>npm run dev</code> と <code>run</code> を付ける</div></div>
+<div class="card cA"><div class="ct"><i class="ic">🔒</i>package-lock.json と node_modules</div><div class="kv"><div class="m"><b>package-lock.json</b><span>実際に入った正確な版の記録。消さずに一緒に配布する</span></div><div class="m"><b>node_modules/</b><span>ライブラリ本体(数千ファイル)。配布しない。<code>npm install</code> で再生成</span></div></div><div class="cc"><span class="cm"># .gitignore(Git に入れないもの)</span>
+node_modules/
+.env</div><div class="cw">人に渡す・提出するときも <code>node_modules</code> は除く。受け取った側が <code>npm install</code> する</div></div>
+<div class="sec sB"><b>B</b>UNIX 基本コマンド</div>
+<div class="card cB"><div class="ct"><i class="ic">📂</i>場所の確認と移動</div><div class="kv"><div class="m"><b>pwd</b><span><strong>print working directory</strong> 今いる場所</span></div><div class="m"><b>ls</b><span><strong>list</strong> ファイル一覧</span></div><div><b>ls -la</b><span>隠しファイル(<code>.env</code> など)も詳しく表示</span></div><div class="m"><b>cd フォルダ</b><span><strong>change directory</strong> 移動</span></div><div><b>cd ..</b><span>一つ上へ</span></div><div><b>cd ~</b><span>ホームへ(<code>cd</code> だけでも同じ)</span></div><div class="p"><b>cd -</b><span>直前の場所へ戻る</span></div></div><div class="cd">名前の途中で <code>Tab</code> を押すと補完される。打ち間違い防止に必ず使う</div></div>
+<div class="card cB"><div class="ct"><i class="ic">🗂️</i>作る・コピー・移動・消す</div><div class="kv"><div class="m"><b>mkdir 名前</b><span><strong>make directory</strong> フォルダを作る</span></div><div><b>mkdir -p a/b</b><span>途中の階層もまとめて作る</span></div><div><b>touch app.js</b><span>空のファイルを作る</span></div><div><b>cp 元 先</b><span><strong>copy</strong> コピー(フォルダは <code>cp -r</code>)</span></div><div class="m"><b>mv 元 先</b><span><strong>move</strong> 移動・名前の変更</span></div><div class="m"><b>rm ファイル</b><span><strong>remove</strong> 削除(フォルダは <code>rm -r</code>)</span></div><div><b>cat ファイル</b><span>中身を表示</span></div><div><b>less ファイル</b><span>1画面ずつ読む(<code>q</code> で終了)</span></div><div class="p"><b>tail -f app.log</b><span>ファイルの末尾を表示し続ける</span></div></div><div class="cw"><code>rm</code> はゴミ箱に入らず即削除。取り消しできない</div></div>
+<div class="card cB"><div class="ct"><i class="ic">🔣</i>パスと記号</div><div class="kv"><div><b>/</b><span>ルート(一番上)・区切り</span></div><div><b>~</b><span>ホーム(<code>/Users/自分</code>)</span></div><div><b>.  ..</b><span>今いる場所 / 一つ上</span></div><div><b>*</b><span>何でも一致(<code>ls *.js</code>)</span></div><div><b>&gt; / &gt;&gt;</b><span>出力をファイルへ(上書き / 追記)</span></div><div><b>|</b><span><strong>パイプ</strong> 出力を次のコマンドへ</span></div><div><b>&amp;&amp;</b><span>前が成功したら次を実行</span></div></div><div class="cd"><strong>絶対パス</strong> は <code>/</code> から始まる。<strong>相対パス</strong> は今いる場所が起点</div></div>
+<div class="card cB"><div class="ct"><i class="ic">🛤️</i>PATH と環境の確認</div><div class="kv"><div class="m"><b>which node</b><span>実際に動く node の場所</span></div><div><b>echo $PATH</b><span>コマンドを探す場所(<code>:</code> 区切り)</span></div><div><b>~/.zshrc</b><span>ターミナル起動時に読まれる設定ファイル</span></div><div><b>source ~/.zshrc</b><span>設定をいま読み直す</span></div><div><b>export X=値</b><span>環境変数を設定</span></div><div><b>grep -rn 語 .</b><span>フォルダ内のファイルから文字列を探す</span></div><div><b>man コマンド</b><span>説明書(<code>q</code> で終了)</span></div></div><div class="cw"><code>zsh: command not found: node</code> は PATH の設定漏れ。nodebrew のカードの <code>echo … &gt;&gt; ~/.zshrc</code> を確認</div></div>
+<div class="card cB"><div class="ct"><i class="ic">⚙️</i>プロセスを調べる・止める</div><div class="kv"><div class="m"><b>Ctrl+C</b><span>前面で動いているサーバを止める</span></div><div><b>ps</b><span><strong>process status</strong> このターミナルのプロセス</span></div><div class="m"><b>ps aux | grep node</b><span>全プロセスから node を探す(2列目が PID)</span></div><div><b>ps -p PID -o command=</b><span>その PID が何のコマンドかを確認</span></div><div class="m"><b>kill PID</b><span>終了を頼む。まずこれ</span></div><div class="p"><b>kill -9 PID</b><span>強制終了。<code>kill</code> で止まらないときだけ</span></div></div><div class="cd"><strong>PID</strong> = プロセスごとの番号。止めるときはこの番号で指定する</div><div class="cw"><code>Ctrl+Z</code> は止めずに一時停止するだけ。ポートを握ったまま残り、次の起動が <code>EADDRINUSE</code> になる</div></div>
+<div class="card cB"><div class="ct"><i class="ic">🔌</i>lsof でポートを調べる</div><div class="cc">lsof -i :3000   <span class="cm"># 3000番を使うのは?</span>
+COMMAND   PID ... NAME
+node    12345 ... *:hbci (LISTEN)
+ps -p 12345 -o command=  <span class="cm"># ① 確認</span>
+node app.js
+kill 12345      <span class="cm"># ② 自分のなら止める</span>
+lsof -i :3000   <span class="cm"># 空なら解放された</span></div><div class="kv"><div class="m"><b>lsof -i :3000</b><span><strong>list open files</strong> そのポートを使うプロセス</span></div><div class="p"><b>lsof -P -i :3000</b><span>NAME をポート番号で表示(<code>*:3000</code>)</span></div></div><div class="cd">2列目が PID。NAME の <code>hbci</code> は 3000番に登録された名前(番号の代わりに表示される)。止めずに <code>PORT=3001 node app.js</code> と別の番号で起動してもよい</div><div class="cw">他人や別の作業のサーバを止めないよう、<code>kill</code> の前に ① で必ず確認する</div></div>
+</div>
+<div class="foot"><span>このページ＝最初に環境を整えるとき。Homebrew・nodebrew・npm と UNIX コマンド</span><span>起動: node app.js ／ 停止: Ctrl+C ／ 確認: http://localhost:3000</span><span>1 / 4</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>Node.js Webアプリ開発チートシート</b><span>macOS / Node.js v26 / Express 5.3</span></div><div class="legend"><span class="lg lgA"><i></i>A 環境構築</span><span class="lg lgB"><i></i>B UNIX コマンド</span><span class="lg lgC"><i></i>C JS の値と型</span><span class="lg lgD"><i></i>D 関数・配列</span><span class="lg lgE"><i></i>E 非同期処理</span><span class="lg lgF"><i></i>F Node.js の作法</span><span class="lg lgG"><i></i>G Express</span><span class="lg lgH"><i></i>H トラブル対処</span><span class="lg mk"><b>★</b>まず覚える定番</span><span class="lg ad"><b>Aa</b>グレー文字=上級者向け</span><span class="lg wn"><b>⚠</b>間違えやすい点</span></div></div>
+<div class="grid">
+<div class="sec sC"><b>C</b>JavaScript の値・型・制御</div>
+<div class="card cC"><div class="ct"><i class="ic">▶️</i>JavaScript を動かす</div><div class="cc">node hello.js     <span class="cm"># ファイルを実行</span>
+node              <span class="cm"># 対話モード(REPL)</span>
+&gt; 1 + 2
+3
+&gt; .exit           <span class="cm"># 終了(Ctrl+D でも可)</span></div><div class="kv"><div class="m"><b>console.log(x)</b><span>表示(C の <code>printf</code>)。<code>,</code> で複数並べられる</span></div><div><b>console.error(x)</b><span>エラー出力へ表示</span></div><div><b>// …  /* … */</b><span>コメント(C と同じ)</span></div><div><b>;</b><span>文末。省略もできるが付ける習慣に</span></div><div><b>⌥⌘I → Console</b><span>ブラウザでも実行できる</span></div></div><div class="cd">ファイルの<strong>上から順に</strong>実行される。<code>main</code> 関数は無い</div></div>
+<div class="card cC"><div class="ct"><i class="ic">🏷️</i>変数と型</div><div class="cc">const PI = 3.14;  <span class="cm">// 再代入できない</span>
+let count = 0;    <span class="cm">// 再代入できる</span>
+count = count + 1;
+var old = 1;      <span class="cm">// 古い書き方</span>
+typeof count      <span class="cm">// 'number'</span></div><table class="tb"><thead><tr><th>型</th><th>例</th><th>typeof</th></tr></thead><tbody><tr><td class="f">数値</td><td><code>42</code> <code>3.14</code> <code>NaN</code></td><td><code>'number'</code></td></tr><tr><td class="f">文字列</td><td><code>'abc'</code> <code>"abc"</code></td><td><code>'string'</code></td></tr><tr><td class="f">真偽値</td><td><code>true</code> <code>false</code></td><td><code>'boolean'</code></td></tr><tr><td class="f">未定義</td><td><code>undefined</code>(値が無い)</td><td><code>'undefined'</code></td></tr><tr><td class="f">空</td><td><code>null</code>(空を表す値)</td><td><code>'object'</code> ⚠</td></tr><tr><td class="f">オブジェクト</td><td><code>{ a: 1 }</code> <code>[1, 2]</code></td><td><code>'object'</code></td></tr></tbody></table><div class="cw">迷ったら <code>const</code>。値を変える変数だけ <code>let</code>。<code>const</code> に再代入すると <code>TypeError: Assignment to constant variable.</code></div></div>
+<div class="card cC"><div class="ct"><i class="ic">🔢</i>数値と演算</div><div class="kv"><div class="m"><b>5 / 2</b><span>→ <code>2.5</code>(C と違い切り捨てない)</span></div><div><b>Math.floor(5 / 2)</b><span>→ <code>2</code>(切り捨て)</span></div><div><b>7 % 3  /  2 ** 10</b><span>→ <code>1</code>(余り) / <code>1024</code>(べき乗)</span></div><div><b>0.1 + 0.2</b><span>→ <code>0.30000000000000004</code>(誤差)</span></div><div><b>Number("42")</b><span>文字列 → 数値</span></div><div><b>parseInt("42px")</b><span>→ <code>42</code>(先頭の数字だけ)</span></div><div><b>Number("abc")</b><span>→ <code>NaN</code>(数ではない)</span></div><div><b>(3.14159).toFixed(2)</b><span>→ <code>"3.14"</code>(文字列になる)</span></div><div><b>Math.round / max / random</b><span>四捨五入 / 最大 / 0以上1未満の乱数</span></div></div><div class="cw"><code>"5" + 1</code> → <code>"51"</code>(文字列の連結)、<code>"5" - 1</code> → <code>4</code>。フォームの値は文字列なので <code>Number()</code> で変換する</div></div>
+<div class="card cC"><div class="ct"><i class="ic">🔤</i>文字列</div><div class="cc">const name = 'Node';
+`Hello, ${name}!`  <span class="cm">// 'Hello, Node!'</span>
+'a' + 'b'          <span class="cm">// 'ab'(連結)</span></div><div class="kv"><div><b>s.length</b><span>文字数</span></div><div><b>s.toUpperCase()</b><span>大文字に(<code>toLowerCase</code> で小文字)</span></div><div><b>s.includes("od")</b><span>含むか → <code>true</code></span></div><div><b>s.slice(1, 3)</b><span>1〜2文字目 → <code>"od"</code></span></div><div><b>s.split(",")</b><span>区切って配列に</span></div><div><b>s.trim()</b><span>前後の空白を除く</span></div><div><b>s.replaceAll("a", "b")</b><span>すべて置換</span></div><div><b>String(42)</b><span>数値 → 文字列</span></div></div><div class="cd"><code>'…'</code> と <code>"…"</code> は同じ意味。変数を埋め込むときはバッククォートで囲む(JIS キーボードでは Shift+@)</div></div>
+<div class="card cC"><div class="ct"><i class="ic">⚖️</i>比較と真偽値</div><div class="kv"><div class="m"><b>=== / !==</b><span>型も含めて比較。こちらを使う</span></div><div><b>== / !=</b><span>型を変換して比較。<code>0 == ""</code> が <code>true</code> になるので使わない</span></div><div><b>&amp;&amp; || !</b><span>かつ / または / 否定(C と同じ)</span></div><div><b>falsy</b><span><code>false</code> <code>0</code> <code>""</code> <code>null</code> <code>undefined</code> <code>NaN</code> は偽</span></div><div><b>truthy</b><span>それ以外はすべて真(<code>"0"</code> <code>[]</code> <code>{}</code> も真)</span></div><div><b>a ?? 3</b><span><code>a</code> が <code>null</code> か <code>undefined</code> なら <code>3</code></span></div><div><b>a || 3</b><span><code>a</code> が偽なら <code>3</code>(<code>0</code> や <code>""</code> も置き換わる)</span></div><div><b>user?.name</b><span><code>user</code> が <code>undefined</code> でもエラーにせず <code>undefined</code></span></div></div></div>
+<div class="card cC"><div class="ct"><i class="ic">🔁</i>条件分岐とループ</div><div class="cc">if (score &gt;= 80) {
+  console.log('A');
+} else if (score &gt;= 60) {
+  console.log('B');
+} else {
+  console.log('C');
+}
+<span class="cm">// 三項演算子</span>
+const msg = ok ? '成功' : '失敗';
+for (let i = 0; i &lt; 3; i++) { … }
+for (const x of arr) { … } <span class="cm">// 要素</span>
+for (const k in obj) { … } <span class="cm">// キー</span></div><div class="cd"><code>for (let i …)</code> / <code>while</code> / <code>switch</code> / <code>break</code> / <code>continue</code> は C と同じ書き方</div><div class="cw">配列には <code>for...of</code>。<code>for...in</code> を配列に使うと添字が文字列 <code>"0"</code> <code>"1"</code> で出る</div></div>
+<div class="card cC"><div class="ct"><i class="ic">🆚</i>C言語との違い</div><table class="tb"><thead><tr><th>C言語</th><th>JavaScript</th></tr></thead><tbody><tr><td class="f"><code>int x = 1;</code></td><td><code>let x = 1;</code>(型を書かない)</td></tr><tr><td class="f"><code>5 / 2</code> → <code>2</code></td><td><code>5 / 2</code> → <code>2.5</code></td></tr><tr><td class="f"><code>printf("%d\n", x);</code></td><td><code>console.log(x);</code></td></tr><tr><td class="f"><code>gcc</code> でコンパイル</td><td>不要。<code>node app.js</code> で直接実行</td></tr><tr><td class="f"><code>main()</code> から開始</td><td>ファイルの上から順に実行</td></tr><tr><td class="f"><code>'a'</code> は文字</td><td><code>'a'</code> も <code>"a"</code> も文字列</td></tr><tr><td class="f"><code>strcmp(a, b) == 0</code></td><td><code>a === b</code></td></tr><tr><td class="f"><code>int a[5];</code>(固定長)</td><td><code>const a = [];</code>(<code>push</code> で伸びる)</td></tr><tr><td class="f"><code>a[10]</code> は未定義動作</td><td><code>a[10]</code> は <code>undefined</code></td></tr><tr><td class="f"><code>struct</code></td><td>オブジェクト <code>{ x: 1, y: 2 }</code></td></tr><tr><td class="f">ポインタ</td><td>無い。配列・オブジェクトは参照で渡る</td></tr><tr><td class="f"><code>malloc</code> / <code>free</code></td><td>不要(自動で解放される)</td></tr></tbody></table></div>
+<div class="sec sD"><b>D</b>関数・配列・オブジェクト</div>
+<div class="card cD"><div class="ct"><i class="ic">🧩</i>関数とアロー関数</div><div class="cc"><span class="cm">// 関数宣言</span>
+function add(a, b) {
+  return a + b;
+}
+<span class="cm">// アロー関数(=&gt; で書く)</span>
+const add2 = (a, b) =&gt; {
+  return a + b;
+};
+<span class="cm">// 1行なら { } と return を省略できる</span>
+const add3 = (a, b) =&gt; a + b;
+<span class="cm">// 引数が1つなら ( ) も省略できる</span>
+const twice = x =&gt; x * 2;
+<span class="cm">// 引数の既定値</span>
+function hi(name = '名無し') { … }</div><div class="kv"><div><b>引数の型</b><span>書かない。渡さなかった引数は <code>undefined</code></span></div><div class="m"><b>関数は値</b><span>変数に入れたり、引数として渡したりできる(コールバック)</span></div><div class="p"><b>() =&gt; ({ a: 1 })</b><span>オブジェクトを返すときは <code>( )</code> で囲む</span></div></div></div>
+<div class="card cD"><div class="ct"><i class="ic">📚</i>配列の基本</div><div class="cc">const a = [3, 1, 2];
+a.length       <span class="cm">// 3</span>
+a[0]           <span class="cm">// 3(添字は 0 から)</span>
+a.push(4);     <span class="cm">// 末尾に追加</span>
+a.pop();       <span class="cm">// 末尾を取り出す → 4</span>
+a.includes(2)  <span class="cm">// true</span>
+a.indexOf(9)   <span class="cm">// -1(無い)</span>
+a.join('-')    <span class="cm">// '3-1-2'</span>
+a.slice(0, 2)  <span class="cm">// [3, 1](元は不変)</span></div><div class="kv"><div><b>a.unshift(x) / a.shift()</b><span>先頭に追加 / 先頭を取り出す</span></div><div class="p"><b>a.splice(i, 1)</b><span><code>i</code> 番目を1つ削除</span></div></div><div class="cw"><code>[10, 9, 1].sort()</code> → <code>[1, 10, 9]</code>(文字列として並ぶ)。数値は <code>sort((x, y) =&gt; x - y)</code></div></div>
+<div class="card cD"><div class="ct"><i class="ic">🧮</i>配列メソッド(ループの代わり)</div><div class="cc">const nums = [1, 2, 3, 4];
+nums.forEach(n =&gt; console.log(n));
+nums.map(n =&gt; n * 2)    <span class="cm">// [2,4,6,8]</span>
+nums.filter(n =&gt; n &gt; 2) <span class="cm">// [3, 4]</span>
+nums.find(n =&gt; n &gt; 2) <span class="cm">// 3(最初の1つ)</span>
+nums.some(n =&gt; n &gt; 3) <span class="cm">// true(どれか)</span>
+nums.every(n =&gt; n &gt; 0) <span class="cm">// true(全部)</span>
+<span class="cm">// 合計 → 10</span>
+nums.reduce((s, n) =&gt; s + n, 0)</div><div class="kv"><div><b>forEach</b><span>1つずつ処理する(戻り値なし)</span></div><div class="m"><b>map</b><span>全要素を変換した新しい配列</span></div><div class="m"><b>filter</b><span>条件に合う要素だけの新しい配列</span></div></div><div class="cd"><code>map</code> <code>filter</code> <code>slice</code> は元の配列を変えない。<code>push</code> <code>pop</code> <code>sort</code> <code>splice</code> は変える</div></div>
+<div class="card cD"><div class="ct"><i class="ic">🗃️</i>オブジェクト</div><div class="cc">const user = {
+  name: 'Ken',
+  age: 20,
+};
+user.name       <span class="cm">// 'Ken'</span>
+user['age']     <span class="cm">// 20(キーを文字列で)</span>
+user.mail = 'a@b.jp'; <span class="cm">// 追加</span>
+delete user.mail;     <span class="cm">// 削除</span>
+user.tel        <span class="cm">// undefined(無い)</span>
+Object.keys(user) <span class="cm">// ['name', 'age']</span>
+const name = 'Jiro';
+<span class="cm">// { name: name } の省略形</span>
+const u2 = { name, age: 21 };</div><div class="cd">C の構造体に近い。<code>[{ id: 1, name: "A" }, …]</code> のような「オブジェクトの配列」がデータの基本形(JSON と同じ)</div><div class="cw"><code>const</code> でも中身は変更できる(禁止されるのは再代入だけ)</div></div>
+<div class="card cD"><div class="ct"><i class="ic">✂️</i>分割代入とスプレッド構文</div><div class="cc"><span class="cm">// user.name と user.age を取り出す</span>
+const { name, age } = user;
+const { name: n } = user; <span class="cm">// 別名で</span>
+const [a, b] = [10, 20];  <span class="cm">// 配列から</span>
+const [x, ...rest] = [1, 2, 3];
+<span class="cm">// rest は [2, 3](残り全部)</span>
+<span class="cm">// 引数で直接受け取る</span>
+function show({ name, age }) { … }
+<span class="cm">// コピーして一部を上書き</span>
+const copy = { ...user, age: 21 };
+const all = [...a1, ...a2]; <span class="cm">// 連結</span></div><div class="kv"><div class="m"><b>const { id } = req.params;</b><span>Express でよく使う形</span></div><div class="m"><b>const { name } = req.body;</b><span>フォームの値を取り出す</span></div></div></div>
+<div class="card cD"><div class="ct"><i class="ic">🛡️</i>例外処理(try / catch)</div><div class="cc">try {
+  const data = JSON.parse(text);
+  console.log(data);
+} catch (err) {     <span class="cm">// 失敗したら</span>
+  console.error(err.message);
+} finally {
+  <span class="cm">// 成功しても失敗しても実行</span>
+}
+<span class="cm">// 自分で例外を投げる</span>
+throw new Error('不正な値です');</div><div class="cd">例外を捕まえないとプログラムはその場で終了する(サーバなら停止)</div></div>
+<div class="sec sH"><b>H</b>トラブル対処</div>
+<div class="card cH"><div class="ct"><i class="ic">🔎</i>デバッグのコツ</div><div class="kv"><div class="m"><b>エラーの1行目</b><span>まず <code>Error:</code> の行と、その下の <code>at … app.js:12:5</code>(12行目)を見る</span></div><div class="m"><b>console.log</b><span>途中の値を表示して、どこまで想定どおりか確かめる</span></div><div><b>JSON.stringify(x, null, 2)</b><span>オブジェクトの中身を見やすく表示</span></div><div><b>ターミナル</b><span>サーバ(Node)側のエラーが出る場所</span></div><div><b>⌥⌘I</b><span>ブラウザ側。Console = JS のエラー、Network = 通信とステータス</span></div><div><b>curl -i URL</b><span>ブラウザを使わずに応答を確かめる(<code>-X POST -d 'name=Taro'</code> で POST)</span></div></div><div class="cd">エラー文はそのままコピーして検索する。自分のパスやファイル名の部分は除く</div><div class="cw">zsh では <code>curl localhost:3000/search?q=node</code> が <code>no matches found</code> になる。<code>?</code> を含む URL は <code>'…'</code> で囲む</div></div>
+</div>
+<div class="foot"><span>このページ＝JavaScript を書くとき。C言語との違いに注意</span><span>起動: node app.js ／ 停止: Ctrl+C ／ 確認: http://localhost:3000</span><span>2 / 4</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>Node.js Webアプリ開発チートシート</b><span>macOS / Node.js v26 / Express 5.3</span></div><div class="legend"><span class="lg lgA"><i></i>A 環境構築</span><span class="lg lgB"><i></i>B UNIX コマンド</span><span class="lg lgC"><i></i>C JS の値と型</span><span class="lg lgD"><i></i>D 関数・配列</span><span class="lg lgE"><i></i>E 非同期処理</span><span class="lg lgF"><i></i>F Node.js の作法</span><span class="lg lgG"><i></i>G Express</span><span class="lg lgH"><i></i>H トラブル対処</span><span class="lg mk"><b>★</b>まず覚える定番</span><span class="lg ad"><b>Aa</b>グレー文字=上級者向け</span><span class="lg wn"><b>⚠</b>間違えやすい点</span></div></div>
+<div class="grid">
+<div class="sec sE"><b>E</b>非同期処理</div>
+<div class="card cE"><div class="ct"><i class="ic">⏳</i>同期と非同期(待たずに次へ進む)</div><div class="cc">console.log('1: 注文');
+setTimeout(() =&gt; {
+  console.log('3: 1秒後に届く');
+}, 1000);
+console.log('2: 待たずに次へ');</div><div class="cc">時間 →
+本体    1 ── 2 ── (本体はここで終わり)
+タイマー └──── 1秒 ────→ 3
+出力: 1 → 2 → 3</div><div class="cd">ファイル読み込み・通信・タイマーのような時間のかかる処理は、<strong>終わるのを待たずに次の行へ進み</strong>、終わったら後で知らせ(コールバック)を受ける。C は1行ずつ終わるまで待つ</div><div class="cw">結果を使う処理は「知らせを受けた後」に書く。すぐ次の行に書くと、まだ値が無い</div></div>
+<div class="card cE"><div class="ct"><i class="ic">📞</i>コールバック</div><div class="cc">const fs = require('fs');
+fs.readFile('a.txt', 'utf8', cb);
+<span class="cm">// 読み終わったら cb が呼ばれる</span>
+function cb(err, data) {
+  if (err) {   <span class="cm">// 失敗すると err に入る</span>
+    console.error(err.message);
+    return;
+  }
+  console.log(data);
+}
+console.log('こちらが先に表示される');</div><div class="cd"><code>cb</code> のように「終わったら呼んでもらう関数」をコールバックと呼ぶ。普通はアロー関数で直接書く。第1引数がエラー、第2引数が結果(Node の約束)。入れ子が深くなりやすい(コールバック地獄)ので、新しく書くなら Promise / async を使う</div></div>
+<div class="card cE"><div class="ct"><i class="ic">🤝</i>Promise</div><div class="cc">const fs = require('fs/promises');
+fs.readFile('a.txt', 'utf8')
+  .then(data =&gt; console.log(data))
+  .catch(err =&gt; console.error(err))
+  .finally(() =&gt; console.log('終了'));
+<span class="cm">// 自分で作る例: ms ミリ秒だけ待つ</span>
+const sleep = ms =&gt; new Promise(
+  r =&gt; setTimeout(r, ms));</div><div class="kv"><div class="m"><b>.then / .catch</b><span>成功したとき / 失敗したときに呼ばれる</span></div><div><b>Promise</b><span>「後で結果が届く」ことを表す値。成功(resolve)か失敗(reject)で終わる</span></div><div class="p"><b>Promise.all([p1, p2])</b><span>全部終わるまで待つ(並行に実行)</span></div></div></div>
+<div class="card cE"><div class="ct"><i class="ic">✨</i>async / await</div><div class="cc">const fs = require('fs/promises');
+
+async function main() {
+  try {
+    const data = await fs.readFile(
+      'a.txt', 'utf8');
+    <span class="cm">// ↑ 読み終わるまで待ってから次へ</span>
+    console.log(data);
+    await sleep(1000);  <span class="cm">// 1秒待つ</span>
+  } catch (err) {  <span class="cm">// 失敗はここ</span>
+    console.error(err.message);
+  }
+}
+main();</div><div class="cw"><code>await</code> は <code>async</code> 関数の中だけ。外で使うと <code>SyntaxError: await is only valid in async functions and the top level bodies of modules</code>(ES Modules ならトップレベルも可)</div><div class="cw"><code>await</code> を付け忘れると値ではなく <code>Promise { &lt;pending&gt; }</code> が返る</div></div>
+<div class="card cE"><div class="ct"><i class="ic">🔀</i>3つの書き方の対応</div><table class="tb"><thead><tr><th>書き方</th><th>成功したとき</th><th>失敗したとき</th></tr></thead><tbody><tr><td class="f">コールバック</td><td><code>(err, data) =&gt;</code> の <code>data</code></td><td><code>if (err) { … }</code></td></tr><tr><td class="f">Promise</td><td><code>.then(data =&gt; …)</code></td><td><code>.catch(err =&gt; …)</code></td></tr><tr><td class="f">async/await</td><td><code>const data = await …</code></td><td><code>try { } catch (err) { }</code></td></tr></tbody></table><div class="cd"><code>fs/promises</code> や <code>fetch</code> のように Promise を返す関数には <code>await</code> を付けて使う</div><div class="cw"><code>forEach</code> の中の <code>await</code> は待ってくれない。順に待つなら <code>for (const x of list) { await … }</code></div></div>
+<div class="sec sF"><b>F</b>Node.js の作法</div>
+<div class="card cF"><div class="ct"><i class="ic">🧾</i>JSON</div><div class="cc">const obj = { name: 'Ken', age: 20 };
+<span class="cm">// オブジェクト → 文字列</span>
+const s = JSON.stringify(obj);
+<span class="cm">// s は '{"name":"Ken","age":20}'</span>
+JSON.stringify(obj, null, 2) <span class="cm">// 整形</span>
+<span class="cm">// 文字列 → オブジェクト</span>
+const back = JSON.parse(s);
+back.name                    <span class="cm">// 'Ken'</span></div><div class="kv"><div class="m"><b>" "</b><span>キーも文字列もダブルクォート。<code>'</code>・末尾の <code>,</code>・コメントは不可</span></div></div><div class="cw"><code>SyntaxError: Unexpected token '&lt;', "&lt;!DOCTYPE "... is not valid JSON</code> → HTML(404 ページなど)を受け取った。URL を確認</div></div>
+<div class="card cF"><div class="ct"><i class="ic">📦</i>CommonJS と ES Modules</div><div class="cc"><span class="cm">// CommonJS("type": "commonjs")</span>
+const express = require('express');
+const { add } = require('./util');
+module.exports = { add };  <span class="cm">// 書き出し</span>
+
+<span class="cm">// ES Modules("type": "module")</span>
+import express from 'express';
+import { add } from './util.js';
+export const add = (a, b) =&gt; a + b;
+export default app; <span class="cm">// 1つだけ</span></div><table class="tb"><thead><tr><th></th><th>CommonJS</th><th>ES Modules</th></tr></thead><tbody><tr><td class="f">package.json</td><td><code>"type": "commonjs"</code></td><td><code>"type": "module"</code></td></tr><tr><td class="f">自作ファイル</td><td><code>./util</code>(省略可)</td><td><code>./util.js</code>(必須)</td></tr><tr><td class="f">拡張子で指定</td><td><code>.cjs</code></td><td><code>.mjs</code></td></tr><tr><td class="f">自分のフォルダ</td><td><code>__dirname</code></td><td><code>import.meta.dirname</code></td></tr><tr><td class="f">トップレベル await</td><td>使えない</td><td>使える</td></tr></tbody></table><div class="cw">1つのプロジェクトの中で混ぜない。<code>"type"</code> に合わせてどちらかに統一する。ネットの記事をコピーする前に、どちらの書き方か確認する</div></div>
+<div class="card cF"><div class="ct"><i class="ic">💥</i>混ぜたときのエラー</div><div class="er"><div><code>SyntaxError: Cannot use import statement outside a module</code><span><code>"type": "commonjs"</code> のまま <code>import</code> を書いた → <code>"type": "module"</code> にするか <code>require</code> に書き換える</span></div><div><code>ReferenceError: require is not defined in ES module scope, you can use import instead</code><span><code>"type": "module"</code> で <code>require</code> を書いた → <code>import</code> に</span></div><div><code>ReferenceError: __dirname is not defined in ES module scope</code><span>ES Modules では <code>import.meta.dirname</code> を使う</span></div><div><code>Did you mean to import "./util.js"?</code><span>ES Modules で拡張子を省略した(<code>ERR_MODULE_NOT_FOUND</code>)</span></div></div><div class="cd"><code>"type"</code> を書かずに <code>import</code> を使うと、自動判定で動くが <code>[MODULE_TYPELESS_PACKAGE_JSON] Warning</code> が出る</div></div>
+<div class="card cF"><div class="ct"><i class="ic">📁</i>fs と path(ファイルの読み書き)</div><div class="cc">const fs = require('fs');
+const path = require('path');
+const file =
+  path.join(__dirname, 'data.txt');
+<span class="cm">// 書く(上書き)</span>
+fs.writeFileSync(file, 'Hello\n');
+<span class="cm">// 追記する</span>
+fs.appendFileSync(file, '追記\n');
+<span class="cm">// 読む('utf8' で文字列になる)</span>
+const text =
+  fs.readFileSync(file, 'utf8');
+fs.existsSync(file) <span class="cm">// 有無 true/false</span></div><div class="kv"><div><b>…Sync</b><span>終わるまで待つ版。起動時の読み込み向き</span></div><div class="m"><b>fs/promises</b><span><code>await fs.readFile(…)</code> の版。サーバの処理中はこちら</span></div><div><b>__dirname</b><span>このファイルがあるフォルダ</span></div></div><div class="cw"><code>"data.txt"</code> とだけ書くと「node を実行した場所」が基準になる。<code>path.join(__dirname, …)</code> で書く</div></div>
+<div class="card cF"><div class="ct"><i class="ic">🌐</i>HTTP の基礎(リクエストとレスポンス)</div><div class="kv"><div><b>http://</b><span><strong>スキーム</strong> 通信の方式</span></div><div><b>localhost</b><span><strong>ホスト</strong> 自分の Mac(<code>127.0.0.1</code>)</span></div><div><b>:3000</b><span><strong>ポート</strong> どのサーバ宛てか</span></div><div><b>/users/42</b><span><strong>パス</strong> → <code>req.params</code></span></div><div><b>?q=node&amp;p=2</b><span><strong>クエリ</strong> → <code>req.query</code></span></div></div><div class="cc">▶ リクエスト(ブラウザ → サーバ)
+POST /login HTTP/1.1  ← メソッド パス
+Host: localhost:3000  ← ヘッダ
+Content-Type: application/x-www-form-urlencoded
+                      ← 空行
+name=Taro             ← ボディ
+◀ レスポンス(サーバ → ブラウザ)
+HTTP/1.1 302 Found    ← ステータス
+Location: /hello?name=Taro  ← ヘッダ</div><div class="cd">上は <code>curl -v</code> で実際に見られる。ブラウザでは ⌥⌘I → Network</div></div>
+<div class="card cF"><div class="ct"><i class="ic">🚦</i>メソッドとステータスコード</div><div class="kv"><div class="m"><b>GET</b><span>取得。URL を開く・リンク・フォームの既定</span></div><div class="m"><b>POST</b><span>送信。<code>method="post"</code> のフォーム・登録</span></div><div class="p"><b>PUT / PATCH / DELETE</b><span>更新 / 一部更新 / 削除</span></div></div><table class="tb"><thead><tr><th>コード</th><th>意味</th></tr></thead><tbody><tr><td class="f"><code>200 OK</code></td><td>成功</td></tr><tr><td class="f"><code>301 Moved Permanently</code></td><td>恒久的に移動した</td></tr><tr><td class="f"><code>302 Found</code></td><td>一時的に移動(<code>res.redirect</code> の既定)</td></tr><tr><td class="f"><code>400 Bad Request</code></td><td>送られた値が不正</td></tr><tr><td class="f"><code>401 Unauthorized</code></td><td>ログインが必要(未認証)</td></tr><tr><td class="f"><code>403 Forbidden</code></td><td>ログイン済みだが権限が無い</td></tr><tr><td class="f"><code>404 Not Found</code></td><td>そのパスが無い</td></tr><tr><td class="f"><code>500 Internal Server Error</code></td><td>サーバ側の例外・バグ</td></tr></tbody></table><div class="cd"><strong>2xx</strong> 成功 ／ <strong>3xx</strong> 移動 ／ <strong>4xx</strong> 送る側の誤り ／ <strong>5xx</strong> サーバ側の誤り</div></div>
+<div class="card cF"><div class="ct"><i class="ic">🛰️</i>fetch(API を呼ぶ)</div><div class="cc">const url = 'http://localhost:3000' +
+            '/api/items';
+<span class="cm">// GET: JSON を受け取る</span>
+const res = await fetch(url);
+if (!res.ok) throw new Error('失敗');
+const items = await res.json();
+<span class="cm">// POST: JSON を送る</span>
+const headers = {
+  'Content-Type': 'application/json',
+};
+const data = { name: 'pen' };
+await fetch(url, {
+  method: 'POST',
+  headers,
+  body: JSON.stringify(data),
+});</div><div class="cd">Node 18 以降は組み込み(インストール不要)。ブラウザでも同じ書き方</div><div class="cw">404 や 500 でも例外にならない。<code>res.ok</code>(200番台なら <code>true</code>)を確認する</div></div>
+</div>
+<div class="foot"><span>このページ＝非同期処理と Node.js の作法。import / require で詰まったら</span><span>起動: node app.js ／ 停止: Ctrl+C ／ 確認: http://localhost:3000</span><span>3 / 4</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>Node.js Webアプリ開発チートシート</b><span>macOS / Node.js v26 / Express 5.3</span></div><div class="legend"><span class="lg lgA"><i></i>A 環境構築</span><span class="lg lgB"><i></i>B UNIX コマンド</span><span class="lg lgC"><i></i>C JS の値と型</span><span class="lg lgD"><i></i>D 関数・配列</span><span class="lg lgE"><i></i>E 非同期処理</span><span class="lg lgF"><i></i>F Node.js の作法</span><span class="lg lgG"><i></i>G Express</span><span class="lg lgH"><i></i>H トラブル対処</span><span class="lg mk"><b>★</b>まず覚える定番</span><span class="lg ad"><b>Aa</b>グレー文字=上級者向け</span><span class="lg wn"><b>⚠</b>間違えやすい点</span></div></div>
+<div class="grid">
+<div class="sec sG"><b>G</b>Express(Web アプリ)</div>
+<div class="card cG"><div class="ct"><i class="ic">🚀</i>最小の Express アプリ(起動の定型)</div><div class="cc"><span class="cm">// app.js</span>
+const express = require('express');
+const app = express();
+const PORT =
+  process.env.PORT || 3000;
+
+app.get('/', (req, res) =&gt; {
+  res.send('Hello, Express!');
+});
+
+app.listen(PORT, (err) =&gt; {
+  if (err) throw err; <span class="cm">// 失敗を表示</span>
+  console.log(
+    `http://localhost:${PORT}`);
+});</div><div class="cd"><code>npm install express</code> で 5.3.0 が入る(2026年10月時点)。<code>node app.js</code> で起動。ES Modules なら1行目を <code>import express from 'express';</code></div><div class="cw">Express 5 は起動の失敗を <code>err</code> で渡す。受け取らないと、ポート使用中でも黙って終了する</div></div>
+<div class="card cG"><div class="ct"><i class="ic">🧭</i>ルーティング</div><div class="cc"><span class="cm">// /users/42 → id は '42'(文字列)</span>
+app.get('/users/:id', (req, res) =&gt; {
+  const { id } = req.params;
+  res.json({ id });
+});
+<span class="cm">// /search?q=node → q は 'node'</span>
+app.get('/search', (req, res) =&gt; {
+  res.send(`検索語: ${req.query.q}`);
+});</div><div class="kv"><div class="m"><b>/users/:id</b><span>パスパラメータ → <code>req.params.id</code></span></div><div class="m"><b>?q=node</b><span>クエリ → <code>req.query.q</code>(無ければ <code>undefined</code>)</span></div><div class="p"><b>/files/*path</b><span>残り全部 → <code>req.params.path</code> は配列</span></div></div><div class="cd">上から順に照合し、最初に合ったものが処理する。<code>app.post</code> / <code>app.put</code> / <code>app.delete</code> も同じ形</div><div class="cw">Express 5 では <code>app.get("*", …)</code> はエラー(<code>Missing parameter name at index 1: *</code>)。404 は最後の <code>app.use</code> で書く</div></div>
+<div class="card cG"><div class="ct"><i class="ic">📨</i>req と res</div><div class="kv"><div class="m"><b>req.params</b><span>パスの <code>:id</code> などの値</span></div><div class="m"><b>req.query</b><span><code>?</code> 以降の値</span></div><div class="m"><b>req.body</b><span>POST の本文(フォーム・JSON)</span></div></div><div class="kv"><div class="m"><b>res.send("文字列")</b><span>文字列・HTML を返す</span></div><div class="m"><b>res.json(obj)</b><span>JSON を返す</span></div><div class="m"><b>res.status(404).send(…)</b><span>ステータスを指定して返す</span></div><div><b>res.redirect("/")</b><span>別のページへ移動(302)</span></div></div><div class="cw">返信は1回だけ。2回送ると <code>Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client</code>。途中で返すときは <code>return res.send(…)</code></div></div>
+<div class="card cG"><div class="ct"><i class="ic">🔗</i>ミドルウェアと実行順序</div><div class="cc"><span class="cm">// すべてのリクエストで実行される</span>
+app.use((req, res, next) =&gt; {
+  console.log(req.method, req.url);
+  next();  <span class="cm">// 次へ渡す</span>
+});</div><div class="cc">リクエスト
+ ↓ ① app.use     ログ → next()
+ ↓ ② static      ファイルがあれば返す
+ ↓ ③ urlencoded  req.body を作る
+ ↓ ④ get / post  返信して終わり
+ ↓ ⑤ app.use     404(どれにも不一致)
+ ↓ ⑥ app.use     エラー処理(引数4つ)</div><div class="cw"><code>next()</code> も返信もしないと、ブラウザは読み込み中のまま待ち続ける</div><div class="cw">書いた順に実行される。<code>public/index.html</code> があると <code>/</code> は ② が先に返し、<code>app.get("/")</code> は呼ばれない</div></div>
+<div class="card cG"><div class="ct"><i class="ic">🗂️</i>フォルダ構成と静的ファイル</div><div class="cc">myapp/
+├─ app.js
+├─ package.json
+├─ public/      ← express.static
+│  ├─ index.html  → /
+│  └─ style.css   → /style.css
+└─ views/       ← テンプレート(EJS)
+   └─ hello.ejs</div><div class="cc">const path = require('path');
+app.use(express.static(
+  path.join(__dirname, 'public')));</div><div class="cw">URL に <code>public</code> は含めない(<code>/style.css</code>)。HTML からも <code>&lt;link href="/style.css"&gt;</code> と書く</div></div>
+<div class="card cG"><div class="ct"><i class="ic">📝</i>フォームを受け取る</div><div class="cc">&lt;!-- public/index.html --&gt;
+&lt;form action="/login" method="post"&gt;
+  &lt;input name="name"&gt;
+  &lt;button&gt;送信&lt;/button&gt;
+&lt;/form&gt;</div><div class="cc"><span class="cm">// フォーム → req.body</span>
+app.use(express.urlencoded(
+  { extended: false }));
+<span class="cm">// JSON → req.body</span>
+app.use(express.json());
+
+app.post('/login', (req, res) =&gt; {
+  <span class="cm">// input の name 属性がキーになる</span>
+  const { name } = req.body;
+  if (!name) return res.status(400)
+    .send('名前が空です');
+  res.redirect('/hello?name=' +
+    encodeURIComponent(name));
+});</div><div class="cd">どちらも Express に組み込み(<code>body-parser</code> は不要)</div><div class="cw">書き忘れると <code>req.body</code> が <code>undefined</code> になり <code>TypeError: Cannot read properties of undefined (reading 'name')</code></div></div>
+<div class="card cG"><div class="ct"><i class="ic">🎨</i>テンプレート(EJS)</div><div class="cc">app.set('view engine', 'ejs');
+app.get('/hello', (req, res) =&gt; {
+  res.render('hello', { <span class="cm">// hello.ejs</span>
+    name: req.query.name,
+    items: ['A', 'B'],
+  });
+});</div><div class="cc">&lt;!-- views/hello.ejs --&gt;
+&lt;h1&gt;こんにちは &lt;%= name %&gt; さん&lt;/h1&gt;
+&lt;ul&gt;
+&lt;% for (const it of items) { %&gt;
+  &lt;li&gt;&lt;%= it %&gt;&lt;/li&gt;
+&lt;% } %&gt;
+&lt;/ul&gt;</div><div class="kv"><div class="m"><b>&lt;%= x %&gt;</b><span>値を表示(<code>&lt;</code> などはエスケープされる)</span></div><div><b>&lt;% … %&gt;</b><span>JS を実行するだけ(表示しない)</span></div><div><b>&lt;%- include("header") %&gt;</b><span><code>views/header.ejs</code> を差し込む</span></div></div><div class="cd"><code>npm install ejs</code> で 7.0.2 が入る</div><div class="cw"><code>&lt;%- %&gt;</code> に利用者の入力を入れない(XSS の原因)</div></div>
+<div class="card cG"><div class="ct"><i class="ic">🛑</i>404 とエラー処理</div><div class="cc"><span class="cm">// すべてのルートの後に書く</span>
+app.use((req, res) =&gt; {
+  res.status(404).send('ありません');
+});
+<span class="cm">// 引数が4つ = エラー処理用</span>
+app.use((err, req, res, next) =&gt; {
+  console.error(err);
+  res.status(500).send('サーバエラー');
+});</div><div class="cd">Express 5 は <code>async</code> 内の throw も自動でここへ回す。404 を書かなければ既定の <code>Cannot GET /パス</code></div><div class="cw">Express 4 では <code>async</code> 内で throw するとサーバごと落ちる。<code>try/catch</code> して <code>next(err)</code> を呼ぶ必要があった</div></div>
+<div class="card cG"><div class="ct"><i class="ic">🔐</i>.env と環境変数</div><div class="cc"><span class="cm"># .env(Git に入れない)</span>
+PORT=3000
+DB_PASSWORD=secret</div><div class="cc"><span class="cm"># .env を読み込んで起動</span>
+node --env-file=.env app.js
+<span class="cm"># その場で1回だけ指定して起動</span>
+PORT=4000 node app.js</div><div class="kv"><div class="m"><b>process.env.PORT</b><span><code>"3000"</code>(必ず文字列)</span></div><div class="p"><b>dotenv</b><span>古い記事のパッケージ。今の Node では不要</span></div></div><div class="cw">パスワードやキーは <code>.env</code> に書き、<code>.gitignore</code> に入れる。コードに直接書かない</div></div>
+<div class="card cG"><div class="ct"><i class="ic">♻️</i>nodemon(保存したら自動で再起動)</div><div class="cc">npm install -D nodemon
+<span class="cm"># package.json の "scripts" に追加</span>
+<span class="cm">#   "dev": "nodemon app.js"</span>
+npm run dev        <span class="cm"># 保存のたびに再起動</span></div><div class="kv"><div><b>rs + Enter</b><span>手動で再起動</span></div><div><b>npx nodemon app.js</b><span><code>scripts</code> を書かずに直接</span></div><div class="p"><b>node --watch app.js</b><span>Node 組み込みの同じ機能</span></div></div><div class="cd"><code>.env</code> を使うときは <code>nodemon --env-file=.env app.js</code></div><div class="cw"><code>nodemon</code> とだけ打つと <code>zsh: command not found: nodemon</code>。<code>npm run dev</code> か <code>npx nodemon</code> で</div></div>
+<div class="sec sH"><b>H</b>トラブル対処</div>
+<div class="card cH"><div class="ct"><i class="ic">🚨</i>起動時のエラー</div><div class="er"><div><code>Error: listen EADDRINUSE: address already in use :::3000</code><span>そのポートは使用中。前に起動したサーバが残っている → B の <code>lsof</code> で探して止める</span></div><div><code>Error: Cannot find module 'expres'
+  code: 'MODULE_NOT_FOUND'</code><span>名前の誤り、<code>npm install</code> していない、別のフォルダで実行している</span></div><div><code>Error: Cannot find module '/Users/…/apps.js'</code><span>実行するファイル名・場所の誤り(<code>ls</code> と <code>pwd</code> で確認)</span></div><div><code>SyntaxError: Unexpected end of input</code><span><code>}</code> や <code>)</code> の閉じ忘れ</span></div><div><code>SyntaxError: Invalid or unexpected token</code><span>クォートの閉じ忘れ、全角の記号・空白</span></div></div><div class="cd">import と require の取り違えは F の「混ぜたときのエラー」</div></div>
+<div class="card cH"><div class="ct"><i class="ic">🐛</i>動かしている最中のエラー</div><div class="er"><div><code>TypeError: Cannot read properties of undefined (reading 'name')</code><span><code>undefined</code> の <code>.name</code> を読んだ。<code>express.urlencoded</code> の書き忘れ、無いキー、<code>await</code> の付け忘れ</span></div><div><code>TypeError: add is not a function</code><span>名前の誤り、<code>require</code> で受け取るものの取り違え</span></div><div><code>ReferenceError: x is not defined</code><span>宣言していない・綴りの誤り・<code>{ }</code> の外から使った</span></div><div><code>Cannot GET /xxx(ブラウザの表示)</code><span>ルートが無い。パスの綴り、GET と POST の違いを確認</span></div></div></div>
+<div class="card cH"><div class="ct"><i class="ic">📦</i>npm のエラー</div><div class="cd">今の npm(v11)は行頭が <code>npm error</code>(古い記事では <code>npm ERR!</code>)</div><div class="er"><div><code>npm error code ENOENT
+npm error enoent Could not read package.json</code><span><code>package.json</code> が無い場所で実行した → <code>cd</code> で移動、または <code>npm init -y</code></span></div><div><code>npm error Missing script: "dev"</code><span><code>package.json</code> の <code>scripts</code> に <code>dev</code> が無い</span></div><div><code>npm error code E404
+npm error 404 Not Found - GET https://registry.npmjs.org/…</code><span>パッケージ名の誤り</span></div></div></div>
+</div>
+<div class="foot"><span>このページ＝Express で作るとき・エラーが出たとき</span><span>起動: node app.js ／ 停止: Ctrl+C ／ 確認: http://localhost:3000</span><span>4 / 4</span></div>
+</div>
+</body>
+</html>

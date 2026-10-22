@@ -6,3 +6,6 @@
 *.jpg
 *.jpeg
 *.png
+
+# npm で入れた依存パッケージ（Node.js シートのコード例を試したときなど）
+node_modules/
