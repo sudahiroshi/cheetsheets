@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>[ライト] upLaTeX チートシート(TeX Live 2024 / dvipdfmx)</title>
+<style>
+:root{
+  --cA: #1a4fa0;
+  --cB: #6b3fa0;
+  --cC: #1f7a3f;
+  --cD: #b07500;
+  --cE: #6d8c1f;
+  --cF: #c0272d;
+  --cG: #d2691e;
+  --cH: #0f7b7b;
+  --ink:#1a1a1a; --sub:#3f3f3f; --line:#d5d5d5; --codebg:#f4f4f4;
+  --mono:"SFMono-Regular","SF Mono",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#8f8f8f;
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  color:var(--ink);}
+@page{size:A4 landscape;margin:7mm}
+
+.page{
+  width:283mm;height:196mm;background:#fff;
+  margin:6mm auto;display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.45);
+}
+.grid{
+  flex:1 1 auto;min-height:0;overflow:hidden;
+  column-count:5;column-gap:2.0mm;column-fill:balance;
+}
+
+/* ヘッダ帯と凡例 */
+.head{display:flex;align-items:flex-end;gap:3mm;border-bottom:1.2pt solid #333;
+  padding:0 0 1.0mm;margin-bottom:1.3mm;flex:0 0 auto}
+.ttl{white-space:nowrap}
+.ttl b{font-size:13.20pt;letter-spacing:.02em}
+.ttl span{font-size:6.72pt;color:var(--sub);margin-left:2mm}
+.head.slim .ttl b{font-size:10.20pt}
+.legend{display:flex;flex-wrap:wrap;gap:0 2.2mm;flex:1 1 auto;justify-content:flex-end}
+.lg{font-size:6.60pt;color:#222;white-space:nowrap;display:inline-flex;align-items:center}
+.lg i{display:inline-block;width:5.4pt;height:5.4pt;border-radius:1pt;margin-right:.7mm}
+
+/* カテゴリ帯 */
+.sec{break-inside:avoid;-webkit-column-break-inside:avoid;
+  color:#fff;font-size:7.44pt;font-weight:700;line-height:1.25;
+  padding:.55mm 1.1mm;border-radius:.6mm;margin:0 0 .8mm;}
+.sec b{display:inline-block;background:rgba(255,255,255,.3);border-radius:.5mm;
+  padding:0 .8mm;margin-right:1mm}
+
+/* カード */
+.card{break-inside:avoid;-webkit-column-break-inside:avoid;
+  border:.4pt solid var(--line);border-top:1.7pt solid #999;border-radius:.6mm;
+  padding:.5mm .9mm .8mm;margin:0 0 .95mm;background:#fff;}
+.ct{font-size:7.08pt;font-weight:700;line-height:1.2;
+  margin:-.5mm -.9mm .6mm;padding:.5mm .9mm .45mm}
+.cc{font-family:var(--mono);font-size:6.36pt;line-height:1.32;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+  background:var(--codebg);border-left:.9pt solid #c6c6c6;
+  padding:.45mm .8mm;border-radius:.4mm;margin-bottom:.55mm;}
+.cg{display:flex;flex-wrap:wrap;gap:.4mm;margin-bottom:.55mm}
+.cg span{font-family:var(--mono);font-size:6.12pt;line-height:1.3;
+  background:var(--codebg);border:.3pt solid #dedede;border-radius:.4mm;
+  padding:0 .55mm;white-space:nowrap}
+.cd{font-size:6.24pt;line-height:1.35;color:var(--sub)}
+
+/* 柱 */
+.foot{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;
+  border-top:.5pt solid #bbb;margin-top:1.1mm;padding-top:.7mm;
+  font-size:6.24pt;color:#666}
+
+.cA{border-top-color:var(--cA)} .cA>.ct{color:var(--cA);background:color-mix(in srgb,var(--cA) 9%,#fff)} .sA{background:var(--cA)} .lgA i{background:var(--cA)}
+.cB{border-top-color:var(--cB)} .cB>.ct{color:var(--cB);background:color-mix(in srgb,var(--cB) 9%,#fff)} .sB{background:var(--cB)} .lgB i{background:var(--cB)}
+.cC{border-top-color:var(--cC)} .cC>.ct{color:var(--cC);background:color-mix(in srgb,var(--cC) 9%,#fff)} .sC{background:var(--cC)} .lgC i{background:var(--cC)}
+.cD{border-top-color:var(--cD)} .cD>.ct{color:var(--cD);background:color-mix(in srgb,var(--cD) 9%,#fff)} .sD{background:var(--cD)} .lgD i{background:var(--cD)}
+.cE{border-top-color:var(--cE)} .cE>.ct{color:var(--cE);background:color-mix(in srgb,var(--cE) 9%,#fff)} .sE{background:var(--cE)} .lgE i{background:var(--cE)}
+.cF{border-top-color:var(--cF)} .cF>.ct{color:var(--cF);background:color-mix(in srgb,var(--cF) 9%,#fff)} .sF{background:var(--cF)} .lgF i{background:var(--cF)}
+.cG{border-top-color:var(--cG)} .cG>.ct{color:var(--cG);background:color-mix(in srgb,var(--cG) 9%,#fff)} .sG{background:var(--cG)} .lgG i{background:var(--cG)}
+.cH{border-top-color:var(--cH)} .cH>.ct{color:var(--cH);background:color-mix(in srgb,var(--cH) 9%,#fff)} .sH{background:var(--cH)} .lgH i{background:var(--cH)}
+
+@media print{
+  html,body{background:#fff}
+  .page{margin:0;box-shadow:none;width:auto;height:196mm;
+    break-after:page;page-break-after:always}
+  .page:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="head"><div class="ttl"><b>upLaTeX チートシート</b><span>upLaTeX + dvipdfmx / TeX Live 2024 — レポート・論文の定番一式</span></div><div class="legend"><span class="lg lgA"><i></i>A 土台とコンパイル</span><span class="lg lgB"><i></i>B 文書クラスとプリアンブル</span><span class="lg lgC"><i></i>C 文書構造と見出し</span><span class="lg lgD"><i></i>D 文字装飾・段落・特殊文字</span><span class="lg lgE"><i></i>E 箇条書き</span><span class="lg lgF"><i></i>F 数式</span><span class="lg lgG"><i></i>G 図・表</span><span class="lg lgH"><i></i>H 参照・文献・コード・日本語・トラブル</span></div></div>
+<div class="grid">
+<div class="sec sA"><b>A</b>土台とコンパイル</div>
+<div class="card cA"><div class="ct">コンパイル手順</div><div class="cc">uplatex main.tex
+dvipdfmx main.dvi</div><div class="cd">DVI 経由の2段。-kanji=utf8 は既定なので省略可</div></div>
+<div class="card cA"><div class="ct">latexmk 設定例 ~/.latexmkrc</div><div class="cc">$latex=&#x27;uplatex -synctex=1 -halt-on-error %O %S&#x27;;
+$bibtex=&#x27;upbibtex %O %B&#x27;;
+$dvipdf=&#x27;dvipdfmx %O -o %D %S&#x27;;
+$makeindex=&#x27;upmendex %O -o %D %S&#x27;;
+$pdf_mode=3;</div><div class="cd">uplatex 用。$pdf_mode=3 が「DVI→PDF を dvipdfmx で」</div></div>
+<div class="card cA"><div class="ct">よく使うオプション</div><div class="cc">-halt-on-error
+-interaction=nonstopmode
+-synctex=1</div><div class="cd">最初のエラーで停止／対話せず最後まで／エディタ相互ジャンプ</div></div>
+<div class="card cA"><div class="ct">コンパイル回数</div><div class="cc">latexmk main.tex</div><div class="cd">相互参照・目次は 2 回以上必要。latexmk が回数を自動判断</div></div>
+<div class="card cA"><div class="ct">ソースは UTF-8 保存</div><div class="cc">（エディタの文字コード設定）</div><div class="cd">upLaTeX は UTF-8 が既定。inputenc は読み込まない</div></div>
+<div class="card cA"><div class="ct">中間ファイル掃除</div><div class="cc">latexmk -c
+latexmk -C</div><div class="cd">-c は aux/log など中間物のみ、-C は生成 PDF も消す</div></div>
+<div class="sec sB"><b>B</b>文書クラスとプリアンブル</div>
+<div class="card cB"><div class="ct">文書の体裁 [jlreq] ★推奨</div><div class="cc">\documentclass[uplatex,dvipdfmx,%
+  paper=a4,fontsize=11pt]{jlreq}</div><div class="cg"><span>paper=a4</span><span>fontsize=11pt</span><span>tate</span><span>line_length=40zw</span><span>number_of_lines=35</span></div><div class="cd">本シートの既定クラス。JLReq 準拠で、版面を字数・行数で直接指定できる</div></div>
+<div class="card cB"><div class="ct">他の選択肢 [jsarticle / ujarticle]</div><div class="cc">\documentclass[uplatex,dvipdfmx,%
+  a4paper,11pt]{jsarticle}
+\documentclass[dvipdfmx,a4paper]{ujarticle}</div><div class="cd">他人のテンプレート用。jsarticle は長年の定番。uj* 系（ujreport / ujbook / utarticle）は upLaTeX 専用なので uplatex 不要</div></div>
+<div class="card cB"><div class="ct">クラスオプション</div><div class="cc">twocolumn  titlepage  landscape
+draft  fleqn  leqno</div><div class="cd">2段組／表題別ページ／横置き／下書き／数式左寄せ／式番号左</div></div>
+<div class="card cB"><div class="ct">dvipdfmx はクラスへ</div><div class="cc">\documentclass[uplatex,dvipdfmx,...]{jlreq}</div><div class="cd">クラスに書くと graphicx/xcolor/hyperref へ伝播。ドライバ不一致事故を防ぐ</div></div>
+<div class="card cB"><div class="ct">パッケージの読み込み順</div><div class="cc">\usepackage{graphicx,xcolor}
+\usepackage{amsmath,amssymb}
+  …（その他）
+\usepackage{hyperref}    % 原則いちばん最後
+\usepackage{pxjahyper}   % その直後</div><div class="cd">hyperref は他の多くの命令を上書きするため最後。pxjahyper はその後でないと効かない</div></div>
+<div class="card cB"><div class="ct">画像の読み込み [graphicx]</div><div class="cc">\usepackage{graphicx}</div><div class="cd">\includegraphics 用。ドライバはクラスから継承</div></div>
+<div class="card cB"><div class="ct">色付け [xcolor]</div><div class="cc">\usepackage{xcolor}
+\textcolor{red}{赤字}</div><div class="cd">色付け。\colorbox \fcolorbox も</div></div>
+<div class="card cB"><div class="ct">用紙サイズ・余白 [geometry]</div><div class="cc">\usepackage[margin=25mm]{geometry}</div><div class="cd">用紙余白をまとめて指定</div></div>
+<div class="card cB"><div class="ct">数式の拡張 [amsmath / amssymb]</div><div class="cc">\usepackage{amsmath,amssymb}</div><div class="cd">align / cases などの数式環境と追加記号。数式を書くなら必須</div></div>
+<div class="card cB"><div class="ct">数式の太字 [bm]</div><div class="cc">\usepackage{bm}
+\bm{x}</div><div class="cd">数式の太字斜体（ベクトル表記）</div></div>
+<div class="card cB"><div class="ct">リンク・しおり [hyperref + pxjahyper]</div><div class="cc">\usepackage{hyperref}
+\usepackage{pxjahyper}</div><div class="cd">PDF のリンク・しおり。pxjahyper が和文しおりの文字化けを防ぐ</div></div>
+<div class="card cB"><div class="ct">表の横罫線 [booktabs]</div><div class="cc">\usepackage{booktabs}</div><div class="cd">\toprule \midrule \bottomrule の見やすい表罫線</div></div>
+<div class="card cB"><div class="ct">表の縦方向の結合 [multirow]</div><div class="cc">\usepackage{multirow}</div><div class="cd">\multirow で表セルを縦方向に結合</div></div>
+<div class="card cB"><div class="ct">列指定の拡張 [array]</div><div class="cc">\usepackage{array}
+&gt;{\centering}p{30mm}</div><div class="cd">列指定の拡張</div></div>
+<div class="card cB"><div class="ct">幅を自動調整する表 [tabularx]</div><div class="cc">\usepackage{tabularx}</div><div class="cd">幅を指定して X 列に残りを自動配分する表</div></div>
+<div class="card cB"><div class="ct">箇条書きの書式指定 [enumitem]</div><div class="cc">\usepackage{enumitem}</div><div class="cd">箇条書きのラベル・余白を細かく制御</div></div>
+<div class="card cB"><div class="ct">キャプション調整・図の並置 [caption + subcaption]</div><div class="cc">\usepackage{caption,subcaption}</div><div class="cd">キャプション書式の調整と、図を並べる subfigure 環境</div></div>
+<div class="card cB"><div class="ct">ソースコードの掲載 [listings + jvlisting]</div><div class="cc">\usepackage{listings}
+\usepackage{jvlisting}</div><div class="cd">ソースコード掲載。jvlisting は日本語を含むコード用（jlisting の後継）</div></div>
+<div class="card cB"><div class="ct">数値と単位の組版 [siunitx]</div><div class="cc">\usepackage{siunitx}</div><div class="cd">数値と単位の組版。\qty{9.8}{\meter\per\second\squared}</div></div>
+<div class="card cB"><div class="ct">URL の折り返し [url]</div><div class="cc">\usepackage{url}
+\url{https://example.com/}</div><div class="cd">長い URL を折り返し付きで組む</div></div>
+<div class="card cB"><div class="ct">多ウェイト和文・特殊文字 [otf]</div><div class="cc">\usepackage[deluxe]{otf}</div><div class="cd">多ウェイト和文（細字・太字・極太）と異体字・記号（\UTF \CID \ajMaru）</div></div>
+<div class="sec sC"><b>C</b>文書構造と見出し</div>
+<div class="card cC"><div class="ct">表題</div><div class="cc">\title{題名}  \author{著者}
+\date{\today}
+\maketitle</div><div class="cd">\date{} を空にすると日付なし。\maketitle は \begin{document} の直後</div></div>
+<div class="card cC"><div class="ct">概要</div><div class="cc">\begin{abstract}
+  本稿では…
+\end{abstract}</div><div class="cd">要旨。jsarticle では表題の直後に置く</div></div>
+<div class="card cC"><div class="ct">目次・図表目次</div><div class="cc">\tableofcontents
+\listoffigures
+\listoftables</div><div class="cd">反映には 2 回コンパイルが必要</div></div>
+<div class="card cC"><div class="ct">見出し階層</div><div class="cc">\part  \chapter  \section
+\subsection  \subsubsection  \paragraph</div><div class="cd">\chapter は book / report 系のみ（article にはない）</div></div>
+<div class="card cC"><div class="ct">番号なし見出し</div><div class="cc">\section*{謝辞}</div><div class="cd">番号を振らず目次にも載せない</div></div>
+<div class="card cC"><div class="ct">目次用の短い見出し</div><div class="cc">\section[短い名]{本文に出る長い見出し}</div><div class="cd">目次・柱には [ ] の方が使われる</div></div>
+<div class="card cC"><div class="ct">付録</div><div class="cc">\appendix</div><div class="cd">以降の \section 番号が A, B, C… になる</div></div>
+<div class="card cC"><div class="ct">改ページ</div><div class="cc">\newpage
+\clearpage</div><div class="cd">\clearpage は未出力の図表を吐き出してから改ページ</div></div>
+<div class="card cC"><div class="ct">番号・目次の深さ</div><div class="cc">\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}</div><div class="cd">何段目の見出しまで番号を振るか／目次に載せるか</div></div>
+<div class="card cC"><div class="ct">コメント</div><div class="cc">% これはコメント
+行末に % を置くと…</div><div class="cd">行末 % は改行由来の余計な空白を消すのに使う</div></div>
+<div class="sec sD"><b>D</b>文字装飾・段落・特殊文字</div>
+<div class="card cD"><div class="ct">欧文書体（命令形）</div><div class="cg"><span>\textbf{}</span><span>\textit{}</span><span>\texttt{}</span><span>\textsf{}</span><span>\textrm{}</span><span>\textsc{}</span><span>\emph{}</span><span>\underline{}</span></div><div class="cd">太字／斜体／等幅／サンセリフ／ローマン／スモールキャップ／強調／下線</div></div>
+<div class="card cD"><div class="ct">和文書体</div><div class="cc">\textgt{ゴシック}
+\textmc{明朝}</div><div class="cd">upLaTeX の和文専用。jsarticle では \textbf でも和文がゴシックになる</div></div>
+<div class="card cD"><div class="ct">宣言形</div><div class="cg"><span>\bfseries</span><span>\itshape</span><span>\ttfamily</span><span>\sffamily</span><span>\gtfamily</span><span>\mcfamily</span></div><div class="cd">{ } のグループ内で以降すべてに効く。\gtfamily \mcfamily は和文</div></div>
+<div class="card cD"><div class="ct">文字サイズ</div><div class="cg"><span>\tiny</span><span>\scriptsize</span><span>\footnotesize</span><span>\small</span><span>\normalsize</span><span>\large</span><span>\Large</span><span>\LARGE</span><span>\huge</span><span>\Huge</span></div><div class="cd">宣言形。{\small 小さい文字} のように使う</div></div>
+<div class="card cD"><div class="ct">改行・段落</div><div class="cc">空行 = 段落の区切り
+\\     \\[5mm]     \par</div><div class="cd">\\ は段落を変えずに改行。空行での段落分けが基本</div></div>
+</div>
+<div class="foot"><span>ソースは UTF-8 ／ コンパイル: uplatex → dvipdfmx</span><span>1 / 3</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>upLaTeX チートシート</b><span>upLaTeX + dvipdfmx</span></div><div class="legend"><span class="lg lgA"><i></i>A 土台とコンパイル</span><span class="lg lgB"><i></i>B 文書クラスとプリアンブル</span><span class="lg lgC"><i></i>C 文書構造と見出し</span><span class="lg lgD"><i></i>D 文字装飾・段落・特殊文字</span><span class="lg lgE"><i></i>E 箇条書き</span><span class="lg lgF"><i></i>F 数式</span><span class="lg lgG"><i></i>G 図・表</span><span class="lg lgH"><i></i>H 参照・文献・コード・日本語・トラブル</span></div></div>
+<div class="grid">
+<div class="sec sD"><b>D</b>文字装飾・段落・特殊文字（続き）</div>
+<div class="card cD"><div class="ct">字下げ・余白</div><div class="cc">\noindent   \parindent=0pt   \parskip=1em
+\vspace{1em}  \vspace*{}  \hspace{1em}</div><div class="cd">\vspace* はページ先頭でも消えない縦空き</div></div>
+<div class="card cD"><div class="ct">細かい空白量</div><div class="cg"><span>\,</span><span>\:</span><span>\;</span><span>\!</span><span>\quad</span><span>\qquad</span><span>~</span></div><div class="cd">順に 1/6em・2/9em・5/18em・負・1em・2em・改行禁止スペース</div></div>
+<div class="card cD"><div class="ct">詰め物（伸びる空白）</div><div class="cg"><span>\hfill</span><span>\vfill</span><span>\dotfill</span><span>\hrulefill</span></div><div class="cd">行内・ページ内の残りを埋める。目次風の点線や罫線に</div></div>
+<div class="card cD"><div class="ct">揃え・引用</div><div class="cc">\centering
+center / flushleft / flushright
+quote / quotation</div><div class="cd">\centering は宣言形（環境より余計な空きが出ない）</div></div>
+<div class="card cD"><div class="ct">エスケープが要る文字</div><div class="cg"><span>\#</span><span>\$</span><span>\%</span><span>\&amp;</span><span>\_</span><span>\{</span><span>\}</span><span>\textbackslash</span><span>\textasciitilde</span><span>\textasciicircum</span></div><div class="cd">\ ~ ^ はバックスラッシュ単体では書けず専用命令を使う</div></div>
+<div class="card cD"><div class="ct">引用符とダッシュ</div><div class="cc">`シングル&#x27;    ``ダブル&#x27;&#x27;
+-  --  ---</div><div class="cd">欧文の引用符は開きがバッククォート。&quot; の直打ちは使わない。- は連字符、-- は範囲、--- はダッシュ</div></div>
+<div class="card cD"><div class="ct">記号</div><div class="cg"><span>\ldots</span><span>\S</span><span>\dag</span><span>\ddag</span><span>\copyright</span><span>\textdegree</span><span>\textregistered</span></div><div class="cd">三点リーダ／節記号／ダガー／コピーライト／度／登録商標</div></div>
+<div class="sec sE"><b>E</b>箇条書き</div>
+<div class="card cE"><div class="ct">3 つの基本環境</div><div class="cc">\begin{itemize} \item … \end{itemize}
+enumerate（番号）  description（語句）</div><div class="cd">記号／番号／用語リストの 3 種</div></div>
+<div class="card cE"><div class="ct">項目とラベル</div><div class="cc">\item 本文
+\item[→] 本文
+\item[用語] 説明</div><div class="cd">[ ] でラベルを上書き。description では見出し語になる</div></div>
+<div class="card cE"><div class="ct">ネスト</div><div class="cc">入れ子は 4 段階まで</div><div class="cd">記号・番号は段ごとに自動で変化（•／–／*／· と 1. (a) i. A.）</div></div>
+<div class="card cE"><div class="ct">enumitem で書式指定</div><div class="cc">\begin{enumerate}[label=(\arabic*),%
+  leftmargin=*, itemsep=0pt, topsep=0pt]</div><div class="cd">ラベル書式と上下左右の空きをその場で指定</div></div>
+<div class="card cE"><div class="ct">ラベル書式</div><div class="cc">label=\alph*   label=\Roman*   label=\arabic*</div><div class="cd">a,b,c ／ I,II,III ／ 1,2,3。* がカウンタの位置</div></div>
+<div class="card cE"><div class="ct">余白を詰める</div><div class="cc">nosep
+noitemsep</div><div class="cd">nosep は項目間と前後の空きを全部ゼロに</div></div>
+<div class="card cE"><div class="ct">文書全体の既定を変える</div><div class="cc">\setlist[itemize]{nosep, leftmargin=1.5em}
+\setlist[enumerate,1]{label=(\arabic*)}</div><div class="cd">プリアンブルで一括設定。[環境,階層] で対象を絞れる</div></div>
+<div class="card cE"><div class="ct">番号の継続</div><div class="cc">\begin{enumerate}[resume]</div><div class="cd">中断した番号の続きから再開する</div></div>
+<div class="sec sF"><b>F</b>数式</div>
+<div class="card cF"><div class="ct">インライン数式</div><div class="cc">$x^2+y^2=z^2$
+\(x+y\)</div><div class="cd">本文中に埋め込む。$$…$$ は LaTeX では使わない</div></div>
+<div class="card cF"><div class="ct">ディスプレイ数式</div><div class="cc">\[ E = mc^2 \]</div><div class="cd">別行立て。番号が要らないときの基本形</div></div>
+<div class="card cF"><div class="ct">番号付き数式</div><div class="cc">\begin{equation}\label{eq:x}
+  a^2+b^2=c^2
+\end{equation}</div><div class="cd">equation* は番号なし（amsmath が必要）</div></div>
+<div class="card cF"><div class="ct">番号の制御</div><div class="cc">\tag{A.1}    \notag    \nonumber</div><div class="cd">任意の式番号を付ける／その行だけ番号を消す</div></div>
+<div class="card cF"><div class="ct">複数行（揃える）</div><div class="cc">\begin{align}
+  a &amp;= b + c \\
+    &amp;= d
+\end{align}</div><div class="cd">&amp; の位置で縦に揃う。align* は番号なし</div></div>
+<div class="card cF"><div class="ct">複数行（その他）</div><div class="cc">gather   multline
+split   aligned</div><div class="cd">中央揃え／長い式を分割／1 つの番号で複数行／部分揃え。後の 2 つは equation の中で使う</div></div>
+<div class="card cF"><div class="ct">場合分け</div><div class="cc">\begin{cases}
+  1 &amp; (x&gt;0) \\
+  0 &amp; (x\le 0)
+\end{cases}</div><div class="cd">左の大括弧付き。equation の中に入れる</div></div>
+<div class="card cF"><div class="ct">分数・根号</div><div class="cc">\frac{a}{b}   \dfrac{a}{b}   \tfrac{a}{b}
+\sqrt{x}   \sqrt[3]{x}</div><div class="cd">\dfrac は常にディスプレイ寸法、\tfrac は常に小さく</div></div>
+<div class="card cF"><div class="ct">添字</div><div class="cc">x^{2}   a_{ij}   x_i^2   {}^{t}\!A</div><div class="cd">2 文字以上の添字は必ず { } で囲む</div></div>
+<div class="card cF"><div class="ct">大型演算子</div><div class="cc">\sum_{i=1}^{n}   \prod_{i=1}^{n}   \int_a^b
+\iint   \oint   \lim_{x\to 0}   \max_{i}</div><div class="cd">インラインでは上下に付かない。\limits で強制できる</div></div>
+<div class="card cF"><div class="ct">括弧の自動伸縮</div><div class="cc">\left( … \right)
+\left\{ … \right.
+\bigl \Bigl \biggl \Biggl</div><div class="cd">\right. は閉じ括弧なし。手動サイズは \bigl 系</div></div>
+<div class="card cF"><div class="ct">括弧・絶対値の種類</div><div class="cg"><span>\langle</span><span>\rangle</span><span>\lvert</span><span>\rvert</span><span>\lVert</span><span>\rVert</span><span>\lfloor</span><span>\rfloor</span><span>\lceil</span><span>\rceil</span></div><div class="cd">山括弧／絶対値／ノルム／床・天井</div></div>
+<div class="card cF"><div class="ct">関数名（立体）</div><div class="cg"><span>\sin</span><span>\cos</span><span>\tan</span><span>\log</span><span>\ln</span><span>\exp</span><span>\max</span><span>\min</span><span>\arg</span><span>\det</span><span>\dim</span><span>\gcd</span></div><div class="cd">自前にないものは \operatorname{sgn} で作る</div></div>
+<div class="card cF"><div class="ct">演算子・関係子</div><div class="cg"><span>\cdot</span><span>\times</span><span>\div</span><span>\pm</span><span>\mp</span><span>\leq</span><span>\geq</span><span>\neq</span><span>\approx</span><span>\simeq</span><span>\equiv</span><span>\sim</span><span>\propto</span><span>\ll</span><span>\gg</span><span>\in</span><span>\notin</span><span>\subset</span><span>\subseteq</span><span>\cup</span><span>\cap</span><span>\setminus</span><span>\emptyset</span><span>\forall</span><span>\exists</span><span>\neg</span><span>\land</span><span>\lor</span><span>\infty</span><span>\partial</span><span>\nabla</span><span>\to</span><span>\mapsto</span><span>\Rightarrow</span><span>\Leftrightarrow</span><span>\therefore</span></div><div class="cd">よく使う二項演算子・関係子・論理記号・矢印</div></div>
+<div class="card cF"><div class="ct">ギリシャ文字（小文字）</div><div class="cg"><span>\alpha</span><span>\beta</span><span>\gamma</span><span>\delta</span><span>\epsilon</span><span>\varepsilon</span><span>\zeta</span><span>\eta</span><span>\theta</span><span>\vartheta</span><span>\iota</span><span>\kappa</span><span>\lambda</span><span>\mu</span><span>\nu</span><span>\xi</span><span>\pi</span><span>\rho</span><span>\sigma</span><span>\tau</span><span>\upsilon</span><span>\phi</span><span>\varphi</span><span>\chi</span><span>\psi</span><span>\omega</span></div><div class="cd">o（オミクロン）はラテン文字の o をそのまま使う</div></div>
+<div class="card cF"><div class="ct">ギリシャ文字（大文字）</div><div class="cg"><span>\Gamma</span><span>\Delta</span><span>\Theta</span><span>\Lambda</span><span>\Xi</span><span>\Pi</span><span>\Sigma</span><span>\Upsilon</span><span>\Phi</span><span>\Psi</span><span>\Omega</span></div><div class="cd">既定は立体。斜体にするなら \varGamma 系（amsmath）</div></div>
+<div class="card cF"><div class="ct">アクセント</div><div class="cg"><span>\hat{x}</span><span>\bar{x}</span><span>\vec{x}</span><span>\dot{x}</span><span>\ddot{x}</span><span>\tilde{x}</span><span>\overline{AB}</span><span>\underline{x}</span><span>\overrightarrow{AB}</span><span>\widehat{ABC}</span><span>\widetilde{ABC}</span></div><div class="cd">2 文字以上には \wide… / \over… 系を使う</div></div>
+<div class="card cF"><div class="ct">数式内の書体</div><div class="cg"><span>\mathrm{d}</span><span>\mathbf{A}</span><span>\bm{x}</span><span>\mathit{}</span><span>\mathcal{F}</span><span>\mathbb{R}</span><span>\mathsf{}</span></div><div class="cd">単位や微分の d は立体 \mathrm、ベクトル太字は \bm</div></div>
+<div class="card cF"><div class="ct">数式内の日本語</div><div class="cc">\text{ただし }x&gt;0</div><div class="cd">\text{} は amsmath。数式中に和文を直書きしない</div></div>
+<div class="card cF"><div class="ct">行列</div><div class="cc">\begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix}
+pmatrix( )  bmatrix[ ]  vmatrix| |
+Vmatrix‖ ‖  matrix(括弧なし)  array</div><div class="cd">array だけ列指定が要る。他は amsmath で括弧付き</div></div>
+<div class="card cF"><div class="ct">行列の省略記号</div><div class="cg"><span>\cdots</span><span>\vdots</span><span>\ddots</span><span>\dots</span></div><div class="cd">横／縦／斜めの三点。文脈任せなら最後</div></div>
+<div class="card cF"><div class="ct">数式内の空き</div><div class="cg"><span>\,</span><span>\quad</span><span>\qquad</span><span>\!</span></div><div class="cd">記号の詰まり具合を手で微調整する（最後は負の空き）</div></div>
+<div class="card cF"><div class="ct">単位（siunitx v3）</div><div class="cc">\num{1.2e3}
+\unit{\kilo\gram}
+\qty{9.8}{\meter\per\second\squared}
+\qtyrange{10}{20}{\celsius}</div><div class="cd">数値と単位の間を自動で正しく空ける。旧 \SI \si も互換で動くが新記法を推奨</div></div>
+<div class="sec sG"><b>G</b>図・表</div>
+<div class="card cG"><div class="ct">[図] 図の基本形</div><div class="cc">\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\linewidth]{fig.pdf}
+  \caption{説明}\label{fig:x}
+\end{figure}</div><div class="cd">\label は必ず \caption の後に置く</div></div>
+</div>
+<div class="foot"><span>ソースは UTF-8 ／ コンパイル: uplatex → dvipdfmx</span><span>2 / 3</span></div>
+</div>
+<div class="page">
+<div class="head slim"><div class="ttl"><b>upLaTeX チートシート</b><span>upLaTeX + dvipdfmx</span></div><div class="legend"><span class="lg lgA"><i></i>A 土台とコンパイル</span><span class="lg lgB"><i></i>B 文書クラスとプリアンブル</span><span class="lg lgC"><i></i>C 文書構造と見出し</span><span class="lg lgD"><i></i>D 文字装飾・段落・特殊文字</span><span class="lg lgE"><i></i>E 箇条書き</span><span class="lg lgF"><i></i>F 数式</span><span class="lg lgG"><i></i>G 図・表</span><span class="lg lgH"><i></i>H 参照・文献・コード・日本語・トラブル</span></div></div>
+<div class="grid">
+<div class="sec sG"><b>G</b>図・表（続き）</div>
+<div class="card cG"><div class="ct">配置指定</div><div class="cc">h（ここ）  t（上）  b（下）
+p（独立ページ）  !（制約緩和）</div><div class="cd">[H]（絶対ここ）は float パッケージが必要</div></div>
+<div class="card cG"><div class="ct">[図] includegraphics オプション</div><div class="cc">width=   height=   scale=   angle=
+trim=10 20 10 20, clip
+keepaspectratio</div><div class="cd">trim は左下右上の順に切り取り。clip を付けないと効かない</div></div>
+<div class="card cG"><div class="ct">幅の基準</div><div class="cc">\linewidth   \textwidth   \columnwidth</div><div class="cd">2 段組や minipage の中では \linewidth が安全</div></div>
+<div class="card cG"><div class="ct">[図] 画像の探索パス</div><div class="cc">\graphicspath{{./figs/}}</div><div class="cd">末尾のスラッシュと二重波括弧に注意</div></div>
+<div class="card cG"><div class="ct">[図] dvipdfmx で使える画像</div><div class="cc">PDF / EPS / JPEG / PNG</div><div class="cd">ベクタは PDF 推奨。拡張子は省略しても良い</div></div>
+<div class="card cG"><div class="ct">[図] バウンディングボックス</div><div class="cc">extractbb fig.png
+→ fig.xbb が生成される</div><div class="cd">JPEG/PNG はサイズ情報が要る。TeX Live では自動生成が有効なことが多い</div></div>
+<div class="card cG"><div class="ct">[図] 図を横に並べる</div><div class="cc">\begin{subfigure}{0.48\linewidth}
+  \includegraphics[width=\linewidth]{a.pdf}
+  \subcaption{左}\label{fig:a}
+\end{subfigure}</div><div class="cd">subcaption パッケージ。参照は \subref{fig:a}</div></div>
+<div class="card cG"><div class="ct">キャプションの位置</div><div class="cc">図 → \includegraphics の下
+表 → tabular の上</div><div class="cd">和文の組版作法。\caption を書く位置で決まる</div></div>
+<div class="card cG"><div class="ct">[表] 表の基本形</div><div class="cc">\begin{table}[htbp]
+  \centering
+  \caption{説明}\label{tab:x}
+  \begin{tabular}{lcr} … \end{tabular}
+\end{table}</div><div class="cd">table が浮動体、tabular が中身。キャプションは先に書く</div></div>
+<div class="card cG"><div class="ct">[表] 列指定</div><div class="cg"><span>l</span><span>c</span><span>r</span><span>p{30mm}</span><span>|</span><span>@{}</span><span>*{3}{c}</span></div><div class="cd">左／中央／右／折り返し幅指定／縦罫線／列間の空き指定／繰り返し</div></div>
+<div class="card cG"><div class="ct">[表] セルと行</div><div class="cc">A &amp; B &amp; C \\</div><div class="cd">&amp; で列区切り、\\ で行末</div></div>
+<div class="card cG"><div class="ct">[表] 罫線（標準）</div><div class="cc">\hline
+\cline{2-3}</div><div class="cd">全幅の横罫／2〜3 列目だけの横罫</div></div>
+<div class="card cG"><div class="ct">[表] 罫線（booktabs）</div><div class="cc">\toprule   \midrule   \bottomrule
+\cmidrule{2-3}</div><div class="cd">太さが整った 3 本線。縦罫線は使わないのが作法</div></div>
+<div class="card cG"><div class="ct">[表] セルの結合</div><div class="cc">\multicolumn{2}{c}{見出し}
+\multirow{2}{*}{縦結合}</div><div class="cd">横結合は標準、縦結合は multirow パッケージ</div></div>
+<div class="card cG"><div class="ct">[表] 幅を指定する表</div><div class="cc">\begin{tabularx}{\linewidth}{lXr}
+  … 
+\end{tabularx}</div><div class="cd">X 列が残り幅を自動で吸収する</div></div>
+<div class="sec sH"><b>H</b>参照・文献・コード・日本語・トラブル</div>
+<div class="card cH"><div class="ct">ラベルと参照</div><div class="cc">\label{sec:x}  →  \ref{sec:x}
+\eqref{eq:x}   \pageref{}   \autoref{}</div><div class="cd">\eqref は括弧付きの式番号、\autoref は「図 3」のように種別付き</div></div>
+<div class="card cH"><div class="ct">ラベル命名の作法</div><div class="cc">sec:   fig:   tab:   eq:</div><div class="cd">接頭辞で種別が分かるようにする</div></div>
+<div class="card cH"><div class="ct">参照が ?? になる</div><div class="cc">もう一度コンパイルする</div><div class="cd">1 回目は .aux に書き出すだけ。latexmk なら自動</div></div>
+<div class="card cH"><div class="ct">脚注</div><div class="cc">\footnote{注}
+\footnotemark + \footnotetext{注}</div><div class="cd">表や minipage の中では後者に分けると確実</div></div>
+<div class="card cH"><div class="ct">手書きの文献リスト</div><div class="cc">\begin{thebibliography}{9}
+  \bibitem{key} 著者, 書名, 出版社, 2024.
+\end{thebibliography}
+→ \cite{key}</div><div class="cd">{9} は番号の最大桁幅の目安</div></div>
+<div class="card cH"><div class="ct">BibTeX</div><div class="cc">\bibliographystyle{junsrt}
+\bibliography{ref}</div><div class="cd">処理は upbibtex（bibtex や pbibtex ではない）</div></div>
+<div class="card cH"><div class="ct">日本語向け文献スタイル</div><div class="cc">junsrt（引用順）  jplain
+jalpha   jabbrv</div><div class="cd">junsrt は出現順に番号を振る。和文論文で最も使われる</div></div>
+<div class="card cH"><div class="ct">natbib</div><div class="cc">\usepackage{natbib}
+\citep{key}   \citet{key}</div><div class="cd">括弧付き引用／著者名を本文に出す引用</div></div>
+<div class="card cH"><div class="ct">索引</div><div class="cc">\usepackage{makeidx}   \makeindex
+\index{項目}   \printindex</div><div class="cd">処理は upmendex（日本語索引の読み仮名に対応）</div></div>
+<div class="card cH"><div class="ct">そのまま出す（インライン）</div><div class="cc">\verb|printf(&quot;%d&quot;, n);|</div><div class="cd">区切り文字は中身に出てこない記号なら何でも良い</div></div>
+<div class="card cH"><div class="ct">そのまま出す（ブロック）</div><div class="cc">\begin{verbatim}
+  …
+\end{verbatim}</div><div class="cd">整形なしで等幅出力。中で命令は効かない</div></div>
+<div class="card cH"><div class="ct">listings の設定</div><div class="cc">\lstset{basicstyle=\ttfamily\small,%
+  frame=single, numbers=left,%
+  breaklines=true, language=C}</div><div class="cd">枠・行番号・自動折り返し・言語指定</div></div>
+<div class="card cH"><div class="ct">listings の使用</div><div class="cc">\begin{lstlisting} … \end{lstlisting}
+\lstinputlisting{code.c}</div><div class="cd">直書きと外部ファイル読み込み</div></div>
+<div class="card cH"><div class="ct">日本語を含むコード</div><div class="cc">\usepackage{jvlisting}</div><div class="cd">listings 単体では和文が化ける。jvlisting は jlisting の後継</div></div>
+<div class="card cH"><div class="ct">文字コード</div><div class="cc">\usepackage[utf8]{inputenc}  ← 不要
+\usepackage[T1]{fontenc}     ← 不要</div><div class="cd">upLaTeX は内部 Unicode で UTF-8 がそのまま通る。pdfLaTeX 用のこれらを混ぜると壊れる</div></div>
+<div class="card cH"><div class="ct">和欧文間の空き</div><div class="cc">\xkanjiskip=.25zw plus 1pt minus 1pt
+\kanjiskip=0pt plus .1zw
+\inhibitglue</div><div class="cd">和文と欧文の間／和文同士の間の空き。最後は局所的に抑止</div></div>
+<div class="card cH"><div class="ct">ルビ</div><div class="cc">\usepackage{pxrubrica}
+\ruby{漢字}{かん|じ}（モノルビ）
+\ruby[g]{漢字}{かんじ}（グループルビ）</div><div class="cd">ルビ側を | で区切って各文字に対応させる。[g] は全体に 1 つ</div></div>
+<div class="card cH"><div class="ct">縦書き</div><div class="cc">\documentclass[uplatex,dvipdfmx,%
+  tate,paper=a4]{jlreq}
+\tate   \yoko</div><div class="cd">jlreq は tate オプションで縦組（旧来のクラスなら utarticle）。\tate \yoko での切替はページ先頭か箱の中（plext の \parbox&lt;t&gt;{}）のみ</div></div>
+<div class="card cH"><div class="ct">多ウェイト和文</div><div class="cc">\usepackage[deluxe]{otf}
+\ajMaru{1}   \ajKakko{1}   \UTF{9DD7}</div><div class="cd">細字・中字・太字を使い分けられる。\aj… 系で丸数字・括弧数字、\UTF で異体字</div></div>
+<div class="card cH"><div class="ct">Overfull \hbox</div><div class="cc">\sloppy    \-    \raggedright</div><div class="cd">行が右にはみ出す。単語間を緩める／分割位置を教える／右を揃えない</div></div>
+<div class="card cH"><div class="ct">Undefined control sequence</div><div class="cc">パッケージの読み込み漏れ
+綴り間違い</div><div class="cd">ログの行番号の直前を見る</div></div>
+<div class="card cH"><div class="ct">目次・図表番号が古い</div><div class="cc">latexmk main.tex</div><div class="cd">目次やページ番号は 2〜3 回回さないと揃わない。latexmk が必要回数を判断する</div></div>
+<div class="card cH"><div class="ct">画像が出ない・ずれる</div><div class="cc">ドライバ指定の不一致
+extractbb で .xbb を作る</div><div class="cd">dvipdfmx をクラスオプションで統一し、BB 不足を補う</div></div>
+<div class="card cH"><div class="ct">しおりが文字化け</div><div class="cc">\usepackage{pxjahyper}</div><div class="cd">hyperref の後に読み込む。upLaTeX + dvipdfmx の定番対策</div></div>
+<div class="card cH"><div class="ct">.aux 破損・原因不明のエラー</div><div class="cc">latexmk -C
+（その後に再コンパイル）</div><div class="cd">中間ファイルを全部消してやり直す</div></div>
+<div class="card cH"><div class="ct">引数なしマクロ</div><div class="cc">\newcommand{\R}{\mathbb{R}}</div><div class="cd">既存の名前と衝突するとエラーになる</div></div>
+<div class="card cH"><div class="ct">引数付きマクロ</div><div class="cc">\newcommand{\abs}[1]{\left|#1\right|}</div><div class="cd">[1] が引数の個数、#1 が 1 番目の引数</div></div>
+<div class="card cH"><div class="ct">再定義と演算子定義</div><div class="cc">\renewcommand{\labelitemi}{\textbullet}
+\DeclareMathOperator{\argmax}{arg\,max}</div><div class="cd">既存命令の上書き／立体の新しい数式演算子</div></div>
+</div>
+<div class="foot"><span>ソースは UTF-8 ／ コンパイル: uplatex → dvipdfmx</span><span>3 / 3</span></div>
+</div>
+</body>
+</html>
