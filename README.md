@@ -1,16 +1,19 @@
 # チートシート
 
-授業で配布する印刷教材です。macOS の操作と C言語の文法を、それぞれ A4横 3 枚に、Node.js による Web アプリ開発を A4横 4 枚に、Markdown の書き方と Mermaid の図を A4横 6 枚にまとめています。
+授業で配布する印刷教材です。macOS の操作と C言語の文法と upLaTeX の組版を、それぞれ A4横 3 枚に、Node.js による Web アプリ開発を A4横 4 枚に、Markdown の書き方と Mermaid の図を A4横 6 枚にまとめています。
 
 | シート | 出力ファイル | 構成 |
 | --- | --- | --- |
-| macOS ショートカット（ライト） | `index-light.html` | 3ページ・34カード・5段組 |
-| macOS ショートカット（ダーク） | `index.html` | 同上（配色のみ違う） |
+| macOS ショートカット（ライト） | `macos_cheatsheet_light.html` | 3ページ・34カード・5段組 |
+| macOS ショートカット（ダーク） | `macos_cheatsheet.html` | 同上（配色のみ違う） |
 | C言語 | `c_lang_cheatsheet_light.html` | 3ページ・47カード・5段組 |
 | Node.js Webアプリ開発 | `node_cheatsheet_light.html` | 4ページ・53カード・5段組 |
 | Markdown（GitHub）と Mermaid | `markdown_cheatsheet_light.html` | 6ページ・58カード・5段組 |
+| upLaTeX | `tex_cheatsheet_light.html` | 3ページ・124カード・5段組 |
 
 いずれも外部 CDN を参照しない単一ファイルです。ブラウザで開いてそのまま印刷できます。
+
+`index.html` は全シートへの入口となるランディングページです（GitHub Pages で公開したときのトップページ）。こちらも外部 CDN を参照しない単一ファイルで、JavaScript は使っていません。
 
 ## 印刷
 
@@ -20,7 +23,9 @@
 - 余白: **なし**（`@page{size:A4 landscape;margin:7mm}` で内側に余白を確保済み）
 - **背景のグラフィック: オン**（カテゴリの色帯が出ません）
 
-配布用は `index-light.html` と `c_lang_cheatsheet_light.html` と `node_cheatsheet_light.html` と `markdown_cheatsheet_light.html` を使ってください。`index.html` は画面で見るためのダーク版です。
+枚数はシートごとに違います。macOS・C言語・upLaTeX が **A4横 3 ページ**、Node.js が **A4横 4 ページ**、Markdown が **A4横 6 ページ**です。
+
+配布用は `macos_cheatsheet_light.html` と `c_lang_cheatsheet_light.html` と `node_cheatsheet_light.html` と `markdown_cheatsheet_light.html` と `tex_cheatsheet_light.html` を使ってください。`macos_cheatsheet.html` は画面で見るためのダーク版です。
 
 ## ページの役割
 
@@ -56,6 +61,14 @@
 
 Mermaid は、GitHub の描画器が mermaid **v12.2.0** であることを ```mermaid の中に `info` と書いて確かめ（2026年10月）、載せたコードはすべて mermaid 12.2.0 を GitHub と同じ設定（`theme: default`・`securityLevel: antiscript` など）で動かして描画できることを確認しています。GitHub が Mermaid の版を上げると描き方や書き方が変わることがあるので、版が変わったら確認し直してください。
 
+**upLaTeX**（upLaTeX + dvipdfmx / TeX Live 2024 を想定。文書クラスは jlreq を既定とする）
+
+1. 土台とプリアンブル（土台とコンパイル / 文書クラスとプリアンブル / 文書構造と見出し / 文字装飾・段落・特殊文字）
+2. 本文を組む（文字装飾・段落・特殊文字の続き / 箇条書き / 数式 / 図・表）
+3. 仕上げと引くための1枚（図・表の続き / 相互参照・脚注 / 参考文献 / ソースコード / 日本語組版 / トラブル対処 / 自作マクロ）
+
+pdfLaTeX / LuaLaTeX 固有の書き方（`\usepackage[utf8]{inputenc}` など）は意図的に載せていません。収録項目の一覧は `tex_plan.md` にあります。
+
 「まず持ち歩く2枚」は、macOS 版の1ページ目と C言語版の1ページ目です。
 
 ## 凡例
@@ -68,10 +81,10 @@ Mermaid は、GitHub の描画器が mermaid **v12.2.0** であることを ```m
 
 ## ビルド
 
-**HTML は 100% 生成物です。直接編集しないでください。** 次回のビルドで上書きされます。
+**各シートの HTML は生成物です。直接編集しないでください。** 次回のビルドで上書きされます。ただし `tex_cheatsheet_light.html`（upLaTeX シート）と `index.html`（ランディングページ）だけは例外で、生成スクリプトを持たない手書きの HTML です（下の「生成しないファイル」を参照）。
 
 ```sh
-node build_macos_cheatsheet.js   # index.html と index-light.html を生成
+node build_macos_cheatsheet.js   # macos_cheatsheet.html と macos_cheatsheet_light.html を生成
 node build_c_cheatsheet.js       # c_lang_cheatsheet_light.html を生成
 node build_node_cheatsheet.js    # node_cheatsheet_light.html を生成
 node build_markdown_cheatsheet.js  # markdown_cheatsheet_light.html を生成
@@ -79,11 +92,18 @@ node build_markdown_cheatsheet.js  # markdown_cheatsheet_light.html を生成
 
 Node.js の標準モジュール（`fs` / `path`）しか使っていないので、依存関係のインストールは不要です。開発に使った Node は v26.4.0 です。
 
-`index.html` と `index-light.html` は同じスクリプトから生成され、`<body>` は完全に同一です。違いは `:root` の CSS 変数だけなので、内容を直すとダーク・ライト両方に反映されます。
+`macos_cheatsheet.html` と `macos_cheatsheet_light.html` は同じスクリプトから生成され、`<body>` は完全に同一です。違いは `:root` の CSS 変数だけなので、内容を直すとダーク・ライト両方に反映されます。
+
+### 生成しないファイル
+
+次の2つだけは生成スクリプトを持たない手書きの HTML です。ビルドでは上書きされないので、直接編集してください。
+
+- `tex_cheatsheet_light.html` … upLaTeX シート。他シートと同じ CSS の流儀（`.page` / `.head` / `.grid` / `.sec` / `.card`）で書いてありますが、カードは `CARDS` 配列ではなく HTML に直接並べています。
+- `index.html` … ランディングページ。
 
 ## 内容を変更する
 
-各スクリプトの `CARDS` 配列を編集します。
+各スクリプトの `CARDS` 配列を編集します（`tex_cheatsheet_light.html` と `index.html` は HTML を直接編集します）。
 
 - カードの追加・削除をしたら、**`SPLIT`（各ページに載せるカード枚数）も更新する**こと。合計がカード数と一致しないとビルドが例外で止まります。
   - macOS: `SPLIT = [13, 9, 12]`
@@ -118,13 +138,16 @@ Node.js の標準モジュール（`fs` / `path`）しか使っていないの�
 | `build_c_cheatsheet.js` | C言語シートの生成スクリプト（唯一の編集対象） |
 | `build_node_cheatsheet.js` | Node.js シートの生成スクリプト（唯一の編集対象） |
 | `build_markdown_cheatsheet.js` | Markdown シートの生成スクリプト（唯一の編集対象） |
-| `index.html` / `index-light.html` | macOS シート（生成物） |
+| `index.html` | 全シートへの入口となるランディングページ（手書き） |
+| `macos_cheatsheet.html` / `macos_cheatsheet_light.html` | macOS シート（生成物） |
 | `c_lang_cheatsheet_light.html` | C言語シート（生成物） |
 | `node_cheatsheet_light.html` | Node.js シート（生成物） |
 | `markdown_cheatsheet_light.html` | Markdown シート（生成物） |
+| `tex_cheatsheet_light.html` | upLaTeX シート（手書き。生成スクリプトは無い） |
 | `content_review.md` | 内容精査の記録。誤り・追加候補・削除候補・未解決事項 |
 | `c_lang.md` | C言語シートの素材 |
 | `c_lang_plan.md` | C言語シートの構成案 |
+| `tex_plan.md` | upLaTeX シートの収録内容一覧 |
 | `history.md` | 作成の経緯 |
 
 ### 使わないスクリプト
