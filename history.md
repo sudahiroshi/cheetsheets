@@ -96,3 +96,6 @@ macOS ショートカット チートシート作成の作業記録(2026-10-05)�
 - `make_light.js`: ライト版の生成スクリプト(Node.js)
 - `history.md`: 本ファイル
 
+## 9. GitHub Pages 向けの再構成(2026-11-04)
+- `index.html` / `index-light.html` を `macos_cheatsheet.html` / `macos_cheatsheet_light.html` に改名した(`build_macos_cheatsheet.js` の出力先も変更)。
+- 空いた `index.html` は、全シートへの入口となるランディングページにした。

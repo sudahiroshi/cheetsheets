@@ -2,7 +2,7 @@
 // デザインは ~/tex-cheatsheet/tex_cheatsheet.html と同じ流儀
 //   .page / .head / .legend / .grid / .sec / .card / .ct / .cc / .cg / .cd / .foot
 // macOS の内容に合わせて .kv(キー+説明の行) / .cl(手順・箇条書き) を追加している
-// 出力: index-light.html(ライト) と index.html(同じ構造で配色だけダーク)
+// 出力: macos_cheatsheet_light.html(ライト) と macos_cheatsheet.html(同じ構造で配色だけダーク)
 // tako:run node build_macos_cheatsheet.js
 const fs = require('fs');
 const path = require('path');
@@ -732,9 +732,9 @@ ${pages.join('\n')}
 
 const DESC = `macOSの標準的なキーボードショートカット・トラックパッド・ターミナル・記号と、アプリのインストール方法(DMG/pkg/App Store/Homebrewほか)をまとめたA4横${SPLIT.length}ページのチートシート。`;
 
-fs.writeFileSync(path.join(DIR, 'index-light.html'),
+fs.writeFileSync(path.join(DIR, 'macos_cheatsheet_light.html'),
   htmlDoc('[ライト] macOS ショートカット・ターミナル・アプリインストール チートシート', DESC, ''));
-fs.writeFileSync(path.join(DIR, 'index.html'),
+fs.writeFileSync(path.join(DIR, 'macos_cheatsheet.html'),
   htmlDoc('macOS ショートカット・ターミナル・アプリインストール チートシート', DESC,
     `\n<style id="dark-theme">${darkCss}</style>`));
 
